@@ -340,8 +340,8 @@ textarea:focus {
 
 .report-shell {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
   align-items: start;
   width: min(1500px, 100vw);
   min-height: 100vh;
@@ -349,43 +349,51 @@ textarea:focus {
   padding: 18px 22px 28px;
 }
 
-.report-sidebar {
+.report-topnav {
   position: sticky;
   top: 0;
   z-index: 10;
-  display: grid;
-  gap: 14px;
-  min-height: calc(100vh - 36px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   border: 1px solid rgba(23, 33, 29, 0.1);
   border-radius: 8px;
   background: rgba(247, 250, 248, 0.94);
+  backdrop-filter: blur(14px);
   padding: 14px;
 }
 
-.sidebar-brand {
+.topnav-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-bottom: 1px solid rgba(23, 33, 29, 0.09);
-  padding-bottom: 14px;
+  min-width: 210px;
 }
 
-.sidebar-brand strong,
-.sidebar-brand span {
+.topnav-brand strong,
+.topnav-brand span {
   display: block;
 }
 
-.sidebar-brand strong {
+.topnav-brand strong {
   color: #17211d;
   font-size: 17px;
 }
 
-.sidebar-brand span {
+.topnav-brand span {
   color: #61736b;
   font-size: 12px;
 }
 
-.sidebar-nav button {
+.topnav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.topnav-tabs button {
   display: flex;
   min-height: 46px;
   align-items: center;
@@ -399,13 +407,8 @@ textarea:focus {
   text-align: left;
 }
 
-.sidebar-nav {
-  display: grid;
-  gap: 8px;
-}
-
-.sidebar-nav button.active,
-.sidebar-nav button:hover {
+.topnav-tabs button.active,
+.topnav-tabs button:hover {
   border-color: #1f6f5d;
   background: #1f6f5d;
   color: #fff;
@@ -1013,8 +1016,7 @@ button.flow-cell.current:focus-visible {
 }
 
 .deep-tabs,
-.tabs,
-.note-actions {
+.tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1058,6 +1060,33 @@ button.flow-cell.current:focus-visible {
   margin: 0 0 8px;
   color: #1f6f5d;
   font-size: 14px;
+}
+
+.merged-advice-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.merged-advice-grid article {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  border: 1px solid rgba(23, 33, 29, 0.09);
+  border-radius: 8px;
+  background: #fbfdfb;
+  padding: 14px;
+}
+
+.merged-advice-grid h3 {
+  color: #17211d;
+  font-size: 16px;
+}
+
+.merged-advice-grid p {
+  color: #61736b;
+  font-size: 14px;
+  line-height: 1.72;
 }
 
 .luck-integrated-section {
@@ -1434,13 +1463,15 @@ button.flow-cell.current:focus-visible {
     position: static;
   }
 
-  .report-sidebar {
-    position: static;
-    min-height: auto;
+  .report-topnav {
+    position: sticky;
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .sidebar-nav {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  .topnav-tabs {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .paipan-grid {
@@ -1458,6 +1489,7 @@ button.flow-cell.current:focus-visible {
   .portrait-grid,
   .life-grid,
   .domain-grid,
+  .merged-advice-grid,
   .luck-overview,
   .luck-period-list,
   .luck-year-grid,
@@ -1478,7 +1510,7 @@ button.flow-cell.current:focus-visible {
   .birth-panel,
   .birth-aside,
   .section,
-  .report-sidebar,
+  .report-topnav,
   .profile-banner {
     padding: 16px;
   }
@@ -1513,11 +1545,16 @@ button.flow-cell.current:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .sidebar-nav {
+  .topnav-brand {
+    min-width: 0;
+  }
+
+  .topnav-tabs {
+    display: grid;
     grid-template-columns: 1fr 1fr;
   }
 
-  .sidebar-nav button,
+  .topnav-tabs button,
   .edit-button {
     width: 100%;
   }

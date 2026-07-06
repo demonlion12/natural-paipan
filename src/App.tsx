@@ -1,29 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent, RefObject } from 'react';
 import {
-  Activity,
   ArrowLeft,
   ArrowRight,
   CalendarDays,
-  Check,
   Clock3,
-  Compass,
   Copy,
   Download,
   Edit3,
   FileText,
-  Heart,
   LogIn,
   MapPin,
   RefreshCw,
   RotateCcw,
-  Save,
   Sparkles,
   UserRound,
 } from 'lucide-react';
 import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
-import type { BaziReading, BirthInput, DeepDomainKey, ElementName, ReadingSection } from './core/types';
+import type { BaziReading, BirthInput, DeepDomainKey, ElementName } from './core/types';
 
 const initialInput: BirthInput = {
   name: '1232',
@@ -33,19 +28,10 @@ const initialInput: BirthInput = {
   birthplace: '未知地 北京时间',
 };
 
-const sectionOrder: ReadingSection[] = ['overview', 'career', 'relationship', 'health', 'growth'];
 type AppStep = 'login' | 'birth' | 'report';
-type NavTarget = 'paipan' | 'professional' | 'detail' | 'luck' | 'notes';
+type NavTarget = 'paipan' | 'element' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
-
-const sectionIcon = {
-  overview: Sparkles,
-  career: Compass,
-  relationship: Heart,
-  health: Activity,
-  growth: Check,
-};
 
 const classicTabs: Array<{ key: ClassicKey; label: string }> = [
   { key: 'qiongtong', label: '穷通宝鉴' },
@@ -1161,54 +1147,16 @@ function PortraitSection({ reading }: { reading: BaziReading }) {
   );
 }
 
-function AdvicePanel({ reading }: { reading: BaziReading }) {
-  const [activeSection, setActiveSection] = useState<ReadingSection>('overview');
-  const advice = reading.advice[activeSection];
-  const Icon = sectionIcon[activeSection];
-
-  return (
-    <section className="section advice-section">
-      <div className="section-title">
-        <h2>分析建议</h2>
-        <span>{reading.structure.highlightedTenGods.join('、') || '结构均衡'}</span>
-      </div>
-      <div className="tabs" role="tablist" aria-label="分析分类">
-        {sectionOrder.map((section) => {
-          const TabIcon = sectionIcon[section];
-          return (
-            <button
-              className={section === activeSection ? 'tab active' : 'tab'}
-              key={section}
-              onClick={() => setActiveSection(section)}
-              type="button"
-            >
-              <TabIcon size={16} />
-              <span>{reading.advice[section].title}</span>
-            </button>
-          );
-        })}
-      </div>
-      <article className="advice-body">
-        <div className="advice-icon">
-          <Icon size={22} />
-        </div>
-        <div>
-          <h3>{advice.title}</h3>
-          <p>{advice.body}</p>
-          <div className="tag-row">
-            {advice.tags.map((tag, index) => (
-              <span key={`${tag}-${index}`}>{tag}</span>
-            ))}
-          </div>
-        </div>
-      </article>
-    </section>
-  );
-}
-
 function DeepDivePanel({ reading }: { reading: BaziReading }) {
   const [activeDomain, setActiveDomain] = useState<DeepDomainKey>('summary');
   const activeReport = reading.deepDive.domains.find((domain) => domain.key === activeDomain) ?? reading.deepDive.domains[0];
+  const mergedAdvice = [
+    reading.advice.overview,
+    reading.advice.career,
+    reading.advice.relationship,
+    reading.advice.health,
+    reading.advice.growth,
+  ];
 
   return (
     <section className="section deep-section">
@@ -1278,6 +1226,19 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
           </div>
         </div>
       </article>
+      <div className="merged-advice-grid">
+        {mergedAdvice.map((advice) => (
+          <article key={advice.title}>
+            <h3>{advice.title}</h3>
+            <p>{advice.body}</p>
+            <div className="tag-row">
+              {advice.tags.map((tag, index) => (
+                <span key={`${advice.title}-${tag}-${index}`}>{tag}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
@@ -1416,7 +1377,7 @@ function LuckIntegratedPanel({ reading }: { reading: BaziReading }) {
   );
 }
 
-function buildReportText(reading: BaziReading, note: string) {
+function buildReportText(reading: BaziReading) {
   const pillars = reading.pillars.map((pillar) => `${pillar.label} ${pillar.ganZhi} ${pillar.stemTenGod}`).join(' / ');
   const elements = reading.elementScores.map((item) => `${item.element}${Math.round(item.ratio * 100)}%(${item.tone})`).join('、');
   const deepDomains = reading.deepDive.domains
@@ -1476,51 +1437,8 @@ function buildReportText(reading: BaziReading, note: string) {
     '【未来三年】',
     futureYears,
     '',
-    '【断事笔记】',
-    note || '暂无',
-    '',
     '注：以上为传统命理视角下的趋势分析，不替代医学、法律、心理、财务等专业意见。',
   ].join('\n');
-}
-
-function NotesPanel({
-  note,
-  onChange,
-  onClear,
-  onSave,
-}: {
-  note: string;
-  onChange: (value: string) => void;
-  onClear: () => void;
-  onSave: (value: string) => void;
-}) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  return (
-    <section className="section notes-panel">
-      <div className="section-title">
-        <h2>断事笔记</h2>
-        <span>记录验证点、问题背景和反馈</span>
-      </div>
-      <textarea
-        aria-label="断事笔记"
-        onChange={(event) => onChange(event.target.value)}
-        placeholder="例如：想看事业转型；2022 年是否有换工作、搬迁、关系变化；后续反馈准或不准都记在这里。"
-        ref={textareaRef}
-        value={note}
-      />
-      <div className="note-actions">
-        <button className="secondary-button" onClick={() => onSave(textareaRef.current?.value ?? note)} type="button">
-          <Save size={16} />
-          保存笔记
-        </button>
-        <button className="secondary-button" onClick={onClear} type="button">
-          <RotateCcw size={16} />
-          清空
-        </button>
-      </div>
-    </section>
-  );
 }
 
 function LoginPage({
@@ -1567,7 +1485,7 @@ function LoginPage({
       <section className="auth-card">
         <form onSubmit={handleSubmit}>
           <h2>登录自然排盘</h2>
-          <p>建立一个档案，后续可以保存报告、记录断事笔记，并继续查看不同阶段的运势变化。</p>
+          <p>建立一个档案，后续可以保存报告，并继续查看不同阶段的运势变化。</p>
           <label>
             <span>
               <UserRound size={15} /> 昵称 / 档案名
@@ -1727,7 +1645,7 @@ function BirthSetupPage({
   );
 }
 
-function ReportSidebar({
+function ReportTopNav({
   activeNav,
   onNavigate,
 }: {
@@ -1736,15 +1654,15 @@ function ReportSidebar({
 }) {
   const navItems: Array<{ key: NavTarget; label: string }> = [
     { key: 'paipan', label: '基本排盘' },
+    { key: 'element', label: '五行气势' },
     { key: 'professional', label: '专业细盘' },
-    { key: 'detail', label: '专业详批' },
     { key: 'luck', label: '大运合参' },
-    { key: 'notes', label: '断事笔记' },
+    { key: 'detail', label: '专业详批' },
   ];
 
   return (
-    <aside className="report-sidebar">
-      <div className="sidebar-brand">
+    <header className="report-topnav">
+      <div className="topnav-brand">
         <div className="brand-symbol">自</div>
         <div>
           <strong>自然排盘</strong>
@@ -1752,14 +1670,14 @@ function ReportSidebar({
         </div>
       </div>
 
-      <nav className="sidebar-nav" aria-label="报告导航">
+      <nav className="topnav-tabs" aria-label="报告导航">
         {navItems.map((item) => (
           <button className={activeNav === item.key ? 'active' : ''} key={item.key} onClick={() => onNavigate(item.key)} type="button">
             {item.label}
           </button>
         ))}
       </nav>
-    </aside>
+    </header>
   );
 }
 
@@ -1768,14 +1686,13 @@ export default function App() {
   const [submitted, setSubmitted] = useState(initialInput);
   const [step, setStep] = useState<AppStep>('login');
   const [activeNav, setActiveNav] = useState<NavTarget>('paipan');
-  const [note, setNote] = useState(() => window.localStorage.getItem('bazi-web-note') ?? '');
   const [toast, setToast] = useState('');
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
   const paipanRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement>(null);
   const professionalRef = useRef<HTMLDivElement>(null);
-  const detailRef = useRef<HTMLDivElement>(null);
   const luckRef = useRef<HTMLDivElement>(null);
-  const notesRef = useRef<HTMLDivElement>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!toast) {
@@ -1788,10 +1705,10 @@ export default function App() {
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
       paipan: paipanRef,
+      element: elementRef,
       professional: professionalRef,
-      detail: detailRef,
       luck: luckRef,
-      notes: notesRef,
+      detail: detailRef,
     };
     setActiveNav(target);
     refs[target].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1801,7 +1718,7 @@ export default function App() {
     if (!reading) {
       return;
     }
-    const text = buildReportText(reading, note);
+    const text = buildReportText(reading);
     try {
       await navigator.clipboard.writeText(text);
       setToast('已复制自然排盘报告');
@@ -1820,7 +1737,7 @@ export default function App() {
     if (!reading) {
       return;
     }
-    const text = buildReportText(reading, note);
+    const text = buildReportText(reading);
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -1829,12 +1746,6 @@ export default function App() {
     link.click();
     URL.revokeObjectURL(url);
     setToast('已导出 txt 报告');
-  };
-
-  const saveNote = (value: string) => {
-    setNote(value);
-    window.localStorage.setItem('bazi-web-note', value);
-    setToast('断事笔记已保存');
   };
 
   const resetCase = () => {
@@ -1884,7 +1795,7 @@ export default function App() {
 
   return (
     <main className="report-shell">
-      <ReportSidebar activeNav={activeNav} onNavigate={scrollTo} />
+      <ReportTopNav activeNav={activeNav} onNavigate={scrollTo} />
 
       <div className="report-main">
         {error && <div className="error-box">{error}</div>}
@@ -1899,29 +1810,18 @@ export default function App() {
             <div ref={paipanRef}>
               <PaipanSection reading={reading} />
             </div>
+            <div ref={elementRef}>
+              <ElementBoard reading={reading} />
+            </div>
             <div ref={professionalRef}>
               <ProfessionalChartPanel reading={reading} />
-            </div>
-            <div className="detail-stack" ref={detailRef}>
-              <PortraitSection reading={reading} />
-              <DeepDivePanel reading={reading} />
-              <ElementBoard reading={reading} />
-              <AdvicePanel reading={reading} />
             </div>
             <div ref={luckRef}>
               <LuckIntegratedPanel reading={reading} />
             </div>
-            <div ref={notesRef}>
-              <NotesPanel
-                note={note}
-                onChange={setNote}
-                onClear={() => {
-                  setNote('');
-                  window.localStorage.removeItem('bazi-web-note');
-                  setToast('断事笔记已清空');
-                }}
-                onSave={saveNote}
-              />
+            <div className="detail-stack" ref={detailRef}>
+              <PortraitSection reading={reading} />
+              <DeepDivePanel reading={reading} />
             </div>
 
             <p className="disclaimer">以上为基于传统干支模型的结构化参考，不替代医学、法律、财务或人生重大决策建议。</p>
