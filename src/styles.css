@@ -835,11 +835,140 @@ textarea:focus {
   margin-top: 14px;
 }
 
+.domain-grid.compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .domain-grid h4,
 .mini-columns h4 {
   margin: 0 0 8px;
   color: #1f6f5d;
   font-size: 14px;
+}
+
+.luck-integrated-section {
+  display: grid;
+  gap: 16px;
+}
+
+.luck-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.luck-overview article,
+.luck-current-card,
+.luck-period-card {
+  border: 1px solid rgba(23, 33, 29, 0.09);
+  border-radius: 8px;
+  background: #fbfdfb;
+  padding: 15px;
+}
+
+.luck-overview strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #1f6f5d;
+  font-size: 14px;
+}
+
+.luck-overview p,
+.luck-period-body p,
+.luck-period-body li,
+.luck-period-card small {
+  color: #61736b;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.luck-current-card h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.luck-current-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.luck-current-head strong {
+  color: #9b4d24;
+  font-size: 30px;
+}
+
+.luck-current-head span {
+  color: #22362f;
+  font-weight: 900;
+}
+
+.luck-current-card > p {
+  color: #344a42;
+  line-height: 1.8;
+}
+
+.luck-period-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.luck-period-card {
+  display: grid;
+  gap: 12px;
+}
+
+.luck-period-card.current {
+  border-color: rgba(198, 113, 56, 0.34);
+  background:
+    linear-gradient(135deg, rgba(198, 113, 56, 0.1), rgba(255, 255, 255, 0.84)),
+    #fbfdfb;
+}
+
+.luck-period-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.luck-period-head strong {
+  display: block;
+  color: #9b4d24;
+  font-size: 26px;
+}
+
+.luck-period-head span {
+  display: inline-flex;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: rgba(31, 111, 93, 0.1);
+  color: #1f6f5d;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.luck-period-head p {
+  color: #22362f;
+  font-weight: 900;
+  text-align: right;
+}
+
+.luck-period-body ul {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.luck-period-card small {
+  display: block;
+  color: #9b4d24;
+  font-weight: 900;
 }
 
 .luck-year-grid {
@@ -1109,6 +1238,8 @@ textarea:focus {
   .portrait-grid,
   .life-grid,
   .domain-grid,
+  .luck-overview,
+  .luck-period-list,
   .luck-year-grid,
   .timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1156,6 +1287,9 @@ textarea:focus {
   .portrait-grid,
   .life-grid,
   .domain-grid,
+  .domain-grid.compact,
+  .luck-overview,
+  .luck-period-list,
   .luck-year-grid,
   .mini-columns,
   .timeline {

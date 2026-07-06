@@ -22,7 +22,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import { readingService } from './adapters/readingService';
-import type { BaziReading, BirthInput, DeepDomainKey, ReadingSection } from './core/types';
+import type { BaziReading, BirthInput, DeepDomainKey, ElementName, ReadingSection } from './core/types';
 
 const initialInput: BirthInput = {
   name: '1232',
@@ -34,7 +34,7 @@ const initialInput: BirthInput = {
 
 const sectionOrder: ReadingSection[] = ['overview', 'career', 'relationship', 'health', 'growth'];
 type AppStep = 'login' | 'birth' | 'report';
-type NavTarget = 'paipan' | 'analysis' | 'detail' | 'notes';
+type NavTarget = 'paipan' | 'detail' | 'luck' | 'notes';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 
@@ -143,6 +143,58 @@ function collectPairNotes(values: string[], rules: string[][], fallback: string)
     }
   });
   return notes.size ? [...notes].join('，') : fallback;
+}
+
+function getLuckPhase(period: BaziReading['daYun']['periods'][number]) {
+  if (period.endAge <= 22) {
+    return '成长期';
+  }
+  if (period.endAge <= 42) {
+    return '立业期';
+  }
+  if (period.endAge <= 62) {
+    return '沉淀期';
+  }
+  return '收束期';
+}
+
+function describeLuckPeriod(reading: BaziReading, period: BaziReading['daYun']['periods'][number]) {
+  const [stem, branch] = period.ganZhi.split('');
+  const stemWuXing = stemElement[stem] ?? '';
+  const branchWuXing = branchElement[branch] ?? '';
+  const usefulHits = [stemWuXing, branchWuXing].filter((element): element is ElementName =>
+    reading.usefulElements.includes(element as ElementName),
+  );
+  const repeatsDominant = [stemWuXing, branchWuXing].includes(reading.structure.dominantElement);
+  const branchNote = collectPairNotes(
+    [...reading.pillars.map((pillar) => pillar.branch), branch],
+    branchRelations,
+    '与原局地支未见明显冲合刑害，更多看五行补偏与十神落点。',
+  );
+  const stemNote = collectPairNotes(
+    [...reading.pillars.map((pillar) => pillar.stem), stem],
+    combinePairs,
+    '与原局天干未见明显合化，重点看该运天干所带出的做事方式。',
+  );
+  const theme = usefulHits.length
+    ? `这步运带${usefulHits.join('、')}，能补命局所需，适合主动经营关键机会。`
+    : repeatsDominant
+      ? `这步运加重${reading.structure.dominantElement}气，优势会更明显，但也容易把原本的惯性放大。`
+      : `这步运不直接落在首要喜用上，宜以稳定节奏和现实选择来借势。`;
+  const action = period.isCurrent
+    ? '当前正在此运，重要决定要同时看原局短板、流年触发和现实资源，不宜只凭一时情绪推进。'
+    : period.startYear > new Date().getFullYear()
+      ? '未来进入此运前，先把专业能力、现金流和关系边界准备好，届时更容易承接机会。'
+      : '这步运可作为回测样本，回看学习、迁移、事业压力、关系变化是否在此阶段明显被触发。';
+
+  return {
+    action,
+    branchNote,
+    phase: getLuckPhase(period),
+    stemNote,
+    theme,
+    usefulText: usefulHits.length ? `喜用触发：${usefulHits.join('、')}` : `喜用未显：以${reading.usefulElements.join('、')}为调候方向`,
+  };
 }
 
 function GanZhiGlyph({ value, type }: { value: string; type: 'stem' | 'branch' }) {
@@ -385,8 +437,8 @@ function PortraitSection({ reading }: { reading: BaziReading }) {
   return (
     <section className="section portrait-section">
       <div className="section-title">
-        <h2>你是这样的人</h2>
-        <span>青阳子批语 · 有据有断</span>
+        <h2>性格画像</h2>
+        <span>从日主、月令、十神和五行结构合看</span>
       </div>
       <div className="portrait-opening">
         <span className="eyebrow">{portrait.title}</span>
@@ -512,7 +564,7 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
   return (
     <section className="section deep-section">
       <div className="section-title">
-        <h2>专业深度详批</h2>
+        <h2>专业详批</h2>
         <span>
           {reading.deepDive.structureName} · 用神{reading.deepDive.usefulGod} · 喜神{reading.deepDive.favorableGod}
         </span>
@@ -577,19 +629,69 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
           </div>
         </div>
       </article>
-      <div className="luck-year-grid">
-        <article className="luck-card">
+    </section>
+  );
+}
+
+function LuckIntegratedPanel({ reading }: { reading: BaziReading }) {
+  const currentPeriod = reading.daYun.periods.find((period) => period.isCurrent);
+  const currentDescription = currentPeriod ? describeLuckPeriod(reading, currentPeriod) : null;
+
+  return (
+    <section className="section luck-integrated-section">
+      <div className="section-title">
+        <h2>大运合参</h2>
+        <span>
+          八字原局 + 十年大运 + 未来三年
+        </span>
+      </div>
+
+      <div className="luck-overview">
+        <article>
+          <strong>起运方式</strong>
+          <p>
+            {reading.daYun.direction}，{reading.daYun.startText}。大运不是单独看吉凶，而是看它把原局里的哪一股气引出来。
+          </p>
+        </article>
+        <article>
+          <strong>命局底盘</strong>
+          <p>
+            日主{reading.dayMaster.stem}，整体{reading.dayMaster.strength}；命局{reading.structure.dominantElement}气较显，喜用偏向
+            {reading.usefulElements.join('、')}。
+          </p>
+        </article>
+        <article>
+          <strong>当前重点</strong>
+          <p>
+            {currentPeriod && currentDescription
+              ? `${currentPeriod.ganZhi}运（${currentPeriod.startYear}-${currentPeriod.endYear}）处在${currentDescription.phase}，${currentDescription.theme}`
+              : '当前大运未能定位，建议检查出生时间与性别信息。'}
+          </p>
+        </article>
+      </div>
+
+      <div className="luck-current-grid">
+        <article className="luck-current-card">
           <h3>当前大运详批</h3>
-          {reading.deepDive.currentLuck ? (
+          {reading.deepDive.currentLuck && currentPeriod && currentDescription ? (
             <>
-              <strong>{reading.deepDive.currentLuck.ganZhi}</strong>
-              <p>
-                {reading.deepDive.currentLuck.years} · {reading.deepDive.currentLuck.ages}
-              </p>
+              <div className="luck-current-head">
+                <strong>{reading.deepDive.currentLuck.ganZhi}</strong>
+                <span>
+                  {reading.deepDive.currentLuck.years} · {reading.deepDive.currentLuck.ages}
+                </span>
+              </div>
               <p>{reading.deepDive.currentLuck.effect}</p>
-              <div className="mini-columns">
+              <div className="domain-grid compact">
                 <div>
-                  <h4>较利</h4>
+                  <h4>原局触发</h4>
+                  <ul>
+                    <li>{currentDescription.stemNote}</li>
+                    <li>{currentDescription.branchNote}</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>较利方向</h4>
                   <ul>
                     {reading.deepDive.currentLuck.bestFor.map((item) => (
                       <li key={item}>{item}</li>
@@ -597,11 +699,18 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
                   </ul>
                 </div>
                 <div>
-                  <h4>需防</h4>
+                  <h4>需要留意</h4>
                   <ul>
                     {reading.deepDive.currentLuck.caution.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4>行动取法</h4>
+                  <ul>
+                    <li>{currentDescription.action}</li>
+                    <li>{currentDescription.usefulText}</li>
                   </ul>
                 </div>
               </div>
@@ -610,50 +719,50 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
             <p>当前大运未能定位，请检查出生时间与性别信息。</p>
           )}
         </article>
-        <article className="year-card">
-          <h3>未来三年逐年提示</h3>
-          <div className="year-list">
-            {reading.deepDive.futureYears.map((year) => (
-              <div className="year-item" key={year.year}>
-                <strong>
-                  {year.year} · {year.ganZhi} · {year.theme}
-                </strong>
-                <p>{year.focus}</p>
-                <p>事业：{year.career}</p>
-                <p>关系：{year.relationship}</p>
-                <p>财务：{year.money}</p>
-                <small>提醒：{year.caution}</small>
-              </div>
-            ))}
-          </div>
-        </article>
       </div>
-    </section>
-  );
-}
 
-function DaYunTimeline({ reading }: { reading: BaziReading }) {
-  return (
-    <section className="section">
-      <div className="section-title">
-        <h2>大运节奏</h2>
-        <span>
-          {reading.daYun.direction} · {reading.daYun.startText}
-        </span>
-      </div>
-      <div className="timeline">
+      <div className="luck-period-list">
         {reading.daYun.periods.map((period) => (
-          <article className={period.isCurrent ? 'period current' : 'period'} key={`${period.startYear}-${period.ganZhi}`}>
-            <strong>{period.ganZhi}</strong>
-            <span>
-              {period.startYear}-{period.endYear}
-            </span>
-            <small>
-              {period.startAge}-{period.endAge}岁 · 空亡{period.xunKong}
-            </small>
+          <article className={period.isCurrent ? 'luck-period-card current' : 'luck-period-card'} key={`${period.startYear}-${period.ganZhi}`}>
+            <div className="luck-period-head">
+              <div>
+                <strong>{period.ganZhi}</strong>
+                <span>{describeLuckPeriod(reading, period).phase}</span>
+              </div>
+              <p>
+                {period.startYear}-{period.endYear} · {period.startAge}-{period.endAge}岁
+              </p>
+            </div>
+            <div className="luck-period-body">
+              <p>{describeLuckPeriod(reading, period).theme}</p>
+              <ul>
+                <li>{describeLuckPeriod(reading, period).stemNote}</li>
+                <li>{describeLuckPeriod(reading, period).branchNote}</li>
+                <li>{describeLuckPeriod(reading, period).action}</li>
+              </ul>
+            </div>
+            <small>空亡：{period.xunKong} · {describeLuckPeriod(reading, period).usefulText}</small>
           </article>
         ))}
       </div>
+
+      <article className="year-card">
+        <h3>未来三年逐年提示</h3>
+        <div className="year-list">
+          {reading.deepDive.futureYears.map((year) => (
+            <div className="year-item" key={year.year}>
+              <strong>
+                {year.year} · {year.ganZhi} · {year.theme}
+              </strong>
+              <p>{year.focus}</p>
+              <p>事业：{year.career}</p>
+              <p>关系：{year.relationship}</p>
+              <p>财务：{year.money}</p>
+              <small>提醒：{year.caution}</small>
+            </div>
+          ))}
+        </div>
+      </article>
     </section>
   );
 }
@@ -676,6 +785,12 @@ function buildReportText(reading: BaziReading, note: string) {
   const futureYears = reading.deepDive.futureYears
     .map((year) => `${year.year} ${year.ganZhi} ${year.theme}：${year.focus} 事业：${year.career} 关系：${year.relationship} 财务：${year.money} 提醒：${year.caution}`)
     .join('\n');
+  const luckPeriods = reading.daYun.periods
+    .map((period) => {
+      const description = describeLuckPeriod(reading, period);
+      return `${period.ganZhi} ${period.startYear}-${period.endYear} ${period.startAge}-${period.endAge}岁：${description.theme} ${description.stemNote} ${description.branchNote} ${description.action}`;
+    })
+    .join('\n');
 
   return [
     `自然排盘报告：${reading.input.name || '未命名'}`,
@@ -687,7 +802,7 @@ function buildReportText(reading: BaziReading, note: string) {
     `喜用：${reading.usefulElements.join('、')}`,
     `命宫：${reading.structure.mingGong}，身宫：${reading.structure.shenGong}，胎元：${reading.structure.taiYuan}`,
     '',
-    '【青阳子批语】',
+    '【专业详批：性格画像】',
     reading.portrait.opening,
     '',
     '【事业打法】',
@@ -699,12 +814,15 @@ function buildReportText(reading: BaziReading, note: string) {
     '【财务节奏】',
     reading.portrait.moneyStyle,
     '',
-    '【专业深度详批】',
+    '【专业详批：命局总论】',
     reading.deepDive.thesis,
     `格局取向：${reading.deepDive.structureName}`,
     `用神：${reading.deepDive.usefulGod}；喜神：${reading.deepDive.favorableGod}；忌神参考：${reading.deepDive.avoidGod}`,
     '',
     deepDomains,
+    '',
+    '【大运合参】',
+    luckPeriods,
     '',
     '【未来三年】',
     futureYears,
@@ -807,10 +925,10 @@ function LoginPage({
           </div>
         </div>
         <div className="hero-copy">
-          <p className="eyebrow">八字排盘 · 青阳子详批 · App-ready</p>
-          <h2>从出生信息到完整命理报告，按用户使用路径一步步生成。</h2>
+          <p className="eyebrow">八字排盘 · 专业详批 · 大运合参</p>
+          <h2>输入生辰，生成一份清晰可读的八字分析报告。</h2>
           <p>
-            当前网页版本已经把登录、资料录入、排盘分析拆成独立模块，后续接账号、订单、远程排盘 API 或原生 App Bridge 时可以直接替换服务层。
+            先建立档案，再录入出生信息，系统会把四柱、五行、格局、事业关系和大运节奏整理成结构化报告。
           </p>
         </div>
         <div className="feature-strip" aria-label="核心能力">
@@ -825,7 +943,7 @@ function LoginPage({
         <StepIndicator current="login" />
         <form onSubmit={handleSubmit}>
           <h2>登录自然排盘</h2>
-          <p>先建立一个临时档案，报告、断事笔记和后续 App 会员能力都可以围绕这个档案扩展。</p>
+          <p>建立一个档案，后续可以保存报告、记录断事笔记，并继续查看不同阶段的运势变化。</p>
           <label>
             <span>
               <UserRound size={15} /> 昵称 / 档案名
@@ -995,8 +1113,8 @@ export default function App() {
   const [toast, setToast] = useState('');
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
   const paipanRef = useRef<HTMLDivElement>(null);
-  const analysisRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
+  const luckRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -1010,8 +1128,8 @@ export default function App() {
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
       paipan: paipanRef,
-      analysis: analysisRef,
       detail: detailRef,
+      luck: luckRef,
       notes: notesRef,
     };
     setActiveNav(target);
@@ -1118,11 +1236,11 @@ export default function App() {
           <button className={activeNav === 'paipan' ? 'active' : ''} onClick={() => scrollTo('paipan')} type="button">
             排盘
           </button>
-          <button className={activeNav === 'analysis' ? 'active' : ''} onClick={() => scrollTo('analysis')} type="button">
-            青阳子分析
-          </button>
           <button className={activeNav === 'detail' ? 'active' : ''} onClick={() => scrollTo('detail')} type="button">
             专业详批
+          </button>
+          <button className={activeNav === 'luck' ? 'active' : ''} onClick={() => scrollTo('luck')} type="button">
+            大运合参
           </button>
           <button className={activeNav === 'notes' ? 'active' : ''} onClick={() => scrollTo('notes')} type="button">
             断事笔记
@@ -1143,14 +1261,14 @@ export default function App() {
             <div ref={paipanRef}>
               <PaipanSection reading={reading} />
             </div>
-            <div ref={analysisRef}>
-              <PortraitSection reading={reading} />
-            </div>
             <div className="detail-stack" ref={detailRef}>
+              <PortraitSection reading={reading} />
               <DeepDivePanel reading={reading} />
               <ElementBoard reading={reading} />
               <AdvicePanel reading={reading} />
-              <DaYunTimeline reading={reading} />
+            </div>
+            <div ref={luckRef}>
+              <LuckIntegratedPanel reading={reading} />
             </div>
             <div ref={notesRef}>
               <NotesPanel
