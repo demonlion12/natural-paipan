@@ -30,7 +30,7 @@ const initialInput: BirthInput = {
 
 type AppStep = 'login' | 'birth' | 'report';
 type NavTarget = 'paipan' | 'element' | 'professional' | 'luck' | 'detail';
-type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping';
+type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 
 const classicTabs: Array<{ key: ClassicKey; label: string }> = [
@@ -39,6 +39,12 @@ const classicTabs: Array<{ key: ClassicKey; label: string }> = [
   { key: 'sanming', label: '三命通会' },
   { key: 'tiyao', label: '八字提要' },
   { key: 'ziping', label: '子平真诠' },
+  { key: 'yuanhai', label: '渊海子平' },
+  { key: 'tianyuan', label: '天元巫咸' },
+  { key: 'shenfeng', label: '神峰通考' },
+  { key: 'qianli', label: '千里命稿' },
+  { key: 'wuxing', label: '五行精纪' },
+  { key: 'lixu', label: '李虚中命书' },
 ];
 
 function createReadingSafely(input: BirthInput) {
@@ -678,6 +684,48 @@ function AncientReference({ reading }: { reading: BaziReading }) {
         `若格局清，则事有主线；若混杂，则人生常需先筛选方向。你的盘面更适合把复杂机会收束成一条主线，不宜什么都抓。`,
       ],
     },
+    yuanhai: {
+      hint: '渊海子平重十神成象：财官印食伤各有用处，关键在有情无情。',
+      paragraphs: [
+        `此盘以日主${dayStem}为核心，先看月令${monthBranch}所主之气，再看透干${visibleStems}是否成局。若十神有情，则现实中做事有章法；若互相牵制，则容易一边想推进，一边被关系、资源或规则拖住。`,
+        `从子平法看，${reading.structure.highlightedTenGods.join('、') || '十神分布较散'}为较醒目的事务角色。它们会具体落在工作分工、合作方式、财务节奏和人际边界上。`,
+      ],
+    },
+    tianyuan: {
+      hint: '天元巫咸偏重天干气象：看透出之神是否清明，再定取舍。',
+      paragraphs: [
+        `天干为外显之气，此局透${visibleStems}，说明外在表现不只看性格，还看机会来时你会先动用哪一类能力。${dayStem}日主遇${monthBranch}月，宜先定主气，再分清扶抑。`,
+        `若岁运再引动${useful}，做事容易从“想明白”走到“做成形”；若岁运加重${dominant}之偏，则要防止判断过满、节奏过急或对单一方向投入过深。`,
+      ],
+    },
+    shenfeng: {
+      hint: '神峰通考重病药取象：先看偏处，再看何物能调。',
+      paragraphs: [
+        `此局之“病”不必理解为坏，而是命局里最容易失衡的地方。${dominant}显，是优势也是惯性；${missing}，则是现实中需要后天经营的功课。`,
+        `取“药”宜看${useful}。在选择行业、合作方式和长期方向时，凡能补${useful}、缓${dominant}之偏者，多半更利沉淀；反之，短期虽热，长期容易内耗。`,
+      ],
+    },
+    qianli: {
+      hint: '千里命稿偏重现代断法：格局、强弱、用神之后，落到职业与生活选择。',
+      paragraphs: [
+        `以现代应用看，此局不是单看旺弱，而要看“能力如何变现”。${reading.dayMaster.strength}时，行事最怕只凭情绪或短线反馈；能建立稳定节奏，优势更容易兑现。`,
+        `事业上宜把${reading.structure.highlightedTenGods.slice(0, 3).join('、') || '主要十神'}对应的能力做成可复用方法。关系和财务上，则要用规则感降低反复消耗。`,
+      ],
+    },
+    wuxing: {
+      hint: '五行精纪重五行生克制化：不只看数量，更看能否循环。',
+      paragraphs: [
+        `五行以${dominant}较显，${missing}为调候与平衡处。旺者不一定全吉，弱者不一定全凶，关键在生克是否形成通路。`,
+        `若能以${useful}引通，则才华、资源与执行之间更顺；若一处太旺而无泄无制，现实中容易表现为执着、反复、急躁或长期疲惫。`,
+      ],
+    },
+    lixu: {
+      hint: '李虚中命书重年命与三元气象：看根基、祖业、早年环境与命局底色。',
+      paragraphs: [
+        `年柱${reading.pillars[0].ganZhi}为根基气，月柱${reading.pillars[1].ganZhi}为成长环境与行事底色。早年受环境、规则、资源配置影响较明显，但真正成事仍要看日时与运势承接。`,
+        `此局后劲要看时柱${reading.pillars[3].ganZhi}与大运配合。若阶段运能补${useful}，后期越能靠经验、专业和稳定输出打开空间。`,
+      ],
+    },
   };
   const currentClassic = classicContent[activeClassic];
 
@@ -713,7 +761,7 @@ function AncientReference({ reading }: { reading: BaziReading }) {
   );
 }
 
-function PaipanSection({ reading }: { reading: BaziReading }) {
+function PaipanSection({ reading, elementRef }: { reading: BaziReading; elementRef: RefObject<HTMLDivElement | null> }) {
   const stemNotes = collectPairNotes(reading.pillars.map((pillar) => pillar.stem), combinePairs, '无合冲关系');
   const branchNotes = collectPairNotes(reading.pillars.map((pillar) => pillar.branch), branchRelations, '未见明显冲合刑害');
   const rows = [
@@ -767,7 +815,9 @@ function PaipanSection({ reading }: { reading: BaziReading }) {
             ))}
           </div>
         </article>
-        <AncientReference reading={reading} />
+        <div ref={elementRef}>
+          <ElementBoard reading={reading} compact />
+        </div>
       </div>
       <div className="paipan-notes">
         <p>
@@ -1028,9 +1078,9 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   );
 }
 
-function ElementBoard({ reading }: { reading: BaziReading }) {
+function ElementBoard({ reading, compact = false }: { reading: BaziReading; compact?: boolean }) {
   return (
-    <section className="section element-section">
+    <section className={compact ? 'section element-section compact' : 'section element-section'}>
       <div className="section-title">
         <h2>五行气势</h2>
         <span>喜用 {reading.usefulElements.join('、')}</span>
@@ -1655,9 +1705,9 @@ function ReportTopNav({
   const navItems: Array<{ key: NavTarget; label: string }> = [
     { key: 'paipan', label: '基本排盘' },
     { key: 'element', label: '五行气势' },
+    { key: 'detail', label: '专业详批' },
     { key: 'professional', label: '专业细盘' },
     { key: 'luck', label: '大运合参' },
-    { key: 'detail', label: '专业详批' },
   ];
 
   return (
@@ -1808,20 +1858,18 @@ export default function App() {
               reading={reading}
             />
             <div ref={paipanRef}>
-              <PaipanSection reading={reading} />
+              <PaipanSection reading={reading} elementRef={elementRef} />
             </div>
-            <div ref={elementRef}>
-              <ElementBoard reading={reading} />
+            <AncientReference reading={reading} />
+            <div className="detail-stack" ref={detailRef}>
+              <PortraitSection reading={reading} />
+              <DeepDivePanel reading={reading} />
             </div>
             <div ref={professionalRef}>
               <ProfessionalChartPanel reading={reading} />
             </div>
             <div ref={luckRef}>
               <LuckIntegratedPanel reading={reading} />
-            </div>
-            <div className="detail-stack" ref={detailRef}>
-              <PortraitSection reading={reading} />
-              <DeepDivePanel reading={reading} />
             </div>
 
             <p className="disclaimer">以上为基于传统干支模型的结构化参考，不替代医学、法律、财务或人生重大决策建议。</p>
