@@ -148,6 +148,7 @@ const monthTermDates = [
   { month: 12, day: 7 },
   { month: 1, day: 5 },
 ];
+const dayMs = 24 * 60 * 60 * 1000;
 
 const tianYiMap: Record<string, string[]> = {
   甲: ['丑', '未'],
@@ -824,10 +825,16 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
       ganZhi,
     };
   });
-  const selectedTermDate = monthTermDates[selectedMonthIndex];
-  const selectedTermYear = selectedMonthIndex === 11 ? selectedYear + 1 : selectedYear;
-  const flowDays = Array.from({ length: flowColumnCount }, (_, index) => {
-    const date = new Date(selectedTermYear, selectedTermDate.month - 1, selectedTermDate.day + index, 12, 0, 0);
+  const getTermStart = (year: number, monthIndex: number) => {
+    const termDate = monthTermDates[monthIndex];
+    return new Date(monthIndex === 11 ? year + 1 : year, termDate.month - 1, termDate.day, 12, 0, 0);
+  };
+  const selectedTermStart = getTermStart(selectedYear, selectedMonthIndex);
+  const nextTermStart = selectedMonthIndex === 11 ? getTermStart(selectedYear + 1, 0) : getTermStart(selectedYear, selectedMonthIndex + 1);
+  const flowDayCount = Math.max(28, Math.round((nextTermStart.getTime() - selectedTermStart.getTime()) / dayMs));
+  const flowDays = Array.from({ length: flowDayCount }, (_, index) => {
+    const date = new Date(selectedTermStart);
+    date.setDate(selectedTermStart.getDate() + index);
     const solar = Solar.fromYmdHms(date.getFullYear(), date.getMonth() + 1, date.getDate(), 12, 0, 0);
     const lunar = solar.getLunar();
     const ganZhi = lunar.getEightChar().getDay();
@@ -878,7 +885,13 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
         <div className="professional-title-actions">
           <label>
             <span>流年</span>
-            <select value={selectedYear} onChange={(event) => setSelectedYear(Number(event.target.value))}>
+            <select
+              value={selectedYear}
+              onChange={(event) => {
+                setSelectedYear(Number(event.target.value));
+                setSelectedDayIndex(0);
+              }}
+            >
               {selectableYears.map((year) => (
                 <option key={year} value={year}>
                   {year}
@@ -925,76 +938,86 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
             <small>日主：{reading.dayMaster.stem} · 点击流年 / 流月 / 流日切换</small>
           </div>
 
-          <div className="flow-matrix">
-            <div className="flow-label">大运</div>
-            {displayedLuckPeriods.map((period, index) => (
-              <div className={period?.ganZhi === currentLuck.ganZhi ? 'flow-cell current' : 'flow-cell'} key={period?.ganZhi ?? `luck-empty-${index}`}>
-                {period ? (
-                  <>
-                    <small>{period.startYear}</small>
-                    <strong>{period.ganZhi}</strong>
-                    <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
-                  </>
-                ) : (
-                  <span>-</span>
-                )}
+          <div className="flow-stack">
+            <div className="flow-matrix">
+              <div className="flow-label">大运</div>
+              {displayedLuckPeriods.map((period, index) => (
+                <div className={period?.ganZhi === currentLuck.ganZhi ? 'flow-cell current' : 'flow-cell'} key={period?.ganZhi ?? `luck-empty-${index}`}>
+                  {period ? (
+                    <>
+                      <small>{period.startYear}</small>
+                      <strong>{period.ganZhi}</strong>
+                      <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
+                    </>
+                  ) : (
+                    <span>-</span>
+                  )}
+                </div>
+              ))}
+
+              <div className="flow-label">流年</div>
+              {nextYears.map((year) => (
+                <button
+                  type="button"
+                  className={year.year === selectedYear ? 'flow-cell current' : 'flow-cell'}
+                  key={year.year}
+                  onClick={() => {
+                    setSelectedYear(year.year);
+                    setSelectedDayIndex(0);
+                  }}
+                  aria-label={`切换到${year.year}流年`}
+                >
+                  <small>{year.year}</small>
+                  <strong>{year.ganZhi}</strong>
+                  <span>{getTenGod(reading.dayMaster.stem, year.ganZhi[0])}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="flow-strip">
+              <div className="flow-label">流月</div>
+              <div className="flow-scroll" aria-label="流月横向列表">
+                {flowMonths.map((month, index) => (
+                  <button
+                    type="button"
+                    className={index === selectedMonthIndex ? 'flow-cell current' : 'flow-cell'}
+                    key={`${month.term}-${month.ganZhi}`}
+                    onClick={() => {
+                      setSelectedMonthIndex(index);
+                      setSelectedDayIndex(0);
+                    }}
+                    aria-label={`切换到${month.term}${month.ganZhi}流月`}
+                  >
+                    <small>{month.term}</small>
+                    <strong>{month.ganZhi}</strong>
+                    <span>{getTenGod(reading.dayMaster.stem, month.ganZhi[0])}</span>
+                  </button>
+                ))}
               </div>
-            ))}
+            </div>
 
-            <div className="flow-label">流年</div>
-            {nextYears.map((year) => (
-              <button
-                type="button"
-                className={year.year === selectedYear ? 'flow-cell current' : 'flow-cell'}
-                key={year.year}
-                onClick={() => {
-                  setSelectedYear(year.year);
-                  setSelectedDayIndex(0);
-                }}
-                aria-label={`切换到${year.year}流年`}
-              >
-                <small>{year.year}</small>
-                <strong>{year.ganZhi}</strong>
-                <span>{getTenGod(reading.dayMaster.stem, year.ganZhi[0])}</span>
-              </button>
-            ))}
-
-            <div className="flow-label">流月</div>
-            {flowMonths.map((month, index) => (
-              <button
-                type="button"
-                className={index === selectedMonthIndex ? 'flow-cell current' : 'flow-cell'}
-                key={`${month.term}-${month.ganZhi}`}
-                onClick={() => {
-                  setSelectedMonthIndex(index);
-                  setSelectedDayIndex(0);
-                }}
-                aria-label={`切换到${month.term}${month.ganZhi}流月`}
-              >
-                <small>{month.term}</small>
-                <strong>{month.ganZhi}</strong>
-                <span>{getTenGod(reading.dayMaster.stem, month.ganZhi[0])}</span>
-              </button>
-            ))}
-
-            <div className="flow-label">流日</div>
-            {flowDays.map((day, index) => (
-              <button
-                type="button"
-                className={index === selectedDayIndex ? 'flow-cell current' : 'flow-cell'}
-                key={`${day.dateText}-${day.ganZhi}`}
-                onClick={() => setSelectedDayIndex(index)}
-                aria-label={`切换到${day.dateText}${day.ganZhi}流日`}
-              >
-                <small>
-                  {day.label}
-                  <br />
-                  {day.dateText}
-                </small>
-                <strong>{day.ganZhi}</strong>
-                <span>{getTenGod(reading.dayMaster.stem, day.ganZhi[0])}</span>
-              </button>
-            ))}
+            <div className="flow-strip">
+              <div className="flow-label">流日</div>
+              <div className="flow-scroll day-scroll" aria-label="流日横向列表">
+                {flowDays.map((day, index) => (
+                  <button
+                    type="button"
+                    className={index === selectedDayIndex ? 'flow-cell current' : 'flow-cell'}
+                    key={`${day.dateText}-${day.ganZhi}`}
+                    onClick={() => setSelectedDayIndex(index)}
+                    aria-label={`切换到${day.dateText}${day.ganZhi}流日`}
+                  >
+                    <small>
+                      {day.label}
+                      <br />
+                      {day.dateText}
+                    </small>
+                    <strong>{day.ganZhi}</strong>
+                    <span>{getTenGod(reading.dayMaster.stem, day.ganZhi[0])}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="flow-summary">
@@ -1706,11 +1729,9 @@ function BirthSetupPage({
 
 function ReportSidebar({
   activeNav,
-  onEdit,
   onNavigate,
 }: {
   activeNav: NavTarget;
-  onEdit: () => void;
   onNavigate: (target: NavTarget) => void;
 }) {
   const navItems: Array<{ key: NavTarget; label: string }> = [
@@ -1730,11 +1751,6 @@ function ReportSidebar({
           <span>命盘报告</span>
         </div>
       </div>
-
-      <button className="sidebar-edit" onClick={onEdit} type="button">
-        <Edit3 size={16} />
-        基本信息
-      </button>
 
       <nav className="sidebar-nav" aria-label="报告导航">
         {navItems.map((item) => (
@@ -1868,7 +1884,7 @@ export default function App() {
 
   return (
     <main className="report-shell">
-      <ReportSidebar activeNav={activeNav} onEdit={() => setStep('birth')} onNavigate={scrollTo} />
+      <ReportSidebar activeNav={activeNav} onNavigate={scrollTo} />
 
       <div className="report-main">
         {error && <div className="error-box">{error}</div>}

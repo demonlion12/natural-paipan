@@ -385,7 +385,6 @@ textarea:focus {
   font-size: 12px;
 }
 
-.sidebar-edit,
 .sidebar-nav button {
   display: flex;
   min-height: 46px;
@@ -400,18 +399,13 @@ textarea:focus {
   text-align: left;
 }
 
-.sidebar-edit {
-  color: #1f6f5d;
-}
-
 .sidebar-nav {
   display: grid;
   gap: 8px;
 }
 
 .sidebar-nav button.active,
-.sidebar-nav button:hover,
-.sidebar-edit:hover {
+.sidebar-nav button:hover {
   border-color: #1f6f5d;
   background: #1f6f5d;
   color: #fff;
@@ -769,12 +763,48 @@ textarea:focus {
   font-weight: 800;
 }
 
+.flow-stack {
+  display: grid;
+}
+
 .flow-matrix {
   display: grid;
   grid-template-columns: 64px repeat(12, minmax(58px, 1fr));
   overflow-x: auto;
   border: 1px solid #edf1ee;
   border-radius: 8px;
+}
+
+.flow-strip {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  border-right: 1px solid #edf1ee;
+  border-bottom: 1px solid #edf1ee;
+  border-left: 1px solid #edf1ee;
+}
+
+.flow-strip:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.flow-strip .flow-label {
+  border-bottom: 0;
+}
+
+.flow-scroll {
+  display: grid;
+  grid-auto-columns: minmax(76px, 86px);
+  grid-auto-flow: column;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.day-scroll {
+  grid-auto-columns: minmax(72px, 80px);
+}
+
+.flow-scroll .flow-cell {
+  border-bottom: 0;
 }
 
 .flow-label,
@@ -1487,7 +1517,6 @@ button.flow-cell.current:focus-visible {
     grid-template-columns: 1fr 1fr;
   }
 
-  .sidebar-edit,
   .sidebar-nav button,
   .edit-button {
     width: 100%;
