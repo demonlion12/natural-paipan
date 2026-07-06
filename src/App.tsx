@@ -134,6 +134,58 @@ const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申',
 const monthBranches = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
 const monthTerms = ['立春', '惊蛰', '清明', '立夏', '芒种', '小暑', '立秋', '白露', '寒露', '立冬', '大雪', '小寒'];
 
+const tianYiMap: Record<string, string[]> = {
+  甲: ['丑', '未'],
+  戊: ['丑', '未'],
+  庚: ['丑', '未'],
+  乙: ['子', '申'],
+  己: ['子', '申'],
+  丙: ['亥', '酉'],
+  丁: ['亥', '酉'],
+  壬: ['卯', '巳'],
+  癸: ['卯', '巳'],
+  辛: ['寅', '午'],
+};
+
+const wenChangMap: Record<string, string> = {
+  甲: '巳',
+  乙: '午',
+  丙: '申',
+  丁: '酉',
+  戊: '申',
+  己: '酉',
+  庚: '亥',
+  辛: '子',
+  壬: '寅',
+  癸: '卯',
+};
+
+const luShenMap: Record<string, string> = {
+  甲: '寅',
+  乙: '卯',
+  丙: '巳',
+  丁: '午',
+  戊: '巳',
+  己: '午',
+  庚: '申',
+  辛: '酉',
+  壬: '亥',
+  癸: '子',
+};
+
+const yangRenMap: Record<string, string> = {
+  甲: '卯',
+  乙: '寅',
+  丙: '午',
+  丁: '巳',
+  戊: '午',
+  己: '巳',
+  庚: '酉',
+  辛: '申',
+  壬: '子',
+  癸: '亥',
+};
+
 const combinePairs = [
   ['甲', '己', '甲己合土'],
   ['乙', '庚', '乙庚合金'],
@@ -229,6 +281,53 @@ function getTenGod(dayStem: string, targetStem: string) {
   return samePolarity ? '七杀' : '正官';
 }
 
+function getBranchGroupStar(referenceBranch: string, targetBranch: string, map: Record<string, string[]>, label: string) {
+  const matched = Object.entries(map).find(([branchesInGroup, starBranch]) => {
+    return branchesInGroup.includes(referenceBranch) && starBranch.includes(targetBranch);
+  });
+  return matched ? label : '';
+}
+
+function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBranch: string) {
+  const dayStem = reading.dayMaster.stem;
+  const dayBranch = reading.pillars.find((pillar) => pillar.key === 'day')?.branch ?? '';
+  const yearBranch = reading.pillars.find((pillar) => pillar.key === 'year')?.branch ?? '';
+  const stars = new Set<string>();
+
+  if ((tianYiMap[dayStem] ?? []).includes(targetBranch)) {
+    stars.add('天乙贵人');
+  }
+  if (wenChangMap[dayStem] === targetBranch) {
+    stars.add('文昌贵人');
+  }
+  if (luShenMap[dayStem] === targetBranch) {
+    stars.add('禄神');
+  }
+  if (yangRenMap[dayStem] === targetBranch) {
+    stars.add('羊刃');
+  }
+
+  const groupMaps = [
+    { label: '桃花', map: { 申子辰: ['酉'], 寅午戌: ['卯'], 巳酉丑: ['午'], 亥卯未: ['子'] } },
+    { label: '驿马', map: { 申子辰: ['寅'], 寅午戌: ['申'], 巳酉丑: ['亥'], 亥卯未: ['巳'] } },
+    { label: '华盖', map: { 申子辰: ['辰'], 寅午戌: ['戌'], 巳酉丑: ['丑'], 亥卯未: ['未'] } },
+    { label: '将星', map: { 申子辰: ['子'], 寅午戌: ['午'], 巳酉丑: ['酉'], 亥卯未: ['卯'] } },
+  ];
+  [dayBranch, yearBranch].filter(Boolean).forEach((referenceBranch) => {
+    groupMaps.forEach((item) => {
+      const star = getBranchGroupStar(referenceBranch, targetBranch, item.map, item.label);
+      if (star) {
+        stars.add(star);
+      }
+    });
+  });
+
+  if (targetStem === dayStem) {
+    stars.add('伏吟');
+  }
+  return [...stars].slice(0, 5);
+}
+
 function createVirtualColumn(label: string, ganZhi: string, reading: BaziReading) {
   const [stem, branch] = ganZhi.split('');
   const hiddenStems = branchHiddenStems[branch] ?? [];
@@ -240,6 +339,7 @@ function createVirtualColumn(label: string, ganZhi: string, reading: BaziReading
     hiddenStems,
     stemTenGod: getTenGod(reading.dayMaster.stem, stem),
     branchTenGods: hiddenStems.map((hiddenStem) => getTenGod(reading.dayMaster.stem, hiddenStem)),
+    shenSha: getShenShaForBranch(reading, stem, branch),
     diShi: '-',
     xunKong: '-',
     naYin: '-',
@@ -453,6 +553,12 @@ function PaipanSection({ reading }: { reading: BaziReading }) {
     { label: '自坐', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.diShi}</span> },
     { label: '空亡', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.xunKong}</span> },
     { label: '纳音', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.naYin}</span> },
+    {
+      label: '神煞',
+      render: (pillar: BaziReading['pillars'][number]) => (
+        <span className="stacked-text shensha-text">{getShenShaForBranch(reading, pillar.stem, pillar.branch).join('\n') || '-'}</span>
+      ),
+    },
   ];
 
   return (
@@ -496,18 +602,26 @@ function PaipanSection({ reading }: { reading: BaziReading }) {
 
 function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   const currentYear = new Date().getFullYear();
-  const currentLuck = reading.daYun.periods.find((period) => period.isCurrent) ?? reading.daYun.periods[0];
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const selectableYears = Array.from({ length: 41 }, (_, index) => currentYear - 10 + index);
+  const currentLuck =
+    reading.daYun.periods.find((period) => selectedYear >= period.startYear && selectedYear <= period.endYear) ??
+    reading.daYun.periods.find((period) => period.isCurrent) ??
+    reading.daYun.periods[0];
   const currentYearGanZhi =
-    reading.annual.year === currentYear ? reading.annual.ganZhi : advanceGanZhi(reading.annual.ganZhi, currentYear - reading.annual.year);
+    reading.annual.year === selectedYear ? reading.annual.ganZhi : advanceGanZhi(reading.annual.ganZhi, selectedYear - reading.annual.year);
   const detailColumns = [
     createVirtualColumn('流年', currentYearGanZhi, reading),
     createVirtualColumn('大运', currentLuck.ganZhi, reading),
-    ...reading.pillars,
+    ...reading.pillars.map((pillar) => ({
+      ...pillar,
+      shenSha: getShenShaForBranch(reading, pillar.stem, pillar.branch),
+    })),
   ];
   const stemNotes = collectPairNotes(detailColumns.map((column) => column.stem), combinePairs, '天干暂未见明显合化，重点看十神与五行补偏。');
   const branchNotes = collectPairNotes(detailColumns.map((column) => column.branch), branchRelations, '地支暂未见明显冲合刑害，重点看岁运是否引动原局。');
   const nextYears = Array.from({ length: 8 }, (_, index) => {
-    const year = currentYear + index;
+    const year = selectedYear + index;
     return {
       year,
       ganZhi: advanceGanZhi(currentYearGanZhi, index),
@@ -537,15 +651,28 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
     { label: '星运', render: (column: typeof detailColumns[number]) => <span>{column.diShi}</span> },
     { label: '空亡', render: (column: typeof detailColumns[number]) => <span>{column.xunKong}</span> },
     { label: '纳音', render: (column: typeof detailColumns[number]) => <span>{column.naYin}</span> },
+    { label: '神煞', render: (column: typeof detailColumns[number]) => <span className="stacked-text shensha-text">{column.shenSha.join('\n') || '-'}</span> },
   ];
 
   return (
     <section className="section professional-chart-section">
       <div className="section-title">
         <h2>专业细盘</h2>
-        <span>
-          {currentYear}流年 · {currentLuck.ganZhi}大运 · 原局同看
-        </span>
+        <div className="professional-title-actions">
+          <label>
+            <span>流年</span>
+            <select value={selectedYear} onChange={(event) => setSelectedYear(Number(event.target.value))}>
+              {selectableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </label>
+          <span>
+            {selectedYear}流年 · {currentLuck.ganZhi}大运 · 原局同看
+          </span>
+        </div>
       </div>
 
       <div className="professional-grid">
@@ -584,7 +711,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
           <div className="flow-matrix">
             <div className="flow-label">大运</div>
             {reading.daYun.periods.slice(0, 8).map((period) => (
-              <div className={period.isCurrent ? 'flow-cell current' : 'flow-cell'} key={period.ganZhi}>
+              <div className={period.ganZhi === currentLuck.ganZhi ? 'flow-cell current' : 'flow-cell'} key={period.ganZhi}>
                 <small>{period.startYear}</small>
                 <strong>{period.ganZhi}</strong>
                 <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
@@ -593,7 +720,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
 
             <div className="flow-label">流年</div>
             {nextYears.map((year) => (
-              <div className={year.year === currentYear ? 'flow-cell current' : 'flow-cell'} key={year.year}>
+              <div className={year.year === selectedYear ? 'flow-cell current' : 'flow-cell'} key={year.year}>
                 <small>{year.year}</small>
                 <strong>{year.ganZhi}</strong>
                 <span>{getTenGod(reading.dayMaster.stem, year.ganZhi[0])}</span>

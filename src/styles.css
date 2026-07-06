@@ -653,6 +653,41 @@ textarea:focus {
   gap: 16px;
 }
 
+.professional-title-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.professional-title-actions label {
+  display: flex;
+  grid-template-columns: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.professional-title-actions label > span {
+  color: #61736b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.professional-title-actions select {
+  min-height: 34px;
+  width: 108px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 9px;
+}
+
+.professional-title-actions > span {
+  color: #61736b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
 .professional-grid {
   display: grid;
   grid-template-columns: minmax(680px, 1.08fr) minmax(500px, 0.92fr);
@@ -697,6 +732,13 @@ textarea:focus {
 .professional-head > div {
   color: #7c8b84;
   font-weight: 900;
+}
+
+.shensha-text {
+  color: #b08b49;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.55;
 }
 
 .flow-board {
