@@ -34,7 +34,7 @@ const initialInput: BirthInput = {
 
 const sectionOrder: ReadingSection[] = ['overview', 'career', 'relationship', 'health', 'growth'];
 type AppStep = 'login' | 'birth' | 'report';
-type NavTarget = 'paipan' | 'detail' | 'luck' | 'notes';
+type NavTarget = 'paipan' | 'professional' | 'detail' | 'luck' | 'notes';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 
@@ -101,6 +101,39 @@ const stemElement: Record<string, string> = {
   癸: '水',
 };
 
+const stemPolarity: Record<string, '阳' | '阴'> = {
+  甲: '阳',
+  乙: '阴',
+  丙: '阳',
+  丁: '阴',
+  戊: '阳',
+  己: '阴',
+  庚: '阳',
+  辛: '阴',
+  壬: '阳',
+  癸: '阴',
+};
+
+const branchHiddenStems: Record<string, string[]> = {
+  子: ['癸'],
+  丑: ['己', '癸', '辛'],
+  寅: ['甲', '丙', '戊'],
+  卯: ['乙'],
+  辰: ['戊', '乙', '癸'],
+  巳: ['丙', '庚', '戊'],
+  午: ['丁', '己'],
+  未: ['己', '丁', '乙'],
+  申: ['庚', '壬', '戊'],
+  酉: ['辛'],
+  戌: ['戊', '辛', '丁'],
+  亥: ['壬', '甲'],
+};
+
+const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const monthBranches = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
+const monthTerms = ['立春', '惊蛰', '清明', '立夏', '芒种', '小暑', '立秋', '白露', '寒露', '立冬', '大雪', '小寒'];
+
 const combinePairs = [
   ['甲', '己', '甲己合土'],
   ['乙', '庚', '乙庚合金'],
@@ -143,6 +176,74 @@ function collectPairNotes(values: string[], rules: string[][], fallback: string)
     }
   });
   return notes.size ? [...notes].join('，') : fallback;
+}
+
+function advanceGanZhi(baseGanZhi: string, offset: number) {
+  const [stem, branch] = baseGanZhi.split('');
+  const stemIndex = stems.indexOf(stem);
+  const branchIndex = branches.indexOf(branch);
+  if (stemIndex < 0 || branchIndex < 0) {
+    return baseGanZhi;
+  }
+  return `${stems[(stemIndex + offset + stems.length * 20) % stems.length]}${branches[(branchIndex + offset + branches.length * 20) % branches.length]}`;
+}
+
+function getTenGod(dayStem: string, targetStem: string) {
+  const dayElement = stemElement[dayStem];
+  const targetElement = stemElement[targetStem];
+  const samePolarity = stemPolarity[dayStem] === stemPolarity[targetStem];
+
+  if (!dayElement || !targetElement) {
+    return '-';
+  }
+  if (dayElement === targetElement) {
+    return samePolarity ? '比肩' : '劫财';
+  }
+  if (
+    (dayElement === '木' && targetElement === '火') ||
+    (dayElement === '火' && targetElement === '土') ||
+    (dayElement === '土' && targetElement === '金') ||
+    (dayElement === '金' && targetElement === '水') ||
+    (dayElement === '水' && targetElement === '木')
+  ) {
+    return samePolarity ? '食神' : '伤官';
+  }
+  if (
+    (targetElement === '木' && dayElement === '火') ||
+    (targetElement === '火' && dayElement === '土') ||
+    (targetElement === '土' && dayElement === '金') ||
+    (targetElement === '金' && dayElement === '水') ||
+    (targetElement === '水' && dayElement === '木')
+  ) {
+    return samePolarity ? '偏印' : '正印';
+  }
+  if (
+    (dayElement === '木' && targetElement === '土') ||
+    (dayElement === '火' && targetElement === '金') ||
+    (dayElement === '土' && targetElement === '水') ||
+    (dayElement === '金' && targetElement === '木') ||
+    (dayElement === '水' && targetElement === '火')
+  ) {
+    return samePolarity ? '偏财' : '正财';
+  }
+  return samePolarity ? '七杀' : '正官';
+}
+
+function createVirtualColumn(label: string, ganZhi: string, reading: BaziReading) {
+  const [stem, branch] = ganZhi.split('');
+  const hiddenStems = branchHiddenStems[branch] ?? [];
+  return {
+    label,
+    ganZhi,
+    stem,
+    branch,
+    hiddenStems,
+    stemTenGod: getTenGod(reading.dayMaster.stem, stem),
+    branchTenGods: hiddenStems.map((hiddenStem) => getTenGod(reading.dayMaster.stem, hiddenStem)),
+    diShi: '-',
+    xunKong: '-',
+    naYin: '-',
+  };
 }
 
 function getLuckPhase(period: BaziReading['daYun']['periods'][number]) {
@@ -379,6 +480,144 @@ function PaipanSection({ reading }: { reading: BaziReading }) {
         </article>
         <AncientReference reading={reading} />
       </div>
+      <div className="paipan-notes">
+        <p>
+          <strong>天干留意：</strong>
+          {stemNotes}
+        </p>
+        <p>
+          <strong>地支留意：</strong>
+          {branchNotes}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
+  const currentYear = new Date().getFullYear();
+  const currentLuck = reading.daYun.periods.find((period) => period.isCurrent) ?? reading.daYun.periods[0];
+  const currentYearGanZhi =
+    reading.annual.year === currentYear ? reading.annual.ganZhi : advanceGanZhi(reading.annual.ganZhi, currentYear - reading.annual.year);
+  const detailColumns = [
+    createVirtualColumn('流年', currentYearGanZhi, reading),
+    createVirtualColumn('大运', currentLuck.ganZhi, reading),
+    ...reading.pillars,
+  ];
+  const stemNotes = collectPairNotes(detailColumns.map((column) => column.stem), combinePairs, '天干暂未见明显合化，重点看十神与五行补偏。');
+  const branchNotes = collectPairNotes(detailColumns.map((column) => column.branch), branchRelations, '地支暂未见明显冲合刑害，重点看岁运是否引动原局。');
+  const nextYears = Array.from({ length: 8 }, (_, index) => {
+    const year = currentYear + index;
+    return {
+      year,
+      ganZhi: advanceGanZhi(currentYearGanZhi, index),
+    };
+  });
+  const flowMonths = monthBranches.map((branch, index) => {
+    const ganZhi = `${stems[(stems.indexOf(currentYearGanZhi[0]) * 2 + index + 2) % stems.length]}${branch}`;
+    return {
+      term: monthTerms[index],
+      ganZhi,
+    };
+  });
+  const rows = [
+    { label: '主星', render: (column: typeof detailColumns[number]) => <strong>{column.stemTenGod}</strong> },
+    { label: '天干', render: (column: typeof detailColumns[number]) => <GanZhiGlyph value={column.stem} type="stem" /> },
+    { label: '地支', render: (column: typeof detailColumns[number]) => <GanZhiGlyph value={column.branch} type="branch" /> },
+    {
+      label: '藏干',
+      render: (column: typeof detailColumns[number]) => (
+        <span className="stacked-text">{column.hiddenStems.map((stem) => `${stem}${stemElement[stem]}`).join('\n') || '-'}</span>
+      ),
+    },
+    {
+      label: '副星',
+      render: (column: typeof detailColumns[number]) => <span className="stacked-text">{column.branchTenGods.join('\n') || '-'}</span>,
+    },
+    { label: '星运', render: (column: typeof detailColumns[number]) => <span>{column.diShi}</span> },
+    { label: '空亡', render: (column: typeof detailColumns[number]) => <span>{column.xunKong}</span> },
+    { label: '纳音', render: (column: typeof detailColumns[number]) => <span>{column.naYin}</span> },
+  ];
+
+  return (
+    <section className="section professional-chart-section">
+      <div className="section-title">
+        <h2>专业细盘</h2>
+        <span>
+          {currentYear}流年 · {currentLuck.ganZhi}大运 · 原局同看
+        </span>
+      </div>
+
+      <div className="professional-grid">
+        <article className="professional-table-card">
+          <div className="professional-table">
+            <div className="professional-row professional-head">
+              <div>日期</div>
+              {detailColumns.map((column) => (
+                <div key={column.label}>{column.label}</div>
+              ))}
+            </div>
+            {rows.map((row) => (
+              <div className="professional-row" key={row.label}>
+                <div className="row-label">{row.label}</div>
+                {detailColumns.map((column) => (
+                  <div className="paipan-cell" key={`${row.label}-${column.label}`}>
+                    {row.render(column)}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="flow-board">
+          <div className="flow-board-head">
+            <div>
+              <strong>岁运盘</strong>
+              <span>
+                起运：{reading.daYun.startText} · {reading.daYun.direction}
+              </span>
+            </div>
+            <small>日主：{reading.dayMaster.stem}</small>
+          </div>
+
+          <div className="flow-matrix">
+            <div className="flow-label">大运</div>
+            {reading.daYun.periods.slice(0, 8).map((period) => (
+              <div className={period.isCurrent ? 'flow-cell current' : 'flow-cell'} key={period.ganZhi}>
+                <small>{period.startYear}</small>
+                <strong>{period.ganZhi}</strong>
+                <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
+              </div>
+            ))}
+
+            <div className="flow-label">流年</div>
+            {nextYears.map((year) => (
+              <div className={year.year === currentYear ? 'flow-cell current' : 'flow-cell'} key={year.year}>
+                <small>{year.year}</small>
+                <strong>{year.ganZhi}</strong>
+                <span>{getTenGod(reading.dayMaster.stem, year.ganZhi[0])}</span>
+              </div>
+            ))}
+
+            <div className="flow-label">流月</div>
+            {flowMonths.slice(0, 8).map((month) => (
+              <div className="flow-cell" key={`${month.term}-${month.ganZhi}`}>
+                <small>{month.term}</small>
+                <strong>{month.ganZhi}</strong>
+                <span>{getTenGod(reading.dayMaster.stem, month.ganZhi[0])}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flow-summary">
+            <span>{reading.usefulElements[0]}旺</span>
+            <span>{reading.structure.dominantElement}显</span>
+            <span>{reading.dayMaster.strength}</span>
+          </div>
+        </article>
+      </div>
+
       <div className="paipan-notes">
         <p>
           <strong>天干留意：</strong>
@@ -874,30 +1113,6 @@ function NotesPanel({
   );
 }
 
-function StepIndicator({ current }: { current: AppStep }) {
-  const steps: Array<{ key: AppStep; label: string; caption: string }> = [
-    { key: 'login', label: '登录', caption: '保存档案' },
-    { key: 'birth', label: '生辰', caption: '录入资料' },
-    { key: 'report', label: '报告', caption: '排盘详批' },
-  ];
-
-  const currentIndex = steps.findIndex((step) => step.key === current);
-
-  return (
-    <div className="step-indicator" aria-label="当前流程">
-      {steps.map((step, index) => (
-        <div className={index <= currentIndex ? 'step-pill active' : 'step-pill'} key={step.key}>
-          <span>{index + 1}</span>
-          <div>
-            <strong>{step.label}</strong>
-            <small>{step.caption}</small>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function LoginPage({
   profileName,
   onChangeName,
@@ -940,7 +1155,6 @@ function LoginPage({
       </section>
 
       <section className="auth-card">
-        <StepIndicator current="login" />
         <form onSubmit={handleSubmit}>
           <h2>登录自然排盘</h2>
           <p>建立一个档案，后续可以保存报告、记录断事笔记，并继续查看不同阶段的运势变化。</p>
@@ -1009,7 +1223,6 @@ function BirthSetupPage({
             <ArrowLeft size={17} />
             返回
           </button>
-          <StepIndicator current="birth" />
         </div>
 
         <div className="birth-heading">
@@ -1104,6 +1317,49 @@ function BirthSetupPage({
   );
 }
 
+function ReportSidebar({
+  activeNav,
+  onEdit,
+  onNavigate,
+}: {
+  activeNav: NavTarget;
+  onEdit: () => void;
+  onNavigate: (target: NavTarget) => void;
+}) {
+  const navItems: Array<{ key: NavTarget; label: string }> = [
+    { key: 'paipan', label: '基本排盘' },
+    { key: 'professional', label: '专业细盘' },
+    { key: 'detail', label: '专业详批' },
+    { key: 'luck', label: '大运合参' },
+    { key: 'notes', label: '断事笔记' },
+  ];
+
+  return (
+    <aside className="report-sidebar">
+      <div className="sidebar-brand">
+        <div className="brand-symbol">自</div>
+        <div>
+          <strong>自然排盘</strong>
+          <span>命盘报告</span>
+        </div>
+      </div>
+
+      <button className="sidebar-edit" onClick={onEdit} type="button">
+        <Edit3 size={16} />
+        基本信息
+      </button>
+
+      <nav className="sidebar-nav" aria-label="报告导航">
+        {navItems.map((item) => (
+          <button className={activeNav === item.key ? 'active' : ''} key={item.key} onClick={() => onNavigate(item.key)} type="button">
+            {item.label}
+          </button>
+        ))}
+      </nav>
+    </aside>
+  );
+}
+
 export default function App() {
   const [input, setInput] = useState(initialInput);
   const [submitted, setSubmitted] = useState(initialInput);
@@ -1113,6 +1369,7 @@ export default function App() {
   const [toast, setToast] = useState('');
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
   const paipanRef = useRef<HTMLDivElement>(null);
+  const professionalRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const luckRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
@@ -1128,6 +1385,7 @@ export default function App() {
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
       paipan: paipanRef,
+      professional: professionalRef,
       detail: detailRef,
       luck: luckRef,
       notes: notesRef,
@@ -1223,32 +1481,9 @@ export default function App() {
 
   return (
     <main className="report-shell">
-      <header className="report-nav">
-        <div className="brand-lockup compact">
-          <div className="brand-symbol">自</div>
-          <div>
-            <span>自然排盘</span>
-            <h1>八字排盘分析</h1>
-          </div>
-        </div>
-        <StepIndicator current="report" />
-        <nav className="result-tabs" aria-label="报告导航">
-          <button className={activeNav === 'paipan' ? 'active' : ''} onClick={() => scrollTo('paipan')} type="button">
-            排盘
-          </button>
-          <button className={activeNav === 'detail' ? 'active' : ''} onClick={() => scrollTo('detail')} type="button">
-            专业详批
-          </button>
-          <button className={activeNav === 'luck' ? 'active' : ''} onClick={() => scrollTo('luck')} type="button">
-            大运合参
-          </button>
-          <button className={activeNav === 'notes' ? 'active' : ''} onClick={() => scrollTo('notes')} type="button">
-            断事笔记
-          </button>
-        </nav>
-      </header>
+      <ReportSidebar activeNav={activeNav} onEdit={() => setStep('birth')} onNavigate={scrollTo} />
 
-      <div className="report-panel">
+      <div className="report-main">
         {error && <div className="error-box">{error}</div>}
         {reading && (
           <>
@@ -1260,6 +1495,9 @@ export default function App() {
             />
             <div ref={paipanRef}>
               <PaipanSection reading={reading} />
+            </div>
+            <div ref={professionalRef}>
+              <ProfessionalChartPanel reading={reading} />
             </div>
             <div className="detail-stack" ref={detailRef}>
               <PortraitSection reading={reading} />
