@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent, RefObject } from 'react';
 import {
   Activity,
+  ArrowLeft,
+  ArrowRight,
   CalendarDays,
   Check,
   Clock3,
@@ -11,6 +13,7 @@ import {
   Edit3,
   FileText,
   Heart,
+  LogIn,
   MapPin,
   RefreshCw,
   RotateCcw,
@@ -30,7 +33,8 @@ const initialInput: BirthInput = {
 };
 
 const sectionOrder: ReadingSection[] = ['overview', 'career', 'relationship', 'health', 'growth'];
-type NavTarget = 'form' | 'paipan' | 'analysis' | 'detail' | 'notes';
+type AppStep = 'login' | 'birth' | 'report';
+type NavTarget = 'paipan' | 'analysis' | 'detail' | 'notes';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 
@@ -752,18 +756,118 @@ function NotesPanel({
   );
 }
 
-function BirthForm({
+function StepIndicator({ current }: { current: AppStep }) {
+  const steps: Array<{ key: AppStep; label: string; caption: string }> = [
+    { key: 'login', label: '登录', caption: '保存档案' },
+    { key: 'birth', label: '生辰', caption: '录入资料' },
+    { key: 'report', label: '报告', caption: '排盘详批' },
+  ];
+
+  const currentIndex = steps.findIndex((step) => step.key === current);
+
+  return (
+    <div className="step-indicator" aria-label="当前流程">
+      {steps.map((step, index) => (
+        <div className={index <= currentIndex ? 'step-pill active' : 'step-pill'} key={step.key}>
+          <span>{index + 1}</span>
+          <div>
+            <strong>{step.label}</strong>
+            <small>{step.caption}</small>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function LoginPage({
+  profileName,
+  onChangeName,
+  onLogin,
+  onGuest,
+}: {
+  profileName: string;
+  onChangeName: (value: string) => void;
+  onLogin: () => void;
+  onGuest: () => void;
+}) {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onLogin();
+  };
+
+  return (
+    <main className="flow-shell login-screen">
+      <section className="login-hero">
+        <div className="brand-lockup">
+          <div className="brand-symbol">自</div>
+          <div>
+            <span>Natural Paipan</span>
+            <h1>自然排盘</h1>
+          </div>
+        </div>
+        <div className="hero-copy">
+          <p className="eyebrow">八字排盘 · 青阳子详批 · App-ready</p>
+          <h2>从出生信息到完整命理报告，按用户使用路径一步步生成。</h2>
+          <p>
+            当前网页版本已经把登录、资料录入、排盘分析拆成独立模块，后续接账号、订单、远程排盘 API 或原生 App Bridge 时可以直接替换服务层。
+          </p>
+        </div>
+        <div className="feature-strip" aria-label="核心能力">
+          <span>四柱排盘</span>
+          <span>五行气势</span>
+          <span>专业深度页</span>
+          <span>逐项详批</span>
+        </div>
+      </section>
+
+      <section className="auth-card">
+        <StepIndicator current="login" />
+        <form onSubmit={handleSubmit}>
+          <h2>登录自然排盘</h2>
+          <p>先建立一个临时档案，报告、断事笔记和后续 App 会员能力都可以围绕这个档案扩展。</p>
+          <label>
+            <span>
+              <UserRound size={15} /> 昵称 / 档案名
+            </span>
+            <input
+              autoComplete="name"
+              name="profileName"
+              onChange={(event) => onChangeName(event.target.value)}
+              placeholder="请输入昵称"
+              value={profileName}
+            />
+          </label>
+          <label>
+            <span>
+              <LogIn size={15} /> 手机号 / 邮箱
+            </span>
+            <input autoComplete="email" name="account" placeholder="演示版可留空" />
+          </label>
+          <button className="primary-button" type="submit">
+            <LogIn size={17} />
+            进入录入
+          </button>
+          <button className="secondary-button" onClick={onGuest} type="button">
+            <ArrowRight size={16} />
+            游客体验
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}
+
+function BirthSetupPage({
   input,
-  activeNav,
+  onBack,
   onChange,
-  onNavigate,
   onReset,
   onSubmit,
 }: {
   input: BirthInput;
-  activeNav: NavTarget;
+  onBack: () => void;
   onChange: (input: BirthInput) => void;
-  onNavigate: (target: NavTarget) => void;
   onReset: () => void;
   onSubmit: (input: BirthInput) => void;
 }) {
@@ -780,117 +884,116 @@ function BirthForm({
   };
 
   return (
-    <form className="control-panel" id="basic-info" onSubmit={handleSubmit}>
-      <div className="side-logo">自然排盘</div>
-      <nav className="side-nav" aria-label="排盘导航">
-        <button className={activeNav === 'form' ? 'active' : ''} onClick={() => onNavigate('form')} type="button">
-          基本信息
-        </button>
-        <button className={activeNav === 'paipan' ? 'active' : ''} onClick={() => onNavigate('paipan')} type="button">
-          基本排盘
-        </button>
-        <button className={activeNav === 'analysis' ? 'active' : ''} onClick={() => onNavigate('analysis')} type="button">
-          青阳子批
-        </button>
-        <button className={activeNav === 'detail' ? 'active' : ''} onClick={() => onNavigate('detail')} type="button">
-          专业细盘
-        </button>
-        <button className={activeNav === 'notes' ? 'active' : ''} onClick={() => onNavigate('notes')} type="button">
-          断事笔记
-        </button>
-      </nav>
-
-      <div className="brand-mark">
-        <div className="seal">知</div>
-        <div>
-          <h1>自然排盘</h1>
-          <p>八字 · 五行 · 大运 · 建议</p>
+    <main className="flow-shell birth-screen">
+      <section className="birth-panel">
+        <div className="flow-topbar">
+          <button className="icon-text-button" onClick={onBack} type="button">
+            <ArrowLeft size={17} />
+            返回
+          </button>
+          <StepIndicator current="birth" />
         </div>
-      </div>
 
-      <div className="form-grid">
-        <label>
-          <span>
-            <UserRound size={15} /> 昵称
-          </span>
-          <input name="name" value={input.name} onChange={(event) => onChange({ ...input, name: event.target.value })} />
-        </label>
+        <div className="birth-heading">
+          <p className="eyebrow">第二步 · 建立命盘资料</p>
+          <h1>输入出生日期，生成四柱与完整详批。</h1>
+          <p>默认使用公历时间。后续接 App 时，这一页可以独立做成资料录入 screen，并扩展真太阳时、农历、出生地经纬度和多档案管理。</p>
+        </div>
 
-        <label>
-          <span>
-            <Sparkles size={15} /> 性别
-          </span>
-          <select
-            name="gender"
-            value={input.gender}
-            onChange={(event) => onChange({ ...input, gender: event.target.value as BirthInput['gender'] })}
-          >
-            <option value="female">女</option>
-            <option value="male">男</option>
-          </select>
-        </label>
+        <form className="birth-form" id="basic-info" onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <label>
+              <span>
+                <UserRound size={15} /> 昵称
+              </span>
+              <input name="name" value={input.name} onChange={(event) => onChange({ ...input, name: event.target.value })} />
+            </label>
 
-        <label>
-          <span>
-            <CalendarDays size={15} /> 出生日期
-          </span>
-          <input
-            name="birthDate"
-            type="date"
-            value={input.birthDate}
-            onChange={(event) => onChange({ ...input, birthDate: event.target.value })}
-          />
-        </label>
+            <label>
+              <span>
+                <Sparkles size={15} /> 性别
+              </span>
+              <select
+                name="gender"
+                value={input.gender}
+                onChange={(event) => onChange({ ...input, gender: event.target.value as BirthInput['gender'] })}
+              >
+                <option value="female">女</option>
+                <option value="male">男</option>
+              </select>
+            </label>
 
-        <label>
-          <span>
-            <Clock3 size={15} /> 出生时间
-          </span>
-          <input
-            name="birthTime"
-            type="time"
-            value={input.birthTime}
-            onChange={(event) => onChange({ ...input, birthTime: event.target.value })}
-          />
-        </label>
+            <label>
+              <span>
+                <CalendarDays size={15} /> 出生日期
+              </span>
+              <input
+                name="birthDate"
+                type="date"
+                value={input.birthDate}
+                onChange={(event) => onChange({ ...input, birthDate: event.target.value })}
+              />
+            </label>
 
-        <label className="wide">
-          <span>
-            <MapPin size={15} /> 出生地
-          </span>
-          <input
-            name="birthplace"
-            value={input.birthplace}
-            onChange={(event) => onChange({ ...input, birthplace: event.target.value })}
-          />
-        </label>
-      </div>
+            <label>
+              <span>
+                <Clock3 size={15} /> 出生时间
+              </span>
+              <input
+                name="birthTime"
+                type="time"
+                value={input.birthTime}
+                onChange={(event) => onChange({ ...input, birthTime: event.target.value })}
+              />
+            </label>
 
-      <button className="primary-button" type="submit">
-        <RefreshCw size={17} />
-        生成排盘
-      </button>
-      <button className="secondary-button" onClick={onReset} type="button">
-        <RotateCcw size={16} />
-        重置案例
-      </button>
+            <label className="wide">
+              <span>
+                <MapPin size={15} /> 出生地
+              </span>
+              <input
+                name="birthplace"
+                value={input.birthplace}
+                onChange={(event) => onChange({ ...input, birthplace: event.target.value })}
+              />
+            </label>
+          </div>
 
-      <div className="app-port">
-        <strong>App 架构口</strong>
-        <p>当前使用本地排盘服务，后续可把 `ReadingPort` 切换为远程 API、会员报告或原生 App Bridge。</p>
-      </div>
-    </form>
+          <div className="form-actions">
+            <button className="primary-button" type="submit">
+              <RefreshCw size={17} />
+              生成八字排盘分析
+            </button>
+            <button className="secondary-button" onClick={onReset} type="button">
+              <RotateCcw size={16} />
+              重置案例
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <aside className="birth-aside">
+        <strong>可扩展功能口</strong>
+        <p>当前由本地 `ReadingPort` 出报告，后续可替换为远程 API、登录会员、订单支付、历史档案和原生 App Bridge。</p>
+        <div className="aside-checks">
+          <span>真太阳时</span>
+          <span>多档案</span>
+          <span>报告导出</span>
+          <span>AI 详批</span>
+        </div>
+      </aside>
+    </main>
   );
 }
 
 export default function App() {
   const [input, setInput] = useState(initialInput);
   const [submitted, setSubmitted] = useState(initialInput);
+  const [step, setStep] = useState<AppStep>('login');
   const [activeNav, setActiveNav] = useState<NavTarget>('paipan');
   const [note, setNote] = useState(() => window.localStorage.getItem('bazi-web-note') ?? '');
   const [toast, setToast] = useState('');
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
-  const formRef = useRef<HTMLDivElement>(null);
   const paipanRef = useRef<HTMLDivElement>(null);
   const analysisRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
@@ -906,7 +1009,6 @@ export default function App() {
 
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
-      form: formRef,
       paipan: paipanRef,
       analysis: analysisRef,
       detail: detailRef,
@@ -960,26 +1062,73 @@ export default function App() {
     setInput(initialInput);
     setSubmitted(initialInput);
     setToast('已重置为默认案例');
-    scrollTo('paipan');
+    setActiveNav('paipan');
   };
 
-  return (
-    <main className="app-shell">
-      <div ref={formRef}>
-        <BirthForm
-          activeNav={activeNav}
+  if (step === 'login') {
+    return (
+      <LoginPage
+        onChangeName={(name) => setInput((current) => ({ ...current, name }))}
+        onGuest={() => {
+          setToast('已进入游客体验');
+          setStep('birth');
+        }}
+        onLogin={() => {
+          setToast('登录成功，继续录入生辰');
+          setStep('birth');
+        }}
+        profileName={input.name}
+      />
+    );
+  }
+
+  if (step === 'birth') {
+    return (
+      <>
+        <BirthSetupPage
           input={input}
+          onBack={() => setStep('login')}
           onChange={setInput}
-          onNavigate={scrollTo}
           onReset={resetCase}
           onSubmit={(nextInput) => {
             setInput(nextInput);
             setSubmitted(nextInput);
-            setToast('排盘已更新');
-            scrollTo('paipan');
+            setActiveNav('paipan');
+            setStep('report');
+            setToast('排盘已生成');
           }}
         />
-      </div>
+        {toast && <div className="toast">{toast}</div>}
+      </>
+    );
+  }
+
+  return (
+    <main className="report-shell">
+      <header className="report-nav">
+        <div className="brand-lockup compact">
+          <div className="brand-symbol">自</div>
+          <div>
+            <span>自然排盘</span>
+            <h1>八字排盘分析</h1>
+          </div>
+        </div>
+        <StepIndicator current="report" />
+        <nav className="result-tabs" aria-label="报告导航">
+          <button className={activeNav === 'paipan' ? 'active' : ''} onClick={() => scrollTo('paipan')} type="button">
+            排盘
+          </button>
+          <button className={activeNav === 'analysis' ? 'active' : ''} onClick={() => scrollTo('analysis')} type="button">
+            青阳子分析
+          </button>
+          <button className={activeNav === 'detail' ? 'active' : ''} onClick={() => scrollTo('detail')} type="button">
+            专业详批
+          </button>
+          <button className={activeNav === 'notes' ? 'active' : ''} onClick={() => scrollTo('notes')} type="button">
+            断事笔记
+          </button>
+        </nav>
+      </header>
 
       <div className="report-panel">
         {error && <div className="error-box">{error}</div>}
@@ -987,7 +1136,7 @@ export default function App() {
           <>
             <TopProfile
               onCopy={copyReport}
-              onEdit={() => scrollTo('form')}
+              onEdit={() => setStep('birth')}
               onExport={exportReport}
               reading={reading}
             />
