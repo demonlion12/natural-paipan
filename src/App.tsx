@@ -186,6 +186,144 @@ const yangRenMap: Record<string, string> = {
   癸: '亥',
 };
 
+const taiJiMap: Record<string, string[]> = {
+  甲: ['子', '午'],
+  乙: ['子', '午'],
+  丙: ['卯', '酉'],
+  丁: ['卯', '酉'],
+  戊: ['辰', '戌', '丑', '未'],
+  己: ['辰', '戌', '丑', '未'],
+  庚: ['寅', '亥'],
+  辛: ['寅', '亥'],
+  壬: ['巳', '申'],
+  癸: ['巳', '申'],
+};
+
+const guoYinMap: Record<string, string> = {
+  甲: '戌',
+  乙: '亥',
+  丙: '丑',
+  丁: '寅',
+  戊: '丑',
+  己: '寅',
+  庚: '辰',
+  辛: '巳',
+  壬: '未',
+  癸: '申',
+};
+
+const fuXingMap: Record<string, string> = {
+  甲: '寅',
+  乙: '丑',
+  丙: '子',
+  丁: '亥',
+  戊: '申',
+  己: '未',
+  庚: '午',
+  辛: '巳',
+  壬: '辰',
+  癸: '卯',
+};
+
+const tianChuMap: Record<string, string> = {
+  甲: '巳',
+  乙: '午',
+  丙: '巳',
+  丁: '午',
+  戊: '申',
+  己: '酉',
+  庚: '亥',
+  辛: '子',
+  壬: '寅',
+  癸: '卯',
+};
+
+const jinYuMap: Record<string, string> = {
+  甲: '辰',
+  乙: '巳',
+  丙: '未',
+  丁: '申',
+  戊: '未',
+  己: '申',
+  庚: '戌',
+  辛: '亥',
+  壬: '丑',
+  癸: '寅',
+};
+
+const hongYanMap: Record<string, string> = {
+  甲: '午',
+  乙: '申',
+  丙: '寅',
+  丁: '未',
+  戊: '辰',
+  己: '辰',
+  庚: '戌',
+  辛: '酉',
+  壬: '子',
+  癸: '申',
+};
+
+const hongLuanMap: Record<string, string> = {
+  子: '卯',
+  丑: '寅',
+  寅: '丑',
+  卯: '子',
+  辰: '亥',
+  巳: '戌',
+  午: '酉',
+  未: '申',
+  申: '未',
+  酉: '午',
+  戌: '巳',
+  亥: '辰',
+};
+
+const tianXiMap: Record<string, string> = {
+  子: '酉',
+  丑: '申',
+  寅: '未',
+  卯: '午',
+  辰: '巳',
+  巳: '辰',
+  午: '卯',
+  未: '寅',
+  申: '丑',
+  酉: '子',
+  戌: '亥',
+  亥: '戌',
+};
+
+const tianDeMap: Record<string, string[]> = {
+  寅: ['丁'],
+  卯: ['申'],
+  辰: ['壬'],
+  巳: ['辛'],
+  午: ['亥'],
+  未: ['甲'],
+  申: ['癸'],
+  酉: ['寅'],
+  戌: ['丙'],
+  亥: ['乙'],
+  子: ['巳'],
+  丑: ['庚'],
+};
+
+const yueDeMap: Record<string, string[]> = {
+  寅: ['丙'],
+  午: ['丙'],
+  戌: ['丙'],
+  申: ['壬'],
+  子: ['壬'],
+  辰: ['壬'],
+  亥: ['甲'],
+  卯: ['甲'],
+  未: ['甲'],
+  巳: ['庚'],
+  酉: ['庚'],
+  丑: ['庚'],
+};
+
 const combinePairs = [
   ['甲', '己', '甲己合土'],
   ['乙', '庚', '乙庚合金'],
@@ -292,13 +430,26 @@ function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBra
   const dayStem = reading.dayMaster.stem;
   const dayBranch = reading.pillars.find((pillar) => pillar.key === 'day')?.branch ?? '';
   const yearBranch = reading.pillars.find((pillar) => pillar.key === 'year')?.branch ?? '';
+  const monthBranch = reading.pillars.find((pillar) => pillar.key === 'month')?.branch ?? '';
   const stars = new Set<string>();
 
   if ((tianYiMap[dayStem] ?? []).includes(targetBranch)) {
     stars.add('天乙贵人');
   }
+  if ((taiJiMap[dayStem] ?? []).includes(targetBranch)) {
+    stars.add('太极贵人');
+  }
   if (wenChangMap[dayStem] === targetBranch) {
     stars.add('文昌贵人');
+  }
+  if (guoYinMap[dayStem] === targetBranch) {
+    stars.add('国印贵人');
+  }
+  if (fuXingMap[dayStem] === targetBranch) {
+    stars.add('福星贵人');
+  }
+  if (tianChuMap[dayStem] === targetBranch) {
+    stars.add('天厨贵人');
   }
   if (luShenMap[dayStem] === targetBranch) {
     stars.add('禄神');
@@ -306,12 +457,33 @@ function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBra
   if (yangRenMap[dayStem] === targetBranch) {
     stars.add('羊刃');
   }
+  if (jinYuMap[dayStem] === targetBranch) {
+    stars.add('金舆');
+  }
+  if (hongYanMap[dayStem] === targetBranch) {
+    stars.add('红艳');
+  }
+  if ((tianDeMap[monthBranch] ?? []).includes(targetStem) || (tianDeMap[monthBranch] ?? []).includes(targetBranch)) {
+    stars.add('天德贵人');
+  }
+  if ((yueDeMap[monthBranch] ?? []).includes(targetStem) || (yueDeMap[monthBranch] ?? []).includes(targetBranch)) {
+    stars.add('月德贵人');
+  }
+  if (hongLuanMap[yearBranch] === targetBranch) {
+    stars.add('红鸾');
+  }
+  if (tianXiMap[yearBranch] === targetBranch) {
+    stars.add('天喜');
+  }
 
   const groupMaps = [
     { label: '桃花', map: { 申子辰: ['酉'], 寅午戌: ['卯'], 巳酉丑: ['午'], 亥卯未: ['子'] } },
     { label: '驿马', map: { 申子辰: ['寅'], 寅午戌: ['申'], 巳酉丑: ['亥'], 亥卯未: ['巳'] } },
     { label: '华盖', map: { 申子辰: ['辰'], 寅午戌: ['戌'], 巳酉丑: ['丑'], 亥卯未: ['未'] } },
     { label: '将星', map: { 申子辰: ['子'], 寅午戌: ['午'], 巳酉丑: ['酉'], 亥卯未: ['卯'] } },
+    { label: '劫煞', map: { 申子辰: ['巳'], 寅午戌: ['亥'], 巳酉丑: ['寅'], 亥卯未: ['申'] } },
+    { label: '灾煞', map: { 申子辰: ['午'], 寅午戌: ['子'], 巳酉丑: ['卯'], 亥卯未: ['酉'] } },
+    { label: '亡神', map: { 申子辰: ['亥'], 寅午戌: ['巳'], 巳酉丑: ['申'], 亥卯未: ['寅'] } },
   ];
   [dayBranch, yearBranch].filter(Boolean).forEach((referenceBranch) => {
     groupMaps.forEach((item) => {
@@ -321,11 +493,20 @@ function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBra
       }
     });
   });
+  [
+    { label: '孤辰', map: { 亥子丑: ['寅'], 寅卯辰: ['巳'], 巳午未: ['申'], 申酉戌: ['亥'] } },
+    { label: '寡宿', map: { 亥子丑: ['戌'], 寅卯辰: ['丑'], 巳午未: ['辰'], 申酉戌: ['未'] } },
+  ].forEach((item) => {
+    const star = getBranchGroupStar(yearBranch, targetBranch, item.map, item.label);
+    if (star) {
+      stars.add(star);
+    }
+  });
 
   if (targetStem === dayStem) {
     stars.add('伏吟');
   }
-  return [...stars].slice(0, 5);
+  return [...stars];
 }
 
 function createVirtualColumn(label: string, ganZhi: string, reading: BaziReading) {
@@ -602,6 +783,7 @@ function PaipanSection({ reading }: { reading: BaziReading }) {
 
 function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   const currentYear = new Date().getFullYear();
+  const flowColumnCount = 12;
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const selectableYears = Array.from({ length: 41 }, (_, index) => currentYear - 10 + index);
   const currentLuck =
@@ -620,7 +802,8 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   ];
   const stemNotes = collectPairNotes(detailColumns.map((column) => column.stem), combinePairs, '天干暂未见明显合化，重点看十神与五行补偏。');
   const branchNotes = collectPairNotes(detailColumns.map((column) => column.branch), branchRelations, '地支暂未见明显冲合刑害，重点看岁运是否引动原局。');
-  const nextYears = Array.from({ length: 8 }, (_, index) => {
+  const displayedLuckPeriods = Array.from({ length: flowColumnCount }, (_, index) => reading.daYun.periods[index] ?? null);
+  const nextYears = Array.from({ length: flowColumnCount }, (_, index) => {
     const year = selectedYear + index;
     return {
       year,
@@ -710,11 +893,17 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
 
           <div className="flow-matrix">
             <div className="flow-label">大运</div>
-            {reading.daYun.periods.slice(0, 8).map((period) => (
-              <div className={period.ganZhi === currentLuck.ganZhi ? 'flow-cell current' : 'flow-cell'} key={period.ganZhi}>
-                <small>{period.startYear}</small>
-                <strong>{period.ganZhi}</strong>
-                <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
+            {displayedLuckPeriods.map((period, index) => (
+              <div className={period?.ganZhi === currentLuck.ganZhi ? 'flow-cell current' : 'flow-cell'} key={period?.ganZhi ?? `luck-empty-${index}`}>
+                {period ? (
+                  <>
+                    <small>{period.startYear}</small>
+                    <strong>{period.ganZhi}</strong>
+                    <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
+                  </>
+                ) : (
+                  <span>-</span>
+                )}
               </div>
             ))}
 
@@ -734,7 +923,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
             ))}
 
             <div className="flow-label">流月</div>
-            {flowMonths.slice(0, 8).map((month) => (
+            {flowMonths.map((month) => (
               <div className="flow-cell" key={`${month.term}-${month.ganZhi}`}>
                 <small>{month.term}</small>
                 <strong>{month.ganZhi}</strong>

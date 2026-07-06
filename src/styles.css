@@ -771,7 +771,7 @@ textarea:focus {
 
 .flow-matrix {
   display: grid;
-  grid-template-columns: 64px repeat(8, minmax(58px, 1fr));
+  grid-template-columns: 64px repeat(12, minmax(58px, 1fr));
   overflow-x: auto;
   border: 1px solid #edf1ee;
   border-radius: 8px;
