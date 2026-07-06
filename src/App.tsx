@@ -705,7 +705,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
                 起运：{reading.daYun.startText} · {reading.daYun.direction}
               </span>
             </div>
-            <small>日主：{reading.dayMaster.stem}</small>
+            <small>日主：{reading.dayMaster.stem} · 点击流年切换</small>
           </div>
 
           <div className="flow-matrix">
@@ -720,11 +720,17 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
 
             <div className="flow-label">流年</div>
             {nextYears.map((year) => (
-              <div className={year.year === selectedYear ? 'flow-cell current' : 'flow-cell'} key={year.year}>
+              <button
+                type="button"
+                className={year.year === selectedYear ? 'flow-cell current' : 'flow-cell'}
+                key={year.year}
+                onClick={() => setSelectedYear(year.year)}
+                aria-label={`切换到${year.year}流年`}
+              >
                 <small>{year.year}</small>
                 <strong>{year.ganZhi}</strong>
                 <span>{getTenGod(reading.dayMaster.stem, year.ganZhi[0])}</span>
-              </div>
+              </button>
             ))}
 
             <div className="flow-label">流月</div>

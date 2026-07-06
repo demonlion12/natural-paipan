@@ -799,8 +799,27 @@ textarea:focus {
   padding: 6px;
 }
 
+button.flow-cell {
+  appearance: none;
+  border-top: 0;
+  border-left: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+button.flow-cell:hover,
+button.flow-cell:focus-visible {
+  background: rgba(29, 122, 98, 0.08);
+  outline: none;
+}
+
 .flow-cell.current {
   background: rgba(198, 113, 56, 0.1);
+}
+
+button.flow-cell.current:hover,
+button.flow-cell.current:focus-visible {
+  background: rgba(198, 113, 56, 0.16);
 }
 
 .flow-cell small,
