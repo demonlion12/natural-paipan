@@ -21,6 +21,7 @@ import {
   Sparkles,
   UserRound,
 } from 'lucide-react';
+import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, ReadingSection } from './core/types';
 
@@ -133,6 +134,20 @@ const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '�
 const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 const monthBranches = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
 const monthTerms = ['立春', '惊蛰', '清明', '立夏', '芒种', '小暑', '立秋', '白露', '寒露', '立冬', '大雪', '小寒'];
+const monthTermDates = [
+  { month: 2, day: 4 },
+  { month: 3, day: 5 },
+  { month: 4, day: 5 },
+  { month: 5, day: 5 },
+  { month: 6, day: 6 },
+  { month: 7, day: 7 },
+  { month: 8, day: 7 },
+  { month: 9, day: 7 },
+  { month: 10, day: 8 },
+  { month: 11, day: 7 },
+  { month: 12, day: 7 },
+  { month: 1, day: 5 },
+];
 
 const tianYiMap: Record<string, string[]> = {
   甲: ['丑', '未'],
@@ -785,6 +800,8 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   const currentYear = new Date().getFullYear();
   const flowColumnCount = 12;
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedMonthIndex, setSelectedMonthIndex] = useState(Math.max(0, Math.min(11, new Date().getMonth() - 1)));
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const selectableYears = Array.from({ length: 41 }, (_, index) => currentYear - 10 + index);
   const currentLuck =
     reading.daYun.periods.find((period) => selectedYear >= period.startYear && selectedYear <= period.endYear) ??
@@ -792,16 +809,6 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
     reading.daYun.periods[0];
   const currentYearGanZhi =
     reading.annual.year === selectedYear ? reading.annual.ganZhi : advanceGanZhi(reading.annual.ganZhi, selectedYear - reading.annual.year);
-  const detailColumns = [
-    createVirtualColumn('流年', currentYearGanZhi, reading),
-    createVirtualColumn('大运', currentLuck.ganZhi, reading),
-    ...reading.pillars.map((pillar) => ({
-      ...pillar,
-      shenSha: getShenShaForBranch(reading, pillar.stem, pillar.branch),
-    })),
-  ];
-  const stemNotes = collectPairNotes(detailColumns.map((column) => column.stem), combinePairs, '天干暂未见明显合化，重点看十神与五行补偏。');
-  const branchNotes = collectPairNotes(detailColumns.map((column) => column.branch), branchRelations, '地支暂未见明显冲合刑害，重点看岁运是否引动原局。');
   const displayedLuckPeriods = Array.from({ length: flowColumnCount }, (_, index) => reading.daYun.periods[index] ?? null);
   const nextYears = Array.from({ length: flowColumnCount }, (_, index) => {
     const year = selectedYear + index;
@@ -817,6 +824,33 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
       ganZhi,
     };
   });
+  const selectedTermDate = monthTermDates[selectedMonthIndex];
+  const selectedTermYear = selectedMonthIndex === 11 ? selectedYear + 1 : selectedYear;
+  const flowDays = Array.from({ length: flowColumnCount }, (_, index) => {
+    const date = new Date(selectedTermYear, selectedTermDate.month - 1, selectedTermDate.day + index, 12, 0, 0);
+    const solar = Solar.fromYmdHms(date.getFullYear(), date.getMonth() + 1, date.getDate(), 12, 0, 0);
+    const lunar = solar.getLunar();
+    const ganZhi = lunar.getEightChar().getDay();
+    return {
+      label: lunar.getDayInChinese(),
+      dateText: `${date.getMonth() + 1}/${date.getDate()}`,
+      ganZhi,
+    };
+  });
+  const currentMonth = flowMonths[selectedMonthIndex];
+  const currentDay = flowDays[selectedDayIndex] ?? flowDays[0];
+  const detailColumns = [
+    createVirtualColumn('流日', currentDay.ganZhi, reading),
+    createVirtualColumn('流月', currentMonth.ganZhi, reading),
+    createVirtualColumn('流年', currentYearGanZhi, reading),
+    createVirtualColumn('大运', currentLuck.ganZhi, reading),
+    ...reading.pillars.map((pillar) => ({
+      ...pillar,
+      shenSha: getShenShaForBranch(reading, pillar.stem, pillar.branch),
+    })),
+  ];
+  const stemNotes = collectPairNotes(detailColumns.map((column) => column.stem), combinePairs, '天干暂未见明显合化，重点看十神与五行补偏。');
+  const branchNotes = collectPairNotes(detailColumns.map((column) => column.branch), branchRelations, '地支暂未见明显冲合刑害，重点看岁运是否引动原局。');
   const rows = [
     { label: '主星', render: (column: typeof detailColumns[number]) => <strong>{column.stemTenGod}</strong> },
     { label: '天干', render: (column: typeof detailColumns[number]) => <GanZhiGlyph value={column.stem} type="stem" /> },
@@ -853,7 +887,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
             </select>
           </label>
           <span>
-            {selectedYear}流年 · {currentLuck.ganZhi}大运 · 原局同看
+            {selectedYear}流年 · {currentMonth.ganZhi}流月 · {currentDay.ganZhi}流日 · {currentLuck.ganZhi}大运
           </span>
         </div>
       </div>
@@ -888,7 +922,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
                 起运：{reading.daYun.startText} · {reading.daYun.direction}
               </span>
             </div>
-            <small>日主：{reading.dayMaster.stem} · 点击流年切换</small>
+            <small>日主：{reading.dayMaster.stem} · 点击流年 / 流月 / 流日切换</small>
           </div>
 
           <div className="flow-matrix">
@@ -913,7 +947,10 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
                 type="button"
                 className={year.year === selectedYear ? 'flow-cell current' : 'flow-cell'}
                 key={year.year}
-                onClick={() => setSelectedYear(year.year)}
+                onClick={() => {
+                  setSelectedYear(year.year);
+                  setSelectedDayIndex(0);
+                }}
                 aria-label={`切换到${year.year}流年`}
               >
                 <small>{year.year}</small>
@@ -923,12 +960,40 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
             ))}
 
             <div className="flow-label">流月</div>
-            {flowMonths.map((month) => (
-              <div className="flow-cell" key={`${month.term}-${month.ganZhi}`}>
+            {flowMonths.map((month, index) => (
+              <button
+                type="button"
+                className={index === selectedMonthIndex ? 'flow-cell current' : 'flow-cell'}
+                key={`${month.term}-${month.ganZhi}`}
+                onClick={() => {
+                  setSelectedMonthIndex(index);
+                  setSelectedDayIndex(0);
+                }}
+                aria-label={`切换到${month.term}${month.ganZhi}流月`}
+              >
                 <small>{month.term}</small>
                 <strong>{month.ganZhi}</strong>
                 <span>{getTenGod(reading.dayMaster.stem, month.ganZhi[0])}</span>
-              </div>
+              </button>
+            ))}
+
+            <div className="flow-label">流日</div>
+            {flowDays.map((day, index) => (
+              <button
+                type="button"
+                className={index === selectedDayIndex ? 'flow-cell current' : 'flow-cell'}
+                key={`${day.dateText}-${day.ganZhi}`}
+                onClick={() => setSelectedDayIndex(index)}
+                aria-label={`切换到${day.dateText}${day.ganZhi}流日`}
+              >
+                <small>
+                  {day.label}
+                  <br />
+                  {day.dateText}
+                </small>
+                <strong>{day.ganZhi}</strong>
+                <span>{getTenGod(reading.dayMaster.stem, day.ganZhi[0])}</span>
+              </button>
             ))}
           </div>
 

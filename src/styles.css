@@ -708,12 +708,12 @@ textarea:focus {
 
 .professional-table {
   display: grid;
-  min-width: 760px;
+  min-width: 920px;
 }
 
 .professional-row {
   display: grid;
-  grid-template-columns: 92px repeat(6, minmax(92px, 1fr));
+  grid-template-columns: 92px repeat(8, minmax(92px, 1fr));
   min-height: 56px;
 }
 
@@ -827,6 +827,7 @@ button.flow-cell.current:focus-visible {
   color: #61736b;
   font-size: 12px;
   font-weight: 800;
+  line-height: 1.25;
 }
 
 .flow-cell strong {
