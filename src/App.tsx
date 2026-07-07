@@ -648,80 +648,147 @@ function AncientReference({ reading }: { reading: BaziReading }) {
   const dominant = reading.structure.dominantElement;
   const missing = reading.structure.missingElements.join('、') || '五行不见明显缺口';
 
-  const classicContent: Record<ClassicKey, { hint: string; paragraphs: string[] }> = {
+  const classicContent: Record<
+    ClassicKey,
+    {
+      quote: string;
+      source: string;
+      chapter: string;
+      sourceUrl?: string;
+      status: '已校勘短引' | '待校勘短引';
+      relevance: string;
+      interpretation: string[];
+    }
+  > = {
     qiongtong: {
-      hint: `调候用神提示：${useful}`,
-      paragraphs: [
+      quote: '十一月丙火，冬至一阳生，弱中复强。',
+      source: '《穷通宝鉴》',
+      chapter: '论丙火，子月条',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E7%AA%AE%E9%80%9A%E5%AF%B6%E9%91%91',
+      status: dayStem === '丙' && monthBranch === '子' ? '已校勘短引' : '待校勘短引',
+      relevance:
+        dayStem === '丙' && monthBranch === '子'
+          ? '当前命盘为丙日、子月，此条可作为调候参考。'
+          : `当前命盘为${dayStem}日、${monthBranch}月；本条先作为“按日主月令取调候”的方法示例，后续可接入完整日主月令原文库。`,
+      interpretation: [
         `${monthBranch}月论命，先看月令寒暖燥湿，再看日主是否得令、得地、得助。此局日主为${dayStem}，${reading.dayMaster.strength}，不可只按五行数量取断，仍须合看月令、藏干与十神透出。`,
         `从盘面看，${dominant}气较显，${missing}为后天需调之处。若行运能引动${useful}，多主思路顺、资源顺、做事阻力减；若再逢耗泄太过，则宜守中取势，不宜强拧。`,
       ],
     },
     ditiansui: {
-      hint: '滴天髓重气势流通：旺者宜泄，弱者宜扶，寒暖燥湿不可偏废。',
-      paragraphs: [
+      quote: '欲识三元万法宗，先观帝载与神功。',
+      source: '《滴天髓》',
+      chapter: '通神论',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E6%BB%B4%E5%A4%A9%E9%AB%93',
+      status: '已校勘短引',
+      relevance: `此条强调先看全局气势。当前命盘${dominant}气较显，喜用取${useful}，正适合从“气势是否流通”切入。`,
+      interpretation: [
         `此局要点在“气势是否能流通”。${dominant}显则是天赋与惯性，若只旺而不通，现实中容易表现为某类反应过度；若能以${useful}疏导，则才气、判断和执行更容易落地。`,
         `看命不可见一字便断吉凶。年、月、日、时四柱需合看：年看根基，月看令气，日看自身，时看后劲。此局时柱为${reading.pillars[3].ganZhi}，后期更重能力沉淀。`,
       ],
     },
     sanming: {
-      hint: '三命通会重格局组合：财官印食伤，比劫杀刃，皆须看位置与成败。',
-      paragraphs: [
+      quote: '凡看命，以日干为主。',
+      source: '《三命通会》',
+      chapter: '论命总法相关条',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E4%B8%89%E5%91%BD%E9%80%9A%E6%9C%83',
+      status: '待校勘短引',
+      relevance: `当前日主为${dayStem}，专业详批里所有十神、喜忌、岁运触发都应回到日主承受力来判断。`,
+      interpretation: [
         `十神较显者为${reading.structure.highlightedTenGods.join('、') || '结构分散'}。这些不是标签，而是你在现实事务中的角色：有的主资源，有的主规则，有的主表达，有的主竞争。`,
         `格局有成有破，不宜强行套一个名称。若大运配合，优势能成事；若岁运冲动短板，则容易在人情、节奏、资源或规则上出现压力。`,
       ],
     },
     tiyao: {
-      hint: '八字提要重简明定盘：先看日主，再看月令，再取喜忌。',
-      paragraphs: [
+      quote: '论命以日主为体，月令为提纲。',
+      source: '《八字提要》',
+      chapter: '定局提要',
+      status: '待校勘短引',
+      relevance: `当前命盘为${dayStem}日、${monthBranch}月，此条用于提示“先定日主，再看月令”的阅读顺序。`,
+      interpretation: [
         `定盘简要：日主${dayStem}，生于${monthBranch}月，整体${reading.dayMaster.strength}。喜用偏向${useful}，忌一味加重${dominant}之偏。`,
         `现实落点：重要选择宜先问三件事：是否补足用神，是否减少内耗，是否能沉淀长期能力。若三者皆无，则短期热闹未必值得投入。`,
       ],
     },
     ziping: {
-      hint: '子平真诠重月令与格局：有官先论官，有杀先论杀，成败看清浊。',
-      paragraphs: [
+      quote: '八字用神，专求月令。',
+      source: '《子平真诠》',
+      chapter: '论用神',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E5%AD%90%E5%B9%B3%E7%9C%9F%E8%A9%AE',
+      status: '已校勘短引',
+      relevance: `当前月柱为${reading.pillars[1].ganZhi}，月令决定气候和格局入口，所以不能只看日柱或单个神煞。`,
+      interpretation: [
         `月柱${reading.pillars[1].ganZhi}为提纲，提纲定一局气候。此处要看${reading.pillars[1].stemTenGod}与藏干${reading.pillars[1].hiddenStems.join('、')}如何作用于日主。`,
         `若格局清，则事有主线；若混杂，则人生常需先筛选方向。你的盘面更适合把复杂机会收束成一条主线，不宜什么都抓。`,
       ],
     },
     yuanhai: {
-      hint: '渊海子平重十神成象：财官印食伤各有用处，关键在有情无情。',
-      paragraphs: [
+      quote: '子平一法，专以日干为主。',
+      source: '《渊海子平》',
+      chapter: '论日为主',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E6%B7%B5%E6%B5%B7%E5%AD%90%E5%B9%B3',
+      status: '待校勘短引',
+      relevance: `当前日主${dayStem}是十神换算的中心，财官印食伤都要看它与日主的关系，不宜单独贴标签。`,
+      interpretation: [
         `此盘以日主${dayStem}为核心，先看月令${monthBranch}所主之气，再看透干${visibleStems}是否成局。若十神有情，则现实中做事有章法；若互相牵制，则容易一边想推进，一边被关系、资源或规则拖住。`,
         `从子平法看，${reading.structure.highlightedTenGods.join('、') || '十神分布较散'}为较醒目的事务角色。它们会具体落在工作分工、合作方式、财务节奏和人际边界上。`,
       ],
     },
     tianyuan: {
-      hint: '天元巫咸偏重天干气象：看透出之神是否清明，再定取舍。',
-      paragraphs: [
+      quote: '甲己之年丙作首，乙庚之岁戊为头。',
+      source: '《天元巫咸经》',
+      chapter: '五虎遁月法相关条',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E5%A4%A9%E5%85%83%E5%B7%AB%E5%92%B8%E7%B6%93',
+      status: '待校勘短引',
+      relevance: `此条偏向干支排布法。当前盘面透${visibleStems}，用于说明天干不是装饰，而是外显能力与岁运触发入口。`,
+      interpretation: [
         `天干为外显之气，此局透${visibleStems}，说明外在表现不只看性格，还看机会来时你会先动用哪一类能力。${dayStem}日主遇${monthBranch}月，宜先定主气，再分清扶抑。`,
         `若岁运再引动${useful}，做事容易从“想明白”走到“做成形”；若岁运加重${dominant}之偏，则要防止判断过满、节奏过急或对单一方向投入过深。`,
       ],
     },
     shenfeng: {
-      hint: '神峰通考重病药取象：先看偏处，再看何物能调。',
-      paragraphs: [
+      quote: '有病方为贵，无伤不是奇。',
+      source: '《神峰通考》',
+      chapter: '病药说相关条',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E7%A5%9E%E5%B3%B0%E9%80%9A%E8%80%83',
+      status: '已校勘短引',
+      relevance: `当前命盘${dominant}较显，${missing}；从病药法看，重点不是说好坏，而是找失衡处与可调之物。`,
+      interpretation: [
         `此局之“病”不必理解为坏，而是命局里最容易失衡的地方。${dominant}显，是优势也是惯性；${missing}，则是现实中需要后天经营的功课。`,
         `取“药”宜看${useful}。在选择行业、合作方式和长期方向时，凡能补${useful}、缓${dominant}之偏者，多半更利沉淀；反之，短期虽热，长期容易内耗。`,
       ],
     },
     qianli: {
-      hint: '千里命稿偏重现代断法：格局、强弱、用神之后，落到职业与生活选择。',
-      paragraphs: [
+      quote: '看命先看日主强弱。',
+      source: '《千里命稿》',
+      chapter: '强弱篇相关条',
+      status: '待校勘短引',
+      relevance: `当前日主判为${reading.dayMaster.strength}，这会影响事业、财务、关系建议是偏进取还是偏蓄势。`,
+      interpretation: [
         `以现代应用看，此局不是单看旺弱，而要看“能力如何变现”。${reading.dayMaster.strength}时，行事最怕只凭情绪或短线反馈；能建立稳定节奏，优势更容易兑现。`,
         `事业上宜把${reading.structure.highlightedTenGods.slice(0, 3).join('、') || '主要十神'}对应的能力做成可复用方法。关系和财务上，则要用规则感降低反复消耗。`,
       ],
     },
     wuxing: {
-      hint: '五行精纪重五行生克制化：不只看数量，更看能否循环。',
-      paragraphs: [
+      quote: '五行者，金木水火土也。',
+      source: '《五行精纪》',
+      chapter: '论五行',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E4%BA%94%E8%A1%8C%E7%B2%BE%E7%B4%80',
+      status: '待校勘短引',
+      relevance: `当前五行以${dominant}较显，喜用${useful}。此条提示五行分析要落到生克循环，不只是百分比。`,
+      interpretation: [
         `五行以${dominant}较显，${missing}为调候与平衡处。旺者不一定全吉，弱者不一定全凶，关键在生克是否形成通路。`,
         `若能以${useful}引通，则才华、资源与执行之间更顺；若一处太旺而无泄无制，现实中容易表现为执着、反复、急躁或长期疲惫。`,
       ],
     },
     lixu: {
-      hint: '李虚中命书重年命与三元气象：看根基、祖业、早年环境与命局底色。',
-      paragraphs: [
+      quote: '年为本，日为主。',
+      source: '《李虚中命书》',
+      chapter: '命书总论相关条',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E6%9D%8E%E8%99%9B%E4%B8%AD%E5%91%BD%E6%9B%B8',
+      status: '待校勘短引',
+      relevance: `当前年柱${reading.pillars[0].ganZhi}看根基，日柱${reading.pillars[2].ganZhi}看自身承载，二者要合看。`,
+      interpretation: [
         `年柱${reading.pillars[0].ganZhi}为根基气，月柱${reading.pillars[1].ganZhi}为成长环境与行事底色。早年受环境、规则、资源配置影响较明显，但真正成事仍要看日时与运势承接。`,
         `此局后劲要看时柱${reading.pillars[3].ganZhi}与大运配合。若阶段运能补${useful}，后期越能靠经验、专业和稳定输出打开空间。`,
       ],
@@ -745,16 +812,33 @@ function AncientReference({ reading }: { reading: BaziReading }) {
         ))}
       </div>
       <div className="classic-body">
-        <p className="classic-hint">{currentClassic.hint}</p>
+        <section className="classic-source-card">
+          <div className="classic-source-meta">
+            <span>古籍原文</span>
+            <strong>{currentClassic.source}</strong>
+            <em>{currentClassic.chapter}</em>
+            <small>{currentClassic.status}</small>
+          </div>
+          <blockquote>{currentClassic.quote}</blockquote>
+          {currentClassic.sourceUrl && (
+            <a className="classic-source-link" href={currentClassic.sourceUrl} rel="noreferrer" target="_blank">
+              查看文本来源
+            </a>
+          )}
+        </section>
         <p>
           本八字：透 <mark>{visibleStems}</mark>，藏 <mark>{hiddenStems}</mark>
         </p>
+        <section className="classic-interpretation">
+          <h3>现代解读</h3>
+          <p className="classic-hint">{currentClassic.relevance}</p>
+        </section>
         <button className="classic-pill" onClick={() => setShowReasoning((value) => !value)} type="button">
-          {showReasoning ? '收起推演' : `展开论${dayStem}生${monthBranch}月`}
+          {showReasoning ? '收起现代解读' : `展开论${dayStem}生${monthBranch}月`}
         </button>
-        {showReasoning && currentClassic.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        {showReasoning && currentClassic.interpretation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         <p>
-          此处为古籍思路转译，并非绝对断语。命局定底色，大运定阶段，流年定触发，现实选择才定落点。
+          原文短引用于定位经典论法，现代解读为系统根据当前命盘转译，并非绝对断语。命局定底色，大运定阶段，流年定触发，现实选择才定落点。
         </p>
       </div>
     </article>

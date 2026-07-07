@@ -619,6 +619,87 @@ textarea:focus {
   padding: 1px 6px;
 }
 
+.classic-source-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(200, 164, 93, 0.3);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(200, 164, 93, 0.1), rgba(255, 255, 255, 0.82)),
+    #fff;
+  padding: 16px;
+}
+
+.classic-source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.classic-source-meta span,
+.classic-source-meta small {
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.classic-source-meta span {
+  background: #2b7a78;
+  color: #fff;
+}
+
+.classic-source-meta small {
+  background: rgba(43, 122, 120, 0.1);
+  color: #2b7a78;
+}
+
+.classic-source-meta strong {
+  color: #17211d;
+  font-size: 16px;
+}
+
+.classic-source-meta em {
+  color: #61736b;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.classic-source-card blockquote {
+  margin: 0;
+  border-left: 4px solid #c8a45d;
+  color: #17211d;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.7;
+  padding-left: 14px;
+}
+
+.classic-source-link {
+  justify-self: start;
+  color: #2b7a78;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.classic-source-link:hover {
+  text-decoration: underline;
+}
+
+.classic-interpretation {
+  display: grid;
+  gap: 8px;
+}
+
+.classic-interpretation h3 {
+  color: #17211d;
+  font-size: 16px;
+}
+
 .classic-hint,
 .domain-conclusion {
   color: #22362f;
