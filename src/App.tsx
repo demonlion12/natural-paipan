@@ -839,7 +839,6 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(Math.max(0, Math.min(11, new Date().getMonth() - 1)));
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
-  const selectableYears = Array.from({ length: 41 }, (_, index) => currentYear - 10 + index);
   const currentLuck =
     reading.daYun.periods.find((period) => selectedYear >= period.startYear && selectedYear <= period.endYear) ??
     reading.daYun.periods.find((period) => period.isCurrent) ??
@@ -919,22 +918,6 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
       <div className="section-title">
         <h2>专业细盘</h2>
         <div className="professional-title-actions">
-          <label>
-            <span>流年</span>
-            <select
-              value={selectedYear}
-              onChange={(event) => {
-                setSelectedYear(Number(event.target.value));
-                setSelectedDayIndex(0);
-              }}
-            >
-              {selectableYears.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </label>
           <span>
             {selectedYear}流年 · {currentMonth.ganZhi}流月 · {currentDay.ganZhi}流日 · {currentLuck.ganZhi}大运
           </span>
@@ -971,25 +954,35 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
                 起运：{reading.daYun.startText} · {reading.daYun.direction}
               </span>
             </div>
-            <small>日主：{reading.dayMaster.stem} · 点击流年 / 流月 / 流日切换</small>
+            <small>日主：{reading.dayMaster.stem} · 点击大运 / 流年 / 流月 / 流日切换</small>
           </div>
 
           <div className="flow-stack">
             <div className="flow-matrix">
               <div className="flow-label">大运</div>
-              {displayedLuckPeriods.map((period, index) => (
-                <div className={period?.ganZhi === currentLuck.ganZhi ? 'flow-cell current' : 'flow-cell'} key={period?.ganZhi ?? `luck-empty-${index}`}>
-                  {period ? (
-                    <>
-                      <small>{period.startYear}</small>
-                      <strong>{period.ganZhi}</strong>
-                      <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
-                    </>
-                  ) : (
+              {displayedLuckPeriods.map((period, index) =>
+                period ? (
+                  <button
+                    type="button"
+                    className={period.startYear === currentLuck.startYear ? 'flow-cell current' : 'flow-cell'}
+                    key={`${period.startYear}-${period.ganZhi}`}
+                    onClick={() => {
+                      setSelectedYear(period.startYear);
+                      setSelectedMonthIndex(0);
+                      setSelectedDayIndex(0);
+                    }}
+                    aria-label={`切换到${period.startYear}年开始的${period.ganZhi}大运`}
+                  >
+                    <small>{period.startYear}</small>
+                    <strong>{period.ganZhi}</strong>
+                    <span>{getTenGod(reading.dayMaster.stem, period.ganZhi[0])}</span>
+                  </button>
+                ) : (
+                  <div className="flow-cell" key={`luck-empty-${index}`}>
                     <span>-</span>
-                  )}
-                </div>
-              ))}
+                  </div>
+                )
+              )}
 
               <div className="flow-label">流年</div>
               {nextYears.map((year) => (
