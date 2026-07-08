@@ -1425,17 +1425,17 @@ button.flow-cell.current:focus-visible {
 
 .flow-chart {
   display: grid;
-  gap: 36px;
-  min-width: 760px;
-  max-width: 980px;
+  gap: 44px;
+  min-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 8px 20px 18px;
+  padding: 12px 26px 24px;
 }
 
 .flow-chart-row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: 34px;
+  grid-template-columns: repeat(4, minmax(148px, 1fr));
+  gap: 58px;
 }
 
 .flow-slot {
@@ -1451,6 +1451,8 @@ button.flow-cell.current:focus-visible {
 }
 
 .flow-glyph-node {
+  position: relative;
+  z-index: 2;
   display: grid;
   min-width: 92px;
   min-height: 104px;
@@ -1458,6 +1460,7 @@ button.flow-cell.current:focus-visible {
   gap: 8px;
   border-radius: 8px;
   background: #fbfdfb;
+  box-shadow: 0 12px 34px rgba(23, 33, 29, 0.08);
   padding: 12px;
 }
 
@@ -1474,7 +1477,7 @@ button.flow-cell.current:focus-visible {
 .relation-line.horizontal {
   left: calc(50% + 42px);
   top: 52%;
-  width: calc(100% + 34px - 84px);
+  width: calc(100% + 58px - 84px);
   border-top: 2px solid currentColor;
 }
 
@@ -1498,7 +1501,7 @@ button.flow-cell.current:focus-visible {
 }
 
 .relation-line.branch-line {
-  top: 72%;
+  top: 70%;
 }
 
 .relation-line.vertical {
@@ -1536,19 +1539,48 @@ button.flow-cell.current:focus-visible {
   height: 32px;
   place-items: center;
   border-radius: 50%;
-  background: currentColor;
+  background: var(--relation-color);
+  box-shadow: 0 8px 22px rgba(23, 33, 29, 0.14);
   color: #fff;
   font-size: 13px;
   font-weight: 900;
   transform: translate(-50%, -50%);
 }
 
+.relation-line em {
+  position: absolute;
+  left: 50%;
+  top: 15px;
+  z-index: 3;
+  min-width: max-content;
+  border: 1px solid rgba(23, 33, 29, 0.09);
+  border-radius: 999px;
+  background: rgba(251, 253, 251, 0.96);
+  box-shadow: 0 8px 20px rgba(23, 33, 29, 0.08);
+  color: #344a42;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  padding: 5px 8px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.relation-line.vertical em {
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .relation-line.good {
-  color: #2b7a78;
+  --relation-color: #2b7a78;
+  color: var(--relation-color);
 }
 
 .relation-line.warn {
-  color: #d14f3f;
+  --relation-color: #d14f3f;
+  color: var(--relation-color);
 }
 
 .palace-pillar strong {

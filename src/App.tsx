@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
-import type { BaziReading, BirthInput, DeepDomainKey, ElementName } from './core/types';
+import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
 
 const initialInput: BirthInput = {
   name: '1232',
@@ -1417,6 +1417,13 @@ function SmartPillarDiagram({ reading }: { reading: BaziReading }) {
   });
   const allStemNotes = collectPairNotes(pillars.map((pillar) => pillar.stem), combinePairs, '天干未见明显合化');
   const allBranchNotes = collectPairNotes(pillars.map((pillar) => pillar.branch), branchRelations, '地支未见明显冲合刑害');
+  const relationTone = (relation: string) => (relation === '生' || relation === '助' ? 'good' : 'warn');
+  const describeStemLink = (pillar: Pillar, next: Pillar, relation: string) =>
+    `${pillar.stem}${stemElement[pillar.stem]} → ${next.stem}${stemElement[next.stem]}：${relation}`;
+  const describeBranchLink = (pillar: Pillar, next: Pillar, relation: string) =>
+    `${pillar.branch}${branchElement[pillar.branch]} → ${next.branch}${branchElement[next.branch]}：${relation}`;
+  const describeRootLink = (pillar: Pillar, relation: string) =>
+    `${pillar.stem}${stemElement[pillar.stem]} → ${pillar.branch}${branchElement[pillar.branch]}：${relation}`;
 
   return (
     <section className="section diagram-section">
@@ -1474,8 +1481,9 @@ function SmartPillarDiagram({ reading }: { reading: BaziReading }) {
                       <GanZhiGlyph value={pillar.stem} type="stem" />
                     </div>
                     {index < adjacentPairs.length && (
-                      <div className={adjacentPairs[index].stemRelation === '生' || adjacentPairs[index].stemRelation === '助' ? 'relation-line horizontal good' : 'relation-line horizontal warn'}>
+                      <div className={`relation-line horizontal ${relationTone(adjacentPairs[index].stemRelation)}`}>
                         <span>{adjacentPairs[index].stemRelation}</span>
+                        <em>{describeStemLink(pillar, adjacentPairs[index].next, adjacentPairs[index].stemRelation)}</em>
                       </div>
                     )}
                   </div>
@@ -1487,16 +1495,18 @@ function SmartPillarDiagram({ reading }: { reading: BaziReading }) {
                   const stemBranchRelation = getElementRelation(stemElement[pillar.stem], branchElement[pillar.branch]);
                   return (
                     <div className="flow-slot branch-slot" key={`branch-slot-${pillar.key}`}>
-                      <div className={stemBranchRelation === '生' || stemBranchRelation === '助' ? 'relation-line vertical good' : 'relation-line vertical warn'}>
+                      <div className={`relation-line vertical ${relationTone(stemBranchRelation)}`}>
                         <span>{stemBranchRelation}</span>
+                        <em>{describeRootLink(pillar, stemBranchRelation)}</em>
                       </div>
                       <div className="flow-glyph-node">
                         <GanZhiGlyph value={pillar.branch} type="branch" />
                         <small>{pillar.branchTenGods[0] || '-'}</small>
                       </div>
                       {index < adjacentPairs.length && (
-                        <div className={adjacentPairs[index].branchRelation === '生' || adjacentPairs[index].branchRelation === '助' ? 'relation-line horizontal good branch-line' : 'relation-line horizontal warn branch-line'}>
+                        <div className={`relation-line horizontal branch-line ${relationTone(adjacentPairs[index].branchRelation)}`}>
                           <span>{adjacentPairs[index].branchRelation}</span>
+                          <em>{describeBranchLink(pillar, adjacentPairs[index].next, adjacentPairs[index].branchRelation)}</em>
                         </div>
                       )}
                     </div>
@@ -1507,7 +1517,21 @@ function SmartPillarDiagram({ reading }: { reading: BaziReading }) {
           </div>
           <div className="diagram-note-grid">
             <p>
-              <strong>流通：</strong>
+              <strong>天干关系：</strong>
+              {adjacentPairs.map((item) => describeStemLink(item.pillar, item.next, item.stemRelation)).join('；')}
+            </p>
+            <p>
+              <strong>地支关系：</strong>
+              {adjacentPairs.map((item) => describeBranchLink(item.pillar, item.next, item.branchRelation)).join('；')}
+            </p>
+            <p>
+              <strong>上下关系：</strong>
+              {pillars
+                .map((pillar) => describeRootLink(pillar, getElementRelation(stemElement[pillar.stem], branchElement[pillar.branch])))
+                .join('；')}
+            </p>
+            <p>
+              <strong>总体判断：</strong>
               {adjacentPairs
                 .map((item) => `${item.pillar.label}${item.next.label}：天干${item.stemRelation}，地支${item.branchRelation}`)
                 .join('；')}
