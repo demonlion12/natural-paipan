@@ -1465,29 +1465,44 @@ function SmartPillarDiagram({ reading }: { reading: BaziReading }) {
       {activeTab === 'flow' && (
         <div className="diagram-pane">
           <div className="flow-visual">
-            <div className="flow-line-grid">
-              {pillars.map((pillar, index) => (
-                <div className="flow-node" key={`stem-${pillar.key}`}>
-                  <small>{pillar.stemTenGod}</small>
-                  <GanZhiGlyph value={pillar.stem} type="stem" />
-                  {index < adjacentPairs.length && (
-                    <span className={adjacentPairs[index].stemRelation === '生' || adjacentPairs[index].stemRelation === '助' ? 'flow-badge good' : 'flow-badge warn'}>
-                      {adjacentPairs[index].stemRelation}
-                    </span>
-                  )}
-                </div>
-              ))}
-              {pillars.map((pillar, index) => (
-                <div className="flow-node" key={`branch-${pillar.key}`}>
-                  <GanZhiGlyph value={pillar.branch} type="branch" />
-                  <small>{pillar.branchTenGods[0] || '-'}</small>
-                  {index < adjacentPairs.length && (
-                    <span className={adjacentPairs[index].branchRelation === '生' || adjacentPairs[index].branchRelation === '助' ? 'flow-badge good' : 'flow-badge warn'}>
-                      {adjacentPairs[index].branchRelation}
-                    </span>
-                  )}
-                </div>
-              ))}
+            <div className="flow-chart">
+              <div className="flow-chart-row">
+                {pillars.map((pillar, index) => (
+                  <div className="flow-slot" key={`stem-slot-${pillar.key}`}>
+                    <div className="flow-glyph-node">
+                      <small>{pillar.stemTenGod}</small>
+                      <GanZhiGlyph value={pillar.stem} type="stem" />
+                    </div>
+                    {index < adjacentPairs.length && (
+                      <div className={adjacentPairs[index].stemRelation === '生' || adjacentPairs[index].stemRelation === '助' ? 'relation-line horizontal good' : 'relation-line horizontal warn'}>
+                        <span>{adjacentPairs[index].stemRelation}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flow-chart-row">
+                {pillars.map((pillar, index) => {
+                  const stemBranchRelation = getElementRelation(stemElement[pillar.stem], branchElement[pillar.branch]);
+                  return (
+                    <div className="flow-slot branch-slot" key={`branch-slot-${pillar.key}`}>
+                      <div className={stemBranchRelation === '生' || stemBranchRelation === '助' ? 'relation-line vertical good' : 'relation-line vertical warn'}>
+                        <span>{stemBranchRelation}</span>
+                      </div>
+                      <div className="flow-glyph-node">
+                        <GanZhiGlyph value={pillar.branch} type="branch" />
+                        <small>{pillar.branchTenGods[0] || '-'}</small>
+                      </div>
+                      {index < adjacentPairs.length && (
+                        <div className={adjacentPairs[index].branchRelation === '生' || adjacentPairs[index].branchRelation === '助' ? 'relation-line horizontal good branch-line' : 'relation-line horizontal warn branch-line'}>
+                          <span>{adjacentPairs[index].branchRelation}</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
           <div className="diagram-note-grid">

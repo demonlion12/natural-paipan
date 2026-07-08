@@ -1423,65 +1423,132 @@ button.flow-cell.current:focus-visible {
   overflow-x: auto;
 }
 
-.flow-line-grid {
+.flow-chart {
   display: grid;
-  grid-template-columns: repeat(4, minmax(140px, 1fr));
-  gap: 18px;
-  min-width: 680px;
+  gap: 36px;
+  min-width: 760px;
   max-width: 980px;
   margin: 0 auto;
+  padding: 8px 20px 18px;
 }
 
-.flow-node {
+.flow-chart-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 34px;
+}
+
+.flow-slot {
   position: relative;
   display: grid;
-  min-height: 150px;
-  justify-items: center;
-  align-content: center;
+  min-height: 132px;
+  place-items: center;
+}
+
+.branch-slot {
+  min-height: 168px;
+  align-content: end;
+}
+
+.flow-glyph-node {
+  display: grid;
+  min-width: 92px;
+  min-height: 104px;
+  place-items: center;
   gap: 8px;
   border-radius: 8px;
   background: #fbfdfb;
+  padding: 12px;
 }
 
-.flow-node::after {
-  position: absolute;
-  right: -18px;
-  top: 50%;
-  width: 18px;
-  border-top: 2px solid rgba(43, 122, 120, 0.36);
-  content: "";
-}
-
-.flow-node:nth-child(4n)::after {
-  display: none;
-}
-
-.flow-node small {
+.flow-glyph-node small {
   color: #9aa7a1;
   font-weight: 900;
 }
 
-.flow-badge {
+.relation-line {
   position: absolute;
-  right: -15px;
-  top: calc(50% - 15px);
   z-index: 1;
+}
+
+.relation-line.horizontal {
+  left: calc(50% + 42px);
+  top: 52%;
+  width: calc(100% + 34px - 84px);
+  border-top: 2px solid currentColor;
+}
+
+.relation-line.horizontal::before,
+.relation-line.horizontal::after {
+  position: absolute;
+  top: -7px;
+  color: currentColor;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.relation-line.horizontal::before {
+  left: 8px;
+  content: ">>";
+}
+
+.relation-line.horizontal::after {
+  right: 8px;
+  content: ">>";
+}
+
+.relation-line.branch-line {
+  top: 72%;
+}
+
+.relation-line.vertical {
+  left: 50%;
+  top: -38px;
+  height: 76px;
+  border-left: 2px solid currentColor;
+  transform: translateX(-50%);
+}
+
+.relation-line.vertical::before,
+.relation-line.vertical::after {
+  position: absolute;
+  left: -9px;
+  color: currentColor;
+  font-size: 18px;
+  line-height: 1;
+  content: "⌄";
+}
+
+.relation-line.vertical::before {
+  top: 6px;
+}
+
+.relation-line.vertical::after {
+  bottom: 6px;
+}
+
+.relation-line span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   border-radius: 50%;
+  background: currentColor;
   color: #fff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
+  transform: translate(-50%, -50%);
 }
 
-.flow-badge.good {
-  background: #2b7a78;
+.relation-line.good {
+  color: #2b7a78;
 }
 
-.flow-badge.warn {
-  background: #d14f3f;
+.relation-line.warn {
+  color: #d14f3f;
 }
 
 .palace-pillar strong {
