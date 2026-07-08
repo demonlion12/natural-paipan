@@ -31,6 +31,7 @@ const initialInput: BirthInput = {
 type AppStep = 'login' | 'birth' | 'report';
 type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
+type DiagramTab = 'ganzhi' | 'flow' | 'palace' | 'kinship';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 
 const classicTabs: Array<{ key: ClassicKey; label: string }> = [
@@ -118,6 +119,27 @@ const seasonProfileByBranch: Record<string, { season: string; climate: string; p
   亥: { season: '初冬', climate: '水势渐旺，寒气已起', priority: '先取火暖局，再看木能否引火。', adjustment: ['火', '木'] },
   子: { season: '仲冬', climate: '水旺寒凝，阳气初萌', priority: '调候首重火暖，土可堤水，木可引火。', adjustment: ['火', '土'] },
   丑: { season: '季冬', climate: '寒湿之土，水气入库', priority: '宜火暖寒湿，木疏冻土。', adjustment: ['火', '木'] },
+};
+
+const palaceMeanings: Record<string, { title: string; time: string; space: string; body: string; people: string[] }> = {
+  year: { title: '祖辈宫', time: '少年 1~18岁', space: '远方、祖籍', body: '头部、颈部', people: ['长辈', '外人', '祖上'] },
+  month: { title: '父母宫 / 兄弟宫 / 事业宫', time: '青年 18~36岁', space: '家乡、成长环境', body: '胸背、脊柱、肩背', people: ['父母', '兄弟', '同事', '领导'] },
+  day: { title: '夫妻宫 / 自身宫', time: '中年 36~48岁', space: '住所、工作场所', body: '腹部、心脏、内脏', people: ['自己', '配偶', '至亲之人'] },
+  time: { title: '子女宫', time: '晚年 48岁往后', space: '门户、房子附近', body: '下肢、泌尿系统', people: ['子女', '晚辈', '学生', '下属'] },
+};
+
+const kinshipByTenGod: Record<string, { family: string[]; social: string[] }> = {
+  日主: { family: ['自己', '自身', '配偶宫核心'], social: ['自我定位', '决策中心', '承载力'] },
+  比肩: { family: ['兄弟', '姐妹', '同辈'], social: ['同性朋友', '同业竞争', '合伙人'] },
+  劫财: { family: ['兄弟', '姐弟', '同辈'], social: ['竞争者', '合伙人', '资源分配'] },
+  食神: { family: ['子女', '晚辈', '孙辈'], social: ['学生', '下属', '作品输出'] },
+  伤官: { family: ['子女', '晚辈', '外向表达'], social: ['创作者', '表达力', '规则冲突'] },
+  偏财: { family: ['父亲', '外缘', '妻缘参考'], social: ['客户', '资源', '商业机会'] },
+  正财: { family: ['妻子', '父亲参考', '稳定财'], social: ['现金流', '执行资源', '合作收益'] },
+  七杀: { family: ['压力来源', '子女参考'], social: ['上级压力', '竞争者', '纪律'] },
+  正官: { family: ['丈夫参考', '规则长辈'], social: ['上司', '政府', '职位名分'] },
+  偏印: { family: ['母系长辈', '助力', '精神追求'], social: ['贵人', '专业方法', '非标资源'] },
+  正印: { family: ['母亲', '长辈', '保护者'], social: ['学历', '证书', '贵人庇护'] },
 };
 
 const stemElement: Record<string, string> = {
@@ -471,6 +493,32 @@ function getBranchGroupStar(referenceBranch: string, targetBranch: string, map: 
     return branchesInGroup.includes(referenceBranch) && starBranch.includes(targetBranch);
   });
   return matched ? label : '';
+}
+
+function getElementRelation(fromElement: string, toElement: string) {
+  if (!fromElement || !toElement) {
+    return '待定';
+  }
+  if (fromElement === toElement) {
+    return '助';
+  }
+  if (elementGenerates[fromElement as ElementName] === toElement) {
+    return '生';
+  }
+  if (elementGenerates[toElement as ElementName] === fromElement) {
+    return '泄';
+  }
+  if (elementControls[fromElement as ElementName] === toElement) {
+    return '克';
+  }
+  if (elementControls[toElement as ElementName] === fromElement) {
+    return '受克';
+  }
+  return '制化';
+}
+
+function getPairRelations(a: string, b: string, rules: string[][]) {
+  return rules.filter(([left, right]) => (left === a && right === b) || (left === b && right === a)).map(([, , label]) => label);
 }
 
 function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBranch: string) {
@@ -1350,6 +1398,197 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
   );
 }
 
+function SmartPillarDiagram({ reading }: { reading: BaziReading }) {
+  const [activeTab, setActiveTab] = useState<DiagramTab>('ganzhi');
+  const tabItems: Array<{ key: DiagramTab; label: string }> = [
+    { key: 'ganzhi', label: '干支' },
+    { key: 'flow', label: '流通' },
+    { key: 'palace', label: '宫位' },
+    { key: 'kinship', label: '六亲' },
+  ];
+  const pillars = reading.pillars;
+  const adjacentPairs = pillars.slice(0, -1).map((pillar, index) => {
+    const next = pillars[index + 1];
+    const stemRelation = getElementRelation(stemElement[pillar.stem], stemElement[next.stem]);
+    const branchRelation = getElementRelation(branchElement[pillar.branch], branchElement[next.branch]);
+    const branchNotes = getPairRelations(pillar.branch, next.branch, branchRelations);
+    const stemNotes = getPairRelations(pillar.stem, next.stem, combinePairs);
+    return { pillar, next, stemRelation, branchRelation, branchNotes, stemNotes };
+  });
+  const allStemNotes = collectPairNotes(pillars.map((pillar) => pillar.stem), combinePairs, '天干未见明显合化');
+  const allBranchNotes = collectPairNotes(pillars.map((pillar) => pillar.branch), branchRelations, '地支未见明显冲合刑害');
+
+  return (
+    <section className="section diagram-section">
+      <div className="diagram-title">
+        <h2>智能四柱图示</h2>
+      </div>
+      <div className="diagram-tabs" role="tablist" aria-label="智能四柱图示">
+        {tabItems.map((item) => (
+          <button
+            className={activeTab === item.key ? 'active' : ''}
+            key={item.key}
+            onClick={() => setActiveTab(item.key)}
+            type="button"
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'ganzhi' && (
+        <div className="diagram-pane">
+          <div className="diagram-pillars">
+            {pillars.map((pillar) => (
+              <article className="diagram-pillar" key={pillar.key}>
+                <span>{pillar.label}</span>
+                <em>{pillar.stemTenGod}</em>
+                <GanZhiGlyph value={pillar.stem} type="stem" />
+                <GanZhiGlyph value={pillar.branch} type="branch" />
+                <small>{pillar.branchTenGods.join('、') || '-'}</small>
+              </article>
+            ))}
+          </div>
+          <div className="diagram-note-grid">
+            <p>
+              <strong>天干：</strong>
+              {allStemNotes}
+            </p>
+            <p>
+              <strong>地支：</strong>
+              {allBranchNotes}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'flow' && (
+        <div className="diagram-pane">
+          <div className="flow-visual">
+            <div className="flow-line-grid">
+              {pillars.map((pillar, index) => (
+                <div className="flow-node" key={`stem-${pillar.key}`}>
+                  <small>{pillar.stemTenGod}</small>
+                  <GanZhiGlyph value={pillar.stem} type="stem" />
+                  {index < adjacentPairs.length && (
+                    <span className={adjacentPairs[index].stemRelation === '生' || adjacentPairs[index].stemRelation === '助' ? 'flow-badge good' : 'flow-badge warn'}>
+                      {adjacentPairs[index].stemRelation}
+                    </span>
+                  )}
+                </div>
+              ))}
+              {pillars.map((pillar, index) => (
+                <div className="flow-node" key={`branch-${pillar.key}`}>
+                  <GanZhiGlyph value={pillar.branch} type="branch" />
+                  <small>{pillar.branchTenGods[0] || '-'}</small>
+                  {index < adjacentPairs.length && (
+                    <span className={adjacentPairs[index].branchRelation === '生' || adjacentPairs[index].branchRelation === '助' ? 'flow-badge good' : 'flow-badge warn'}>
+                      {adjacentPairs[index].branchRelation}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="diagram-note-grid">
+            <p>
+              <strong>流通：</strong>
+              {adjacentPairs
+                .map((item) => `${item.pillar.label}${item.next.label}：天干${item.stemRelation}，地支${item.branchRelation}`)
+                .join('；')}
+            </p>
+            <p>
+              <strong>阻塞：</strong>
+              {adjacentPairs
+                .flatMap((item) => [...item.stemNotes, ...item.branchNotes])
+                .join('、') || '未见明显相冲、相刑、相克阻塞，重点看岁运触发。'}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'palace' && (
+        <div className="diagram-pane">
+          <div className="palace-pillar-row">
+            {pillars.map((pillar) => {
+              const palace = palaceMeanings[pillar.key];
+              return (
+                <article className="palace-pillar" key={pillar.key}>
+                  <strong>{palace.title}</strong>
+                  <span>{pillar.label}</span>
+                  <GanZhiGlyph value={pillar.stem} type="stem" />
+                  <GanZhiGlyph value={pillar.branch} type="branch" />
+                </article>
+              );
+            })}
+          </div>
+          <div className="palace-matrix">
+            {['time', 'space', 'body'].map((key) => (
+              <article key={key}>
+                <h3>{key === 'time' ? '时间类象' : key === 'space' ? '空间类象' : '身体类象'}</h3>
+                <div>
+                  {pillars.map((pillar) => (
+                    <span key={`${key}-${pillar.key}`}>{palaceMeanings[pillar.key][key as 'time' | 'space' | 'body']}</span>
+                  ))}
+                </div>
+              </article>
+            ))}
+            <article>
+              <h3>人际类象</h3>
+              <div>
+                {pillars.map((pillar) => (
+                  <span key={`people-${pillar.key}`}>{palaceMeanings[pillar.key].people.join('、')}</span>
+                ))}
+              </div>
+            </article>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'kinship' && (
+        <div className="diagram-pane">
+          <div className="kinship-board">
+            <article>
+              <h3>亲属关系</h3>
+              <div className="kinship-columns">
+                {pillars.map((pillar) => {
+                  const kin = kinshipByTenGod[pillar.stemTenGod] ?? { family: ['关系待定'], social: ['关系待定'] };
+                  return (
+                    <div key={`family-${pillar.key}`}>
+                      <strong>{kin.family.join(' / ')}</strong>
+                      <span>{pillar.stemTenGod}</span>
+                      <GanZhiGlyph value={pillar.stem} type="stem" />
+                      <GanZhiGlyph value={pillar.branch} type="branch" />
+                      <small>{pillar.branchTenGods.map((god) => kinshipByTenGod[god]?.family[0] ?? god).join('、') || '-'}</small>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+            <article>
+              <h3>社会关系</h3>
+              <div className="kinship-columns">
+                {pillars.map((pillar) => {
+                  const kin = kinshipByTenGod[pillar.stemTenGod] ?? { family: ['关系待定'], social: ['关系待定'] };
+                  return (
+                    <div key={`social-${pillar.key}`}>
+                      <strong>{kin.social.join(' / ')}</strong>
+                      <span>{pillar.stemTenGod}</span>
+                      <GanZhiGlyph value={pillar.stem} type="stem" />
+                      <GanZhiGlyph value={pillar.branch} type="branch" />
+                      <small>{pillar.branchTenGods.map((god) => kinshipByTenGod[god]?.social[0] ?? god).join('、') || '-'}</small>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function PortraitSection({ reading }: { reading: BaziReading }) {
   const { portrait } = reading;
 
@@ -2112,6 +2351,7 @@ export default function App() {
               <PortraitSection reading={reading} />
               <DeepDivePanel reading={reading} />
             </div>
+            <SmartPillarDiagram reading={reading} />
             <div ref={professionalRef}>
               <ProfessionalChartPanel reading={reading} />
             </div>

@@ -1313,6 +1313,263 @@ button.flow-cell.current:focus-visible {
   font-weight: 900;
 }
 
+.diagram-section {
+  overflow: hidden;
+  padding: 0;
+}
+
+.diagram-title {
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid #e7ece8;
+  padding: 18px;
+}
+
+.diagram-title h2 {
+  font-size: 22px;
+}
+
+.diagram-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid #e7ece8;
+  background: #fff;
+}
+
+.diagram-tabs button {
+  min-height: 52px;
+  border: 0;
+  border-right: 1px solid #e7ece8;
+  background: transparent;
+  color: #17211d;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.diagram-tabs button.active,
+.diagram-tabs button:hover {
+  background: rgba(200, 164, 93, 0.11);
+  color: #9b6a2f;
+}
+
+.diagram-pane {
+  display: grid;
+  gap: 22px;
+  padding: 28px;
+}
+
+.diagram-pillars,
+.palace-pillar-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.diagram-pillar,
+.palace-pillar {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  min-height: 230px;
+  border-radius: 8px;
+  background: #fbfdfb;
+  padding: 18px 12px;
+}
+
+.diagram-pillar span,
+.palace-pillar span,
+.diagram-pillar em {
+  color: #9aa7a1;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.diagram-pillar small,
+.kinship-columns small {
+  color: #61736b;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.diagram-note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.diagram-note-grid p {
+  border: 1px solid rgba(23, 33, 29, 0.09);
+  border-radius: 8px;
+  background: #fbfdfb;
+  color: #61736b;
+  line-height: 1.75;
+  padding: 14px 16px;
+}
+
+.diagram-note-grid strong {
+  color: #2b7a78;
+}
+
+.flow-visual {
+  overflow-x: auto;
+}
+
+.flow-line-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 18px;
+  min-width: 680px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.flow-node {
+  position: relative;
+  display: grid;
+  min-height: 150px;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: #fbfdfb;
+}
+
+.flow-node::after {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  width: 18px;
+  border-top: 2px solid rgba(43, 122, 120, 0.36);
+  content: "";
+}
+
+.flow-node:nth-child(4n)::after {
+  display: none;
+}
+
+.flow-node small {
+  color: #9aa7a1;
+  font-weight: 900;
+}
+
+.flow-badge {
+  position: absolute;
+  right: -15px;
+  top: calc(50% - 15px);
+  z-index: 1;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.flow-badge.good {
+  background: #2b7a78;
+}
+
+.flow-badge.warn {
+  background: #d14f3f;
+}
+
+.palace-pillar strong {
+  min-height: 44px;
+  color: #17211d;
+  font-size: 16px;
+  text-align: center;
+}
+
+.palace-matrix {
+  display: grid;
+  max-width: 820px;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #e7ece8;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.palace-matrix article {
+  display: grid;
+  gap: 14px;
+  border-bottom: 1px solid #e7ece8;
+  padding: 18px;
+  text-align: center;
+}
+
+.palace-matrix article:last-child {
+  border-bottom: 0;
+}
+
+.palace-matrix h3,
+.kinship-board h3 {
+  color: #17211d;
+  font-size: 18px;
+}
+
+.palace-matrix article > div,
+.kinship-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.palace-matrix span {
+  color: #344a42;
+  line-height: 1.6;
+}
+
+.kinship-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.kinship-board article {
+  display: grid;
+  gap: 18px;
+  border: 1px solid #e7ece8;
+  border-radius: 8px;
+  background: #fff;
+  padding: 20px;
+}
+
+.kinship-columns > div {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-height: 260px;
+  border-radius: 8px;
+  background: #fbfdfb;
+  padding: 16px 10px;
+}
+
+.kinship-columns strong {
+  min-height: 42px;
+  color: #17211d;
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.kinship-columns span {
+  color: #9aa7a1;
+  font-weight: 900;
+}
+
 .useful-section {
   display: grid;
   gap: 16px;
@@ -1664,6 +1921,10 @@ button.flow-cell.current:focus-visible {
   .portrait-grid,
   .life-grid,
   .domain-grid,
+  .diagram-pillars,
+  .palace-pillar-row,
+  .diagram-note-grid,
+  .kinship-board,
   .merged-advice-grid,
   .useful-summary,
   .useful-grid,
@@ -1714,6 +1975,13 @@ button.flow-cell.current:focus-visible {
   .life-grid,
   .domain-grid,
   .domain-grid.compact,
+  .diagram-tabs,
+  .diagram-pillars,
+  .palace-pillar-row,
+  .diagram-note-grid,
+  .palace-matrix article > div,
+  .kinship-board,
+  .kinship-columns,
   .useful-summary,
   .useful-grid,
   .luck-overview,
@@ -1741,6 +2009,15 @@ button.flow-cell.current:focus-visible {
   .classic-tabs {
     grid-auto-columns: minmax(106px, max-content);
     grid-template-columns: none;
+  }
+
+  .diagram-pane {
+    padding: 18px;
+  }
+
+  .diagram-tabs button {
+    min-height: 46px;
+    font-size: 14px;
   }
 
   .classic-tab {
