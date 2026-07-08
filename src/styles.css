@@ -1313,6 +1313,74 @@ button.flow-cell.current:focus-visible {
   font-weight: 900;
 }
 
+.useful-section {
+  display: grid;
+  gap: 16px;
+}
+
+.useful-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.useful-summary article,
+.useful-grid article {
+  border: 1px solid rgba(23, 33, 29, 0.09);
+  border-radius: 8px;
+  background: #fbfdfb;
+  padding: 15px;
+}
+
+.useful-summary article {
+  display: grid;
+  gap: 8px;
+}
+
+.useful-summary span {
+  color: #61736b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.useful-summary strong {
+  color: #9b6a2f;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.useful-summary p,
+.useful-grid p,
+.useful-grid li {
+  color: #61736b;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.useful-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.useful-grid article {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.useful-grid h3 {
+  color: #17211d;
+  font-size: 17px;
+}
+
+.useful-grid ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+}
+
 .element-board {
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);
@@ -1597,6 +1665,8 @@ button.flow-cell.current:focus-visible {
   .life-grid,
   .domain-grid,
   .merged-advice-grid,
+  .useful-summary,
+  .useful-grid,
   .luck-overview,
   .luck-period-list,
   .luck-year-grid,
@@ -1644,6 +1714,8 @@ button.flow-cell.current:focus-visible {
   .life-grid,
   .domain-grid,
   .domain-grid.compact,
+  .useful-summary,
+  .useful-grid,
   .luck-overview,
   .luck-period-list,
   .luck-year-grid,

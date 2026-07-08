@@ -29,7 +29,7 @@ const initialInput: BirthInput = {
 };
 
 type AppStep = 'login' | 'birth' | 'report';
-type NavTarget = 'paipan' | 'element' | 'professional' | 'luck' | 'detail';
+type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 
@@ -79,6 +79,45 @@ const branchElement: Record<string, string> = {
   酉: '金',
   戌: '土',
   亥: '水',
+};
+
+const elementGenerates: Record<ElementName, ElementName> = {
+  木: '火',
+  火: '土',
+  土: '金',
+  金: '水',
+  水: '木',
+};
+
+const elementControls: Record<ElementName, ElementName> = {
+  木: '土',
+  火: '金',
+  土: '水',
+  金: '木',
+  水: '火',
+};
+
+const elementControlledBy: Record<ElementName, ElementName> = {
+  木: '金',
+  火: '水',
+  土: '木',
+  金: '火',
+  水: '土',
+};
+
+const seasonProfileByBranch: Record<string, { season: string; climate: string; priority: string; adjustment: ElementName[] }> = {
+  寅: { season: '初春', climate: '木气初升，余寒未退', priority: '先扶生机，再防寒湿滞木。', adjustment: ['火', '木'] },
+  卯: { season: '仲春', climate: '木旺风动，生发最盛', priority: '宜疏木成材，忌木多无制。', adjustment: ['火', '金'] },
+  辰: { season: '暮春', climate: '湿土收春，木气入库', priority: '宜燥湿通关，防土湿困木。', adjustment: ['火', '木'] },
+  巳: { season: '初夏', climate: '火气渐旺，燥象初成', priority: '宜取水润燥，兼看土金是否承接。', adjustment: ['水', '金'] },
+  午: { season: '仲夏', climate: '火旺炎上，燥热最显', priority: '先取水调候，再以金生水。', adjustment: ['水', '金'] },
+  未: { season: '季夏', climate: '燥土含火，暑气未退', priority: '宜润土降燥，使气能下行。', adjustment: ['水', '金'] },
+  申: { season: '初秋', climate: '金气初肃，余热尚存', priority: '宜火炼金、水平燥，忌寒燥偏枯。', adjustment: ['火', '水'] },
+  酉: { season: '仲秋', climate: '金旺肃杀，燥气明显', priority: '宜火暖金，亦需水润其燥。', adjustment: ['火', '水'] },
+  戌: { season: '暮秋', climate: '燥土收金，火入墓库', priority: '宜水润燥土，木疏土闭。', adjustment: ['水', '木'] },
+  亥: { season: '初冬', climate: '水势渐旺，寒气已起', priority: '先取火暖局，再看木能否引火。', adjustment: ['火', '木'] },
+  子: { season: '仲冬', climate: '水旺寒凝，阳气初萌', priority: '调候首重火暖，土可堤水，木可引火。', adjustment: ['火', '土'] },
+  丑: { season: '季冬', climate: '寒湿之土，水气入库', priority: '宜火暖寒湿，木疏冻土。', adjustment: ['火', '木'] },
 };
 
 const stemElement: Record<string, string> = {
@@ -1193,6 +1232,124 @@ function ElementBoard({ reading, compact = false }: { reading: BaziReading; comp
   );
 }
 
+function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
+  const dayElement = reading.dayMaster.element;
+  const dayStrength = reading.dayMaster.strength;
+  const monthBranch = reading.pillars[1].branch;
+  const monthProfile = seasonProfileByBranch[monthBranch];
+  const usefulPrimary = reading.usefulElements[0];
+  const usefulSecondary = reading.usefulElements[1] ?? elementGenerates[usefulPrimary];
+  const avoidElements = reading.elementScores
+    .filter((item) => item.tone === '偏旺' && !reading.usefulElements.includes(item.element))
+    .map((item) => item.element);
+  const weakElements = reading.elementScores.filter((item) => item.tone === '不足').map((item) => item.element);
+  const visibleUseful = reading.pillars
+    .flatMap((pillar) => [pillar.stem, pillar.branch])
+    .filter((value) => reading.usefulElements.includes((stemElement[value] ?? branchElement[value]) as ElementName));
+  const supportElement = dayStrength === '偏弱' ? dayElement : elementGenerates[dayElement];
+  const controlElement = elementControlledBy[dayElement];
+  const drainElement = elementGenerates[dayElement];
+  const wealthElement = elementControls[dayElement];
+  const tiaohouHits = monthProfile.adjustment.filter((element) => reading.usefulElements.includes(element));
+  const tensionElements = monthProfile.adjustment.filter((element) => !reading.usefulElements.includes(element));
+  const usefulLogic =
+    dayStrength === '偏弱'
+      ? `日主${dayElement}偏弱，扶抑上先看印比：${supportElement}能补根气、增强承压，${controlElement}来克时则要先看有无通关。`
+      : dayStrength === '偏旺'
+        ? `日主${dayElement}偏旺，扶抑上宜泄耗制：${drainElement}可泄秀，${wealthElement}可成事，${controlElement}可立规矩，但过制则反成压力。`
+        : `日主${dayElement}中和，扶抑不是单纯补强或削弱，重点看月令气候、格局清浊和岁运是否引动关键十神。`;
+
+  return (
+    <section className="section useful-section">
+      <div className="section-title">
+        <h2>喜用与调候详析</h2>
+        <span>
+          用神 {usefulPrimary} · 喜神 {usefulSecondary} · 月令{monthBranch}
+        </span>
+      </div>
+
+      <div className="useful-summary">
+        <article>
+          <span>用神</span>
+          <strong>{usefulPrimary}</strong>
+          <p>
+            当前日主{reading.dayMaster.stem}属{dayElement}，整体{dayStrength}。系统取{reading.usefulElements.join('、')}为主要补偏方向，
+            不是只看缺什么，而是看月令、旺衰、流通和现实可承接性。
+          </p>
+        </article>
+        <article>
+          <span>调候</span>
+          <strong>{monthProfile.adjustment.join('、')}</strong>
+          <p>
+            生于{monthBranch}月，属{monthProfile.season}，{monthProfile.climate}。调候先看寒暖燥湿：
+            {monthProfile.priority}
+          </p>
+        </article>
+        <article>
+          <span>忌偏</span>
+          <strong>{avoidElements.join('、') || reading.structure.dominantElement}</strong>
+          <p>
+            {avoidElements.length
+              ? `${avoidElements.join('、')}已偏旺，岁运再增时容易放大惯性。`
+              : `${reading.structure.dominantElement}为命局主气，未必为忌，但过度时会压住其他五行。`}
+            取用要看能否形成流通，而不是把某一行越补越多。
+          </p>
+        </article>
+      </div>
+
+      <div className="useful-grid">
+        <article>
+          <h3>一、扶抑喜用</h3>
+          <p>{usefulLogic}</p>
+          <ul>
+            <li>首要用神：{usefulPrimary}，用于修正命局最需要补的方向。</li>
+            <li>辅助喜神：{usefulSecondary}，用于承接用神，避免补而不通。</li>
+            <li>可见根气：{visibleUseful.length ? `${visibleUseful.join('、')}已在原局出现，喜用有落点。` : '原局喜用不显，更要靠环境、选择和岁运来补。'}</li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>二、调候取法</h3>
+          <p>
+            调候重在“气候适不适合日主发挥”。{monthProfile.season}的核心问题是{monthProfile.climate}，
+            所以本盘不能只用旺弱判断，还要看{monthProfile.adjustment.join('、')}能否调出可用之气。
+          </p>
+          <ul>
+            <li>{tiaohouHits.length ? `调候与喜用重合：${tiaohouHits.join('、')}，属于既补结构又调气候。` : `调候与扶抑有张力：${tensionElements.join('、')}需谨慎使用，不能一概当成喜。`}</li>
+            <li>月令藏干：{reading.pillars[1].hiddenStems.join('、')}，说明气候背后还藏着{reading.pillars[1].branchTenGods.join('、') || '十神伏藏'}。</li>
+            <li>缺口提示：{weakElements.length ? `${weakElements.join('、')}不足，适合后天主动补环境和能力。` : '五行缺口不明显，重点在清浊与流通。'}</li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>三、现实取用</h3>
+          <p>
+            喜用落到现实，不是简单穿颜色或选方位，而是选择能补足{reading.usefulElements.join('、')}性质的环境、能力和节奏。
+          </p>
+          <ul>
+            <li>{usefulPrimary}为用：优先经营能带来稳定补偏的能力、行业资源或生活节律。</li>
+            <li>{usefulSecondary}为喜：适合作为辅助策略，用来承接机会、缓冲压力。</li>
+            <li>若遇到加重{reading.structure.dominantElement}的年份，先降内耗，再谈扩张。</li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>四、岁运观察</h3>
+          <p>
+            大运、流年见{reading.usefulElements.join('、')}时，往往更容易出现顺手的机会；若见{avoidElements.join('、') || reading.structure.dominantElement}过多，
+            则要看是否冲动原局关系。
+          </p>
+          <ul>
+            <li>可回测：过去进入喜用年份时，学习、迁移、合作或收入是否更顺。</li>
+            <li>可预判：未来岁运若同时补调候与扶抑，适合主动推进重要事项。</li>
+            <li>可避险：岁运冲合刑害明显时，先做减法，避免在压力期硬扩张。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function PortraitSection({ reading }: { reading: BaziReading }) {
   const { portrait } = reading;
 
@@ -1507,6 +1664,11 @@ function LuckIntegratedPanel({ reading }: { reading: BaziReading }) {
 function buildReportText(reading: BaziReading) {
   const pillars = reading.pillars.map((pillar) => `${pillar.label} ${pillar.ganZhi} ${pillar.stemTenGod}`).join(' / ');
   const elements = reading.elementScores.map((item) => `${item.element}${Math.round(item.ratio * 100)}%(${item.tone})`).join('、');
+  const monthBranch = reading.pillars[1].branch;
+  const monthProfile = seasonProfileByBranch[monthBranch];
+  const avoidElements = reading.elementScores
+    .filter((item) => item.tone === '偏旺' && !reading.usefulElements.includes(item.element))
+    .map((item) => item.element);
   const deepDomains = reading.deepDive.domains
     .map((domain) => {
       return [
@@ -1537,6 +1699,8 @@ function buildReportText(reading: BaziReading) {
     `日主：${reading.dayMaster.polarity}${reading.dayMaster.element}，${reading.dayMaster.strength}`,
     `五行：${elements}`,
     `喜用：${reading.usefulElements.join('、')}`,
+    `调候：${monthBranch}月属${monthProfile.season}，${monthProfile.climate}；调候取${monthProfile.adjustment.join('、')}，重点为${monthProfile.priority}`,
+    `喜用详析：日主${reading.dayMaster.stem}属${reading.dayMaster.element}，整体${reading.dayMaster.strength}；用神${reading.usefulElements[0]}，喜神${reading.usefulElements[1] ?? elementGenerates[reading.usefulElements[0]]}。忌偏参考：${avoidElements.join('、') || reading.structure.dominantElement}。`,
     `命宫：${reading.structure.mingGong}，身宫：${reading.structure.shenGong}，胎元：${reading.structure.taiYuan}`,
     '',
     '【专业详批：性格画像】',
@@ -1782,6 +1946,7 @@ function ReportTopNav({
   const navItems: Array<{ key: NavTarget; label: string }> = [
     { key: 'paipan', label: '基本排盘' },
     { key: 'element', label: '五行气势' },
+    { key: 'useful', label: '喜用调候' },
     { key: 'detail', label: '专业详批' },
     { key: 'professional', label: '专业细盘' },
     { key: 'luck', label: '大运合参' },
@@ -1817,6 +1982,7 @@ export default function App() {
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
   const paipanRef = useRef<HTMLDivElement>(null);
   const elementRef = useRef<HTMLDivElement>(null);
+  const usefulRef = useRef<HTMLDivElement>(null);
   const professionalRef = useRef<HTMLDivElement>(null);
   const luckRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
@@ -1833,6 +1999,7 @@ export default function App() {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
       paipan: paipanRef,
       element: elementRef,
+      useful: usefulRef,
       professional: professionalRef,
       luck: luckRef,
       detail: detailRef,
@@ -1938,6 +2105,9 @@ export default function App() {
               <PaipanSection reading={reading} elementRef={elementRef} />
             </div>
             <AncientReference reading={reading} />
+            <div ref={usefulRef}>
+              <UsefulAndTiaohouPanel reading={reading} />
+            </div>
             <div className="detail-stack" ref={detailRef}>
               <PortraitSection reading={reading} />
               <DeepDivePanel reading={reading} />
