@@ -3,6 +3,7 @@ import type { FormEvent, RefObject } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   CalendarDays,
   Clock3,
   Copy,
@@ -28,10 +29,11 @@ const initialInput: BirthInput = {
   birthplace: '未知地 北京时间',
 };
 
-type AppStep = 'login' | 'birth' | 'report';
+type AppStep = 'login' | 'birth' | 'report' | 'yijing';
 type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 type DiagramTab = 'ganzhi' | 'flow' | 'palace' | 'kinship';
+type YaoValue = 6 | 7 | 8 | 9;
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
 const elementCycleOrder: ElementName[] = ['木', '火', '土', '金', '水'];
 
@@ -206,6 +208,95 @@ const monthTermDates = [
   { month: 1, day: 5 },
 ];
 const dayMs = 24 * 60 * 60 * 1000;
+
+const trigramByBits: Record<string, { name: string; symbol: string; nature: string; image: string }> = {
+  '111': { name: '乾', symbol: '☰', nature: '天', image: '健、主动、开创' },
+  '110': { name: '兑', symbol: '☱', nature: '泽', image: '悦、沟通、兑现' },
+  '101': { name: '离', symbol: '☲', nature: '火', image: '明、依附、看见' },
+  '100': { name: '震', symbol: '☳', nature: '雷', image: '动、启动、惊醒' },
+  '011': { name: '巽', symbol: '☴', nature: '风', image: '入、渗透、协商' },
+  '010': { name: '坎', symbol: '☵', nature: '水', image: '险、压力、反复' },
+  '001': { name: '艮', symbol: '☶', nature: '山', image: '止、边界、沉淀' },
+  '000': { name: '坤', symbol: '☷', nature: '地', image: '顺、承载、积累' },
+};
+
+const hexagramMatrix: Record<string, Record<string, { number: number; name: string }>> = {
+  乾: { 乾: { number: 1, name: '乾为天' }, 兑: { number: 10, name: '天泽履' }, 离: { number: 13, name: '天火同人' }, 震: { number: 25, name: '天雷无妄' }, 巽: { number: 44, name: '天风姤' }, 坎: { number: 6, name: '天水讼' }, 艮: { number: 33, name: '天山遁' }, 坤: { number: 12, name: '天地否' } },
+  兑: { 乾: { number: 43, name: '泽天夬' }, 兑: { number: 58, name: '兑为泽' }, 离: { number: 49, name: '泽火革' }, 震: { number: 17, name: '泽雷随' }, 巽: { number: 28, name: '泽风大过' }, 坎: { number: 47, name: '泽水困' }, 艮: { number: 31, name: '泽山咸' }, 坤: { number: 45, name: '泽地萃' } },
+  离: { 乾: { number: 14, name: '火天大有' }, 兑: { number: 38, name: '火泽睽' }, 离: { number: 30, name: '离为火' }, 震: { number: 21, name: '火雷噬嗑' }, 巽: { number: 50, name: '火风鼎' }, 坎: { number: 64, name: '火水未济' }, 艮: { number: 56, name: '火山旅' }, 坤: { number: 35, name: '火地晋' } },
+  震: { 乾: { number: 34, name: '雷天大壮' }, 兑: { number: 54, name: '雷泽归妹' }, 离: { number: 55, name: '雷火丰' }, 震: { number: 51, name: '震为雷' }, 巽: { number: 32, name: '雷风恒' }, 坎: { number: 40, name: '雷水解' }, 艮: { number: 62, name: '雷山小过' }, 坤: { number: 16, name: '雷地豫' } },
+  巽: { 乾: { number: 9, name: '风天小畜' }, 兑: { number: 61, name: '风泽中孚' }, 离: { number: 37, name: '风火家人' }, 震: { number: 42, name: '风雷益' }, 巽: { number: 57, name: '巽为风' }, 坎: { number: 59, name: '风水涣' }, 艮: { number: 53, name: '风山渐' }, 坤: { number: 20, name: '风地观' } },
+  坎: { 乾: { number: 5, name: '水天需' }, 兑: { number: 60, name: '水泽节' }, 离: { number: 63, name: '水火既济' }, 震: { number: 3, name: '水雷屯' }, 巽: { number: 48, name: '水风井' }, 坎: { number: 29, name: '坎为水' }, 艮: { number: 39, name: '水山蹇' }, 坤: { number: 8, name: '水地比' } },
+  艮: { 乾: { number: 26, name: '山天大畜' }, 兑: { number: 41, name: '山泽损' }, 离: { number: 22, name: '山火贲' }, 震: { number: 27, name: '山雷颐' }, 巽: { number: 18, name: '山风蛊' }, 坎: { number: 4, name: '山水蒙' }, 艮: { number: 52, name: '艮为山' }, 坤: { number: 23, name: '山地剥' } },
+  坤: { 乾: { number: 11, name: '地天泰' }, 兑: { number: 19, name: '地泽临' }, 离: { number: 36, name: '地火明夷' }, 震: { number: 24, name: '地雷复' }, 巽: { number: 46, name: '地风升' }, 坎: { number: 7, name: '地水师' }, 艮: { number: 15, name: '地山谦' }, 坤: { number: 2, name: '坤为地' } },
+};
+
+const hexagramThemes: Record<string, string> = {
+  乾为天: '贵在主动开创，但要守正，不宜躁进。',
+  坤为地: '贵在承载配合，先稳住资源，再谈推进。',
+  水雷屯: '初始阻力较大，适合先搭框架、找帮手。',
+  山水蒙: '信息未明，先学习、求证、请教，不宜急断。',
+  水天需: '时机未到，守住准备，等待条件成熟。',
+  天水讼: '有争执和分歧，先厘清边界，避免硬碰硬。',
+  地水师: '需要组织纪律，先统一目标，再调动资源。',
+  水地比: '重在结盟与依附，选择可信的人和平台。',
+  风天小畜: '力量仍在积蓄，小步推进比大举冒进更好。',
+  天泽履: '如履薄冰，礼数、规则、分寸最关键。',
+  地天泰: '上下相通，适合推进合作和长期建设。',
+  天地否: '气机不通，先收缩、清障、等局势转圜。',
+  天火同人: '适合结伴同行，公开透明能聚人心。',
+  火天大有: '资源较足，关键在于正确分配与守成。',
+  地山谦: '以谦受益，降低姿态反而更容易成事。',
+  雷地豫: '人心可动，但要防乐观过度。',
+  泽雷随: '顺势而行，跟随变化，但不能失去主见。',
+  山风蛊: '旧问题需整顿，先治本，再求新局。',
+  地泽临: '机会临近，宜主动接近、观察反馈。',
+  风地观: '先观察全局，暂不宜凭情绪决策。',
+  火雷噬嗑: '有阻隔要咬断，适合处理规则和执行问题。',
+  山火贲: '重在修饰与呈现，内容和外观都要顾及。',
+  山地剥: '势在剥落，宜保核心，少做扩张。',
+  地雷复: '转机初现，适合从小处恢复。',
+  天雷无妄: '不妄为则无咎，按事实行动。',
+  山天大畜: '积累深厚，宜蓄势待发。',
+  山雷颐: '注意供养与言行，先修内在系统。',
+  泽风大过: '压力超载，要减重、换梁、调整结构。',
+  坎为水: '险象反复，守正、分步、备预案。',
+  离为火: '重在清晰与依附，需看清所依之物是否可靠。',
+  泽山咸: '感应互动强，关系和情绪是关键变量。',
+  雷风恒: '贵在稳定持续，忌三分钟热度。',
+  天山遁: '退不是败，是避锋芒、保主动权。',
+  雷天大壮: '势大力强，尤其要守规则。',
+  火地晋: '有上升机会，宜展示成果、争取认可。',
+  地火明夷: '光明受伤，宜低调守内，不宜锋芒太露。',
+  风火家人: '先正内部秩序，家人/团队关系是根。',
+  火泽睽: '意见相背，先求同存异。',
+  水山蹇: '前路有阻，宜换路径或求助。',
+  雷水解: '阻力可解，行动后会有松动。',
+  山泽损: '有所减损，换来结构更清。',
+  风雷益: '有增益之象，适合投入有回报的事。',
+  泽天夬: '需要决断，但要防过刚。',
+  天风姤: '偶遇强缘，机会突来，也要防失控。',
+  泽地萃: '聚合资源，适合集会、整合、组织。',
+  地风升: '渐进上升，靠积累和台阶。',
+  泽水困: '受困之象，少说多做，保存实力。',
+  水风井: '根源未变，宜修井养源。',
+  泽火革: '变革之象，需名正言顺。',
+  火风鼎: '更新器物与制度，适合重组升级。',
+  震为雷: '震动突来，先稳神，再行动。',
+  艮为山: '止而后定，适合暂停、设边界。',
+  风山渐: '循序渐进，慢就是快。',
+  雷泽归妹: '关系或合作名分未正，谨慎承诺。',
+  雷火丰: '盛大但易过满，防高位回落。',
+  火山旅: '漂泊变动，宜轻装、守规矩。',
+  巽为风: '柔入渐进，用沟通和渗透成事。',
+  兑为泽: '喜悦沟通，利谈判，也防口舌。',
+  风水涣: '涣散需重聚，先定共同目标。',
+  水泽节: '节制有利，边界越清越稳。',
+  风泽中孚: '诚信感通，以真实换信任。',
+  雷山小过: '小事可过，大事宜谨慎。',
+  水火既济: '阶段已成，防满而生变。',
+  火水未济: '未完成，仍需补最后一环。',
+};
 
 const tianYiMap: Record<string, string[]> = {
   甲: ['丑', '未'],
@@ -523,6 +614,84 @@ function getElementRelation(fromElement: string, toElement: string) {
 
 function getPairRelations(a: string, b: string, rules: string[][]) {
   return rules.filter(([left, right]) => (left === a && right === b) || (left === b && right === a)).map(([, , label]) => label);
+}
+
+function isYangLine(value: YaoValue) {
+  return value === 7 || value === 9;
+}
+
+function isMovingLine(value: YaoValue) {
+  return value === 6 || value === 9;
+}
+
+function changedLine(value: YaoValue): YaoValue {
+  if (value === 6) {
+    return 7;
+  }
+  if (value === 9) {
+    return 8;
+  }
+  return value;
+}
+
+function castYao(): YaoValue {
+  const heads = [0, 1, 2].reduce((sum) => sum + (Math.random() > 0.5 ? 1 : 0), 0);
+  return ([6, 7, 8, 9] as YaoValue[])[heads];
+}
+
+function getTrigram(lines: YaoValue[]) {
+  const key = lines.map((line) => (isYangLine(line) ? '1' : '0')).join('');
+  return trigramByBits[key] ?? trigramByBits['000'];
+}
+
+function getHexagram(lines: YaoValue[]) {
+  const lower = getTrigram(lines.slice(0, 3));
+  const upper = getTrigram(lines.slice(3, 6));
+  const entry = hexagramMatrix[upper.name]?.[lower.name] ?? { number: 0, name: '未成卦' };
+  return {
+    ...entry,
+    lower,
+    upper,
+    theme: hexagramThemes[entry.name] ?? '此卦宜先看上下卦气是否相通，再看动爻落点决定进退。',
+  };
+}
+
+function formatYao(value: YaoValue) {
+  if (value === 6) {
+    return '老阴';
+  }
+  if (value === 7) {
+    return '少阳';
+  }
+  if (value === 8) {
+    return '少阴';
+  }
+  return '老阳';
+}
+
+function movingLineAdvice(index: number, value: YaoValue) {
+  const positions = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
+  const phase = ['事情刚起，先定方向。', '进入执行层，重在稳住基础。', '处在临界位，谨慎过度用力。', '开始接近外部环境，要看协作。', '来到主位，适合承担决策。', '事情到高处，防过满或收尾不当。'];
+  const motion = value === 9 ? '阳动变阴，宜从强势转为收敛。' : '阴动变阳，宜从等待转为行动。';
+  return `${positions[index]}动：${phase[index]}${motion}`;
+}
+
+function buildDivinationReading(question: string, lines: YaoValue[]) {
+  if (lines.length !== 6) {
+    return null;
+  }
+  const base = getHexagram(lines);
+  const changedLines = lines.map(changedLine);
+  const changed = getHexagram(changedLines);
+  const moving = lines.map((line, index) => ({ line, index })).filter((item) => isMovingLine(item.line));
+  const questionText = question.trim() || '未填写具体事项';
+  const trend =
+    moving.length === 0
+      ? '无动爻，说明局势相对稳定，重点看本卦所示的长期结构。'
+      : moving.length <= 2
+        ? '动爻较少，事情有明确变化点，宜抓住关键节点处理。'
+        : '动爻较多，局势变动明显，先稳住节奏，避免同时处理太多变量。';
+  return { base, changed, moving, questionText, trend };
 }
 
 function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBranch: string) {
@@ -2024,16 +2193,172 @@ function buildReportText(reading: BaziReading) {
   ].join('\n');
 }
 
+function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => void }) {
+  const [question, setQuestion] = useState('近期事业推进是否适合主动争取？');
+  const [lines, setLines] = useState<YaoValue[]>([]);
+  const reading = useMemo(() => buildDivinationReading(question, lines), [question, lines]);
+
+  const castFullHexagram = () => {
+    setLines(Array.from({ length: 6 }, () => castYao()));
+  };
+
+  const castOneLine = () => {
+    setLines((current) => (current.length >= 6 ? [castYao()] : [...current, castYao()]));
+  };
+
+  return (
+    <main className="yijing-shell">
+      <header className="yijing-topbar">
+        <button className="icon-text-button" onClick={onBack} type="button">
+          <ArrowLeft size={17} />
+          返回
+        </button>
+        <div className="topnav-brand">
+          <div className="brand-symbol">易</div>
+          <div>
+            <strong>易经求卦</strong>
+            <span>起卦 · 解卦 · 动爻参考</span>
+          </div>
+        </div>
+        <button className="secondary-button slim" onClick={onGoBazi} type="button">
+          <BookOpen size={16} />
+          八字排盘
+        </button>
+      </header>
+
+      <section className="yijing-layout">
+        <aside className="yijing-control section">
+          <div className="section-title">
+            <h2>求卦</h2>
+            <span>六爻自下而上</span>
+          </div>
+          <label>
+            <span>所问事项</span>
+            <textarea value={question} onChange={(event) => setQuestion(event.target.value)} />
+          </label>
+          <div className="yijing-actions">
+            <button className="primary-button" onClick={castFullHexagram} type="button">
+              <Sparkles size={17} />
+              自动起卦
+            </button>
+            <button className="secondary-button" onClick={castOneLine} type="button">
+              摇一爻 {lines.length ? `${lines.length}/6` : ''}
+            </button>
+            <button className="secondary-button" onClick={() => setLines([])} type="button">
+              清空
+            </button>
+          </div>
+          <div className="yijing-method">
+            <strong>起卦说明</strong>
+            <p>采用三枚铜钱法：六为老阴、七为少阳、八为少阴、九为老阳。老阴老阳为动爻，动则生成变卦。</p>
+          </div>
+        </aside>
+
+        <section className="yijing-result">
+          {!reading && (
+            <div className="empty-divination section">
+              <h2>尚未成卦</h2>
+              <p>可以一次自动起卦，也可以逐爻摇出六爻。六爻完成后，会显示本卦、变卦、动爻和解读建议。</p>
+            </div>
+          )}
+
+          {reading && (
+            <>
+              <div className="hexagram-summary section">
+                <article>
+                  <span>本卦</span>
+                  <strong>
+                    {reading.base.number}. {reading.base.name}
+                  </strong>
+                  <p>
+                    上{reading.base.upper.name}{reading.base.upper.symbol}为{reading.base.upper.nature}，下{reading.base.lower.name}
+                    {reading.base.lower.symbol}为{reading.base.lower.nature}。
+                  </p>
+                </article>
+                <article>
+                  <span>变卦</span>
+                  <strong>
+                    {reading.changed.number}. {reading.changed.name}
+                  </strong>
+                  <p>{reading.moving.length ? `动爻 ${reading.moving.map((item) => item.index + 1).join('、')} 位，局势由本卦转向变卦。` : '无动爻，以本卦为主，不另取变卦。'}</p>
+                </article>
+              </div>
+
+              <div className="hexagram-board section">
+                <div className="hexagram-lines" aria-label="六爻图">
+                  {[...lines].reverse().map((line, reverseIndex) => {
+                    const index = 5 - reverseIndex;
+                    const yang = isYangLine(line);
+                    return (
+                      <div className="yao-row" key={`${index}-${line}`}>
+                        <span>{['上', '五', '四', '三', '二', '初'][reverseIndex]}爻</span>
+                        <div className={yang ? 'yao-line yang' : 'yao-line yin'}>
+                          <i />
+                          {!yang && <i />}
+                        </div>
+                        <em className={isMovingLine(line) ? 'moving' : ''}>{formatYao(line)}</em>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="hexagram-reading">
+                  <h2>{reading.questionText}</h2>
+                  <article>
+                    <h3>卦意</h3>
+                    <p>{reading.base.theme}</p>
+                  </article>
+                  <article>
+                    <h3>趋势</h3>
+                    <p>{reading.trend}</p>
+                  </article>
+                  <article>
+                    <h3>现代解读</h3>
+                    <p>
+                      本卦上卦主外部环境，呈{reading.base.upper.image}；下卦主自身处境，呈{reading.base.lower.image}。
+                      若要推进此事，先看内外是否同向，再看动爻提示的变化位置。
+                    </p>
+                  </article>
+                </div>
+              </div>
+
+              <div className="moving-advice section">
+                <div className="section-title">
+                  <h2>动爻详解</h2>
+                  <span>{reading.moving.length ? `${reading.moving.length} 个动爻` : '无动爻'}</span>
+                </div>
+                {reading.moving.length ? (
+                  <div className="moving-grid">
+                    {reading.moving.map((item) => (
+                      <article key={item.index}>
+                        <strong>{formatYao(item.line)}</strong>
+                        <p>{movingLineAdvice(item.index, item.line)}</p>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="plain-note">无动爻时，以本卦整体卦意为主，适合观察稳定结构，不急于改变策略。</p>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+      </section>
+    </main>
+  );
+}
+
 function LoginPage({
   profileName,
   onChangeName,
   onLogin,
   onGuest,
+  onYijing,
 }: {
   profileName: string;
   onChangeName: (value: string) => void;
   onLogin: () => void;
   onGuest: () => void;
+  onYijing: () => void;
 }) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -2099,7 +2424,7 @@ function LoginPage({
           <span>四柱排盘</span>
           <span>五行气势</span>
           <span>专业深度页</span>
-          <span>逐项详批</span>
+          <button onClick={onYijing} type="button">易经求卦</button>
         </div>
       </section>
 
@@ -2142,12 +2467,14 @@ function BirthSetupPage({
   input,
   onBack,
   onChange,
+  onYijing,
   onReset,
   onSubmit,
 }: {
   input: BirthInput;
   onBack: () => void;
   onChange: (input: BirthInput) => void;
+  onYijing: () => void;
   onReset: () => void;
   onSubmit: (input: BirthInput) => void;
 }) {
@@ -2170,6 +2497,10 @@ function BirthSetupPage({
           <button className="icon-text-button" onClick={onBack} type="button">
             <ArrowLeft size={17} />
             返回
+          </button>
+          <button className="icon-text-button" onClick={onYijing} type="button">
+            <BookOpen size={17} />
+            易经求卦
           </button>
         </div>
 
@@ -2257,9 +2588,11 @@ function BirthSetupPage({
 function ReportTopNav({
   activeNav,
   onNavigate,
+  onYijing,
 }: {
   activeNav: NavTarget;
   onNavigate: (target: NavTarget) => void;
+  onYijing: () => void;
 }) {
   const navItems: Array<{ key: NavTarget; label: string }> = [
     { key: 'paipan', label: '基本排盘' },
@@ -2286,6 +2619,9 @@ function ReportTopNav({
             {item.label}
           </button>
         ))}
+        <button onClick={onYijing} type="button">
+          易经求卦
+        </button>
       </nav>
     </header>
   );
@@ -2295,6 +2631,7 @@ export default function App() {
   const [input, setInput] = useState(initialInput);
   const [submitted, setSubmitted] = useState(initialInput);
   const [step, setStep] = useState<AppStep>('login');
+  const [yijingBackStep, setYijingBackStep] = useState<AppStep>('login');
   const [activeNav, setActiveNav] = useState<NavTarget>('paipan');
   const [toast, setToast] = useState('');
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
@@ -2324,6 +2661,11 @@ export default function App() {
     };
     setActiveNav(target);
     refs[target].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const openYijing = () => {
+    setYijingBackStep(step);
+    setStep('yijing');
   };
 
   const copyReport = async () => {
@@ -2379,8 +2721,18 @@ export default function App() {
           setToast('登录成功，继续录入生辰');
           setStep('birth');
         }}
+        onYijing={openYijing}
         profileName={input.name}
       />
+    );
+  }
+
+  if (step === 'yijing') {
+    return (
+      <>
+        <YijingPage onBack={() => setStep(yijingBackStep === 'yijing' ? 'login' : yijingBackStep)} onGoBazi={() => setStep('birth')} />
+        {toast && <div className="toast">{toast}</div>}
+      </>
     );
   }
 
@@ -2391,6 +2743,7 @@ export default function App() {
           input={input}
           onBack={() => setStep('login')}
           onChange={setInput}
+          onYijing={openYijing}
           onReset={resetCase}
           onSubmit={(nextInput) => {
             setInput(nextInput);
@@ -2407,7 +2760,7 @@ export default function App() {
 
   return (
     <main className="report-shell">
-      <ReportTopNav activeNav={activeNav} onNavigate={scrollTo} />
+      <ReportTopNav activeNav={activeNav} onNavigate={scrollTo} onYijing={openYijing} />
 
       <div className="report-main">
         {error && <div className="error-box">{error}</div>}
