@@ -33,6 +33,7 @@ type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'de
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 type DiagramTab = 'ganzhi' | 'flow' | 'palace' | 'kinship';
 const deepDomainOrder: DeepDomainKey[] = ['summary', 'career', 'wealth', 'relationship', 'health', 'family'];
+const elementCycleOrder: ElementName[] = ['木', '火', '土', '金', '水'];
 
 const classicTabs: Array<{ key: ClassicKey; label: string }> = [
   { key: 'qiongtong', label: '穷通宝鉴' },
@@ -1243,6 +1244,10 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
 }
 
 function ElementBoard({ reading, compact = false }: { reading: BaziReading; compact?: boolean }) {
+  const elementScoresByCycle = elementCycleOrder
+    .map((element) => reading.elementScores.find((item) => item.element === element))
+    .filter((item): item is BaziReading['elementScores'][number] => Boolean(item));
+
   return (
     <section className={compact ? 'section element-section compact' : 'section element-section'}>
       <div className="section-title">
@@ -1251,7 +1256,7 @@ function ElementBoard({ reading, compact = false }: { reading: BaziReading; comp
       </div>
       <div className="element-board">
         <div className="wheel" aria-label="五行盘">
-          {reading.elementScores.map((item, index) => (
+          {elementScoresByCycle.map((item, index) => (
             <div className={`wheel-item wheel-${item.element}`} key={item.element} style={{ rotate: `${index * 72}deg` }}>
               <span style={{ rotate: `${-index * 72}deg` }}>{item.element}</span>
             </div>
@@ -1262,7 +1267,7 @@ function ElementBoard({ reading, compact = false }: { reading: BaziReading; comp
           </div>
         </div>
         <div className="element-bars">
-          {reading.elementScores.map((item) => (
+          {elementScoresByCycle.map((item) => (
             <div className="element-row" key={item.element}>
               <div className="element-head">
                 <strong>{item.element}</strong>
