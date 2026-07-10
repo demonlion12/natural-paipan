@@ -55,7 +55,7 @@ p {
 }
 
 .birth-screen {
-  grid-template-columns: minmax(0, 1fr) 330px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   padding-top: 42px;
 }

@@ -107,19 +107,22 @@ const elementControlledBy: Record<ElementName, ElementName> = {
   水: '土',
 };
 
-const seasonProfileByBranch: Record<string, { season: string; climate: string; priority: string; adjustment: ElementName[] }> = {
-  寅: { season: '初春', climate: '木气初升，余寒未退', priority: '先扶生机，再防寒湿滞木。', adjustment: ['火', '木'] },
-  卯: { season: '仲春', climate: '木旺风动，生发最盛', priority: '宜疏木成材，忌木多无制。', adjustment: ['火', '金'] },
-  辰: { season: '暮春', climate: '湿土收春，木气入库', priority: '宜燥湿通关，防土湿困木。', adjustment: ['火', '木'] },
-  巳: { season: '初夏', climate: '火气渐旺，燥象初成', priority: '宜取水润燥，兼看土金是否承接。', adjustment: ['水', '金'] },
-  午: { season: '仲夏', climate: '火旺炎上，燥热最显', priority: '先取水调候，再以金生水。', adjustment: ['水', '金'] },
-  未: { season: '季夏', climate: '燥土含火，暑气未退', priority: '宜润土降燥，使气能下行。', adjustment: ['水', '金'] },
-  申: { season: '初秋', climate: '金气初肃，余热尚存', priority: '宜火炼金、水平燥，忌寒燥偏枯。', adjustment: ['火', '水'] },
-  酉: { season: '仲秋', climate: '金旺肃杀，燥气明显', priority: '宜火暖金，亦需水润其燥。', adjustment: ['火', '水'] },
-  戌: { season: '暮秋', climate: '燥土收金，火入墓库', priority: '宜水润燥土，木疏土闭。', adjustment: ['水', '木'] },
-  亥: { season: '初冬', climate: '水势渐旺，寒气已起', priority: '先取火暖局，再看木能否引火。', adjustment: ['火', '木'] },
-  子: { season: '仲冬', climate: '水旺寒凝，阳气初萌', priority: '调候首重火暖，土可堤水，木可引火。', adjustment: ['火', '土'] },
-  丑: { season: '季冬', climate: '寒湿之土，水气入库', priority: '宜火暖寒湿，木疏冻土。', adjustment: ['火', '木'] },
+const seasonProfileByBranch: Record<
+  string,
+  { season: string; climate: string; thermal: string; moisture: string; priority: string; adjustment: ElementName[] }
+> = {
+  寅: { season: '初春', climate: '木气初升，余寒未退', thermal: '寒气未尽，火能开冻，木才有生发之势。', moisture: '春木带湿，水多则寒湿滞木，土重则木郁不舒。', priority: '先扶生机，再防寒湿滞木。', adjustment: ['火', '木'] },
+  卯: { season: '仲春', climate: '木旺风动，生发最盛', thermal: '寒退而风动，火可化木气为文明与表达。', moisture: '木旺易泛，湿重则枝叶繁而根气杂，需有疏泄裁成。', priority: '宜疏木成材，忌木多无制。', adjustment: ['火', '金'] },
+  辰: { season: '暮春', climate: '湿土收春，木气入库', thermal: '春末阳气渐足，但辰为湿土，火弱则土湿木困。', moisture: '湿土最怕泥滞，水土过重会让格局迟缓，需火燥湿、木疏土。', priority: '宜燥湿通关，防土湿困木。', adjustment: ['火', '木'] },
+  巳: { season: '初夏', climate: '火气渐旺，燥象初成', thermal: '阳气已旺，火势渐炎，过暖则急躁燥烈。', moisture: '燥气开始抬头，水能润燥，金能生水并收敛火势。', priority: '宜取水润燥，兼看土金是否承接。', adjustment: ['水', '金'] },
+  午: { season: '仲夏', climate: '火旺炎上，燥热最显', thermal: '火到极旺，先论降温，不宜再盲目助火。', moisture: '燥热伤津，水为第一调候，金为水源，土多则更燥。', priority: '先取水调候，再以金生水。', adjustment: ['水', '金'] },
+  未: { season: '季夏', climate: '燥土含火，暑气未退', thermal: '暑气仍在，土中藏火，火土并重时易燥滞。', moisture: '未土燥而能困水，宜先润土，再看金水是否有根。', priority: '宜润土降燥，使气能下行。', adjustment: ['水', '金'] },
+  申: { season: '初秋', climate: '金气初肃，余热尚存', thermal: '秋金初成，仍有余热，火太过则炼金太急，火太弱则金寒无用。', moisture: '初秋偏燥，水可润金，但水多又会寒湿。', priority: '宜火炼金、水平燥，忌寒燥偏枯。', adjustment: ['火', '水'] },
+  酉: { season: '仲秋', climate: '金旺肃杀，燥气明显', thermal: '金旺而气肃，火能温炼，使金有器用。', moisture: '秋燥明显，水能润燥，但不可寒水过多伤火。', priority: '宜火暖金，亦需水润其燥。', adjustment: ['火', '水'] },
+  戌: { season: '暮秋', climate: '燥土收金，火入墓库', thermal: '火气入墓，暖意内收，若火不透则燥土无生机。', moisture: '戌为燥土，土金过重会枯，水可润燥，木可疏土。', priority: '宜水润燥土，木疏土闭。', adjustment: ['水', '木'] },
+  亥: { season: '初冬', climate: '水势渐旺，寒气已起', thermal: '寒气初起，火为调候核心，能使格局有温度与行动力。', moisture: '水旺渐成，湿寒若重则木火难发，土只可适度堤防。', priority: '先取火暖局，再看木能否引火。', adjustment: ['火', '木'] },
+  子: { season: '仲冬', climate: '水旺寒凝，阳气初萌', thermal: '寒到极处，丙火最要紧；有火则阳气能复，无火则才气易被寒水压住。', moisture: '水旺湿重，土可堤水，但冻土太厚也会困局；木可引火通生机。', priority: '调候首重火暖，土可堤水，木可引火。', adjustment: ['火', '土'] },
+  丑: { season: '季冬', climate: '寒湿之土，水气入库', thermal: '寒湿未退，火可暖土解冻，使藏气能用。', moisture: '丑为湿土，水土相杂最易迟滞，木能疏土，火能化湿寒。', priority: '宜火暖寒湿，木疏冻土。', adjustment: ['火', '木'] },
 };
 
 const palaceMeanings: Record<string, { title: string; time: string; space: string; body: string; people: string[] }> = {
@@ -1305,6 +1308,9 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
   const wealthElement = elementControls[dayElement];
   const tiaohouHits = monthProfile.adjustment.filter((element) => reading.usefulElements.includes(element));
   const tensionElements = monthProfile.adjustment.filter((element) => !reading.usefulElements.includes(element));
+  const scoreOf = (element: ElementName) => Math.round((reading.elementScores.find((item) => item.element === element)?.ratio ?? 0) * 100);
+  const thermalBalance = `火约${scoreOf('火')}%，水约${scoreOf('水')}%`;
+  const moistureBalance = `土约${scoreOf('土')}%，水约${scoreOf('水')}%，金约${scoreOf('金')}%`;
   const usefulLogic =
     dayStrength === '偏弱'
       ? `日主${dayElement}偏弱，扶抑上先看印比：${supportElement}能补根气、增强承压，${controlElement}来克时则要先看有无通关。`
@@ -1335,7 +1341,7 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
           <strong>{monthProfile.adjustment.join('、')}</strong>
           <p>
             生于{monthBranch}月，属{monthProfile.season}，{monthProfile.climate}。调候先看寒暖燥湿：
-            {monthProfile.priority}
+            {monthProfile.priority} 本盘寒暖参考为{thermalBalance}，燥湿参考为{moistureBalance}。
           </p>
         </article>
         <article>
@@ -1368,8 +1374,11 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
             所以本盘不能只用旺弱判断，还要看{monthProfile.adjustment.join('、')}能否调出可用之气。
           </p>
           <ul>
+            <li>寒暖判断：{monthProfile.thermal} 本盘{thermalBalance}，若火不足则先补温度与行动力；若火已旺，则调候用火不可过头。</li>
+            <li>燥湿判断：{monthProfile.moisture} 本盘{moistureBalance}，水土金的比例决定是先润、先燥，还是先疏通。</li>
             <li>{tiaohouHits.length ? `调候与喜用重合：${tiaohouHits.join('、')}，属于既补结构又调气候。` : `调候与扶抑有张力：${tensionElements.join('、')}需谨慎使用，不能一概当成喜。`}</li>
             <li>月令藏干：{reading.pillars[1].hiddenStems.join('、')}，说明气候背后还藏着{reading.pillars[1].branchTenGods.join('、') || '十神伏藏'}。</li>
+            <li>取法次第：先处理{monthProfile.adjustment[0]}，再看{monthProfile.adjustment[1]}能否承接；若二者都不显，就要等大运流年或现实环境来补。</li>
             <li>缺口提示：{weakElements.length ? `${weakElements.join('、')}不足，适合后天主动补环境和能力。` : '五行缺口不明显，重点在清浊与流通。'}</li>
           </ul>
         </article>
@@ -1975,7 +1984,7 @@ function buildReportText(reading: BaziReading) {
     .join('\n');
 
   return [
-    `自然排盘报告：${reading.input.name || '未命名'}`,
+    `山易排盘报告：${reading.input.name || '未命名'}`,
     `阳历：${reading.solarText}`,
     `阴历：${reading.lunarText}`,
     `四柱：${pillars}`,
@@ -2035,18 +2044,11 @@ function LoginPage({
     <main className="flow-shell login-screen">
       <section className="login-hero">
         <div className="brand-lockup">
-          <div className="brand-symbol">自</div>
+          <div className="brand-symbol">山</div>
           <div>
-            <span>Natural Paipan</span>
-            <h1>自然排盘</h1>
+            <span>Shan Yi Paipan</span>
+            <h1>山易排盘</h1>
           </div>
-        </div>
-        <div className="hero-copy">
-          <p className="eyebrow">八字排盘 · 专业详批 · 大运合参</p>
-          <h2>输入生辰，生成一份清晰可读的八字分析报告。</h2>
-          <p>
-            先建立档案，再录入出生信息，系统会把四柱、五行、格局、事业关系和大运节奏整理成结构化报告。
-          </p>
         </div>
         <div className="feature-strip" aria-label="核心能力">
           <span>四柱排盘</span>
@@ -2058,8 +2060,7 @@ function LoginPage({
 
       <section className="auth-card">
         <form onSubmit={handleSubmit}>
-          <h2>登录自然排盘</h2>
-          <p>建立一个档案，后续可以保存报告，并继续查看不同阶段的运势变化。</p>
+          <h2>登录山易排盘</h2>
           <label>
             <span>
               <UserRound size={15} /> 昵称 / 档案名
@@ -2130,7 +2131,6 @@ function BirthSetupPage({
         <div className="birth-heading">
           <p className="eyebrow">第二步 · 建立命盘资料</p>
           <h1>输入出生日期，生成四柱与完整详批。</h1>
-          <p>默认使用公历时间。后续接 App 时，这一页可以独立做成资料录入 screen，并扩展真太阳时、农历、出生地经纬度和多档案管理。</p>
         </div>
 
         <form className="birth-form" id="basic-info" onSubmit={handleSubmit}>
@@ -2205,16 +2205,6 @@ function BirthSetupPage({
         </form>
       </section>
 
-      <aside className="birth-aside">
-        <strong>可扩展功能口</strong>
-        <p>当前由本地 `ReadingPort` 出报告，后续可替换为远程 API、登录会员、订单支付、历史档案和原生 App Bridge。</p>
-        <div className="aside-checks">
-          <span>真太阳时</span>
-          <span>多档案</span>
-          <span>报告导出</span>
-          <span>AI 详批</span>
-        </div>
-      </aside>
     </main>
   );
 }
@@ -2238,9 +2228,9 @@ function ReportTopNav({
   return (
     <header className="report-topnav">
       <div className="topnav-brand">
-        <div className="brand-symbol">自</div>
+        <div className="brand-symbol">山</div>
         <div>
-          <strong>自然排盘</strong>
+          <strong>山易排盘</strong>
           <span>命盘报告</span>
         </div>
       </div>
@@ -2298,7 +2288,7 @@ export default function App() {
     const text = buildReportText(reading);
     try {
       await navigator.clipboard.writeText(text);
-      setToast('已复制自然排盘报告');
+      setToast('已复制山易排盘报告');
     } catch {
       const textarea = document.createElement('textarea');
       textarea.value = text;
@@ -2306,7 +2296,7 @@ export default function App() {
       textarea.select();
       document.execCommand('copy');
       textarea.remove();
-      setToast('已复制自然排盘报告');
+      setToast('已复制山易排盘报告');
     }
   };
 
@@ -2319,7 +2309,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${reading.input.name || 'bazi'}-自然排盘报告.txt`;
+    link.download = `${reading.input.name || 'bazi'}-山易排盘报告.txt`;
     link.click();
     URL.revokeObjectURL(url);
     setToast('已导出 txt 报告');
