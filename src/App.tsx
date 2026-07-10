@@ -2050,42 +2050,48 @@ function LoginPage({
             <h1>山易排盘</h1>
           </div>
         </div>
-        <div className="login-showcase" aria-hidden="true">
-          <div className="seal-plate">
-            <span className="seal-element seal-wood">木</span>
-            <span className="seal-element seal-fire">火</span>
-            <span className="seal-element seal-earth">土</span>
-            <span className="seal-element seal-metal">金</span>
-            <span className="seal-element seal-water">水</span>
-            <div className="seal-center">
-              <strong>山易</strong>
-              <span>排盘</span>
-            </div>
+        <div className="login-preview" aria-hidden="true">
+          <div className="preview-topline">
+            <span>命盘预览</span>
+            <strong>四柱 · 五行 · 大运</strong>
           </div>
-          <div className="mini-paipan">
-            <div className="mini-row mini-head">
-              <span>年柱</span>
-              <span>月柱</span>
-              <span>日柱</span>
-              <span>时柱</span>
-            </div>
-            <div className="mini-row mini-stems">
-              <strong>己</strong>
-              <strong>丙</strong>
-              <strong>丙</strong>
-              <strong>戊</strong>
-            </div>
-            <div className="mini-row mini-branches">
-              <strong>巳</strong>
-              <strong>子</strong>
-              <strong>寅</strong>
-              <strong>子</strong>
-            </div>
-            <div className="mini-row mini-gods">
-              <span>伤官</span>
-              <span>比肩</span>
+          <div className="preview-board">
+            <div className="preview-cell muted">日期</div>
+            <div className="preview-cell muted">年柱</div>
+            <div className="preview-cell muted">月柱</div>
+            <div className="preview-cell muted">日柱</div>
+            <div className="preview-cell muted">时柱</div>
+            <div className="preview-cell muted">主星</div>
+            <div className="preview-cell">伤官</div>
+            <div className="preview-cell">比肩</div>
+            <div className="preview-cell">日主</div>
+            <div className="preview-cell">食神</div>
+            <div className="preview-cell muted">天干</div>
+            <div className="preview-cell gan">己</div>
+            <div className="preview-cell gan fire">丙</div>
+            <div className="preview-cell gan fire">丙</div>
+            <div className="preview-cell gan">戊</div>
+            <div className="preview-cell muted">地支</div>
+            <div className="preview-cell zhi fire">巳</div>
+            <div className="preview-cell zhi water">子</div>
+            <div className="preview-cell zhi wood">寅</div>
+            <div className="preview-cell zhi water">子</div>
+          </div>
+          <div className="preview-footer">
+            <div>
               <span>日主</span>
-              <span>食神</span>
+              <strong>丙火</strong>
+            </div>
+            <div>
+              <span>气势</span>
+              <strong>中和</strong>
+            </div>
+            <div className="preview-elements">
+              <i>木</i>
+              <i>火</i>
+              <i>土</i>
+              <i>金</i>
+              <i>水</i>
             </div>
           </div>
         </div>
