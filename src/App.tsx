@@ -2050,6 +2050,45 @@ function LoginPage({
             <h1>山易排盘</h1>
           </div>
         </div>
+        <div className="login-showcase" aria-hidden="true">
+          <div className="seal-plate">
+            <span className="seal-element seal-wood">木</span>
+            <span className="seal-element seal-fire">火</span>
+            <span className="seal-element seal-earth">土</span>
+            <span className="seal-element seal-metal">金</span>
+            <span className="seal-element seal-water">水</span>
+            <div className="seal-center">
+              <strong>山易</strong>
+              <span>排盘</span>
+            </div>
+          </div>
+          <div className="mini-paipan">
+            <div className="mini-row mini-head">
+              <span>年柱</span>
+              <span>月柱</span>
+              <span>日柱</span>
+              <span>时柱</span>
+            </div>
+            <div className="mini-row mini-stems">
+              <strong>己</strong>
+              <strong>丙</strong>
+              <strong>丙</strong>
+              <strong>戊</strong>
+            </div>
+            <div className="mini-row mini-branches">
+              <strong>巳</strong>
+              <strong>子</strong>
+              <strong>寅</strong>
+              <strong>子</strong>
+            </div>
+            <div className="mini-row mini-gods">
+              <span>伤官</span>
+              <span>比肩</span>
+              <span>日主</span>
+              <span>食神</span>
+            </div>
+          </div>
+        </div>
         <div className="feature-strip" aria-label="核心能力">
           <span>四柱排盘</span>
           <span>五行气势</span>
