@@ -1453,6 +1453,17 @@ button.flow-cell.current:focus-visible {
   padding-left: 18px;
 }
 
+.luck-detail-block {
+  border-top: 1px solid rgba(23, 33, 29, 0.08);
+  padding-top: 10px;
+}
+
+.luck-detail-block h4 {
+  color: #17211d;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
 .luck-period-card small {
   display: block;
   color: #9b6a2f;
@@ -1902,6 +1913,10 @@ button.flow-cell.current:focus-visible {
   gap: 10px;
 }
 
+.useful-grid .wide-card {
+  grid-column: 1 / -1;
+}
+
 .useful-grid h3 {
   color: #17211d;
   font-size: 17px;
@@ -1912,6 +1927,47 @@ button.flow-cell.current:focus-visible {
   gap: 7px;
   margin: 0;
   padding-left: 18px;
+}
+
+.climate-detail,
+.remedy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.climate-detail div,
+.remedy-card {
+  border: 1px solid rgba(43, 122, 120, 0.12);
+  border-radius: 8px;
+  background: rgba(43, 122, 120, 0.045);
+  padding: 13px;
+}
+
+.climate-detail strong,
+.remedy-card strong {
+  display: block;
+  color: #2b7a78;
+  margin-bottom: 7px;
+}
+
+.remedy-card strong {
+  color: #9b6a2f;
+  font-size: 18px;
+}
+
+.remedy-card small {
+  display: inline-flex;
+  margin-left: 8px;
+  border-radius: 999px;
+  background: rgba(43, 122, 120, 0.1);
+  color: #2b7a78;
+  padding: 2px 7px;
+  font-size: 11px;
+}
+
+.remedy-card p + p {
+  margin-top: 6px;
 }
 
 .element-board {
@@ -2623,6 +2679,8 @@ button.flow-cell.current:focus-visible {
   .luck-overview,
   .luck-period-list,
   .luck-year-grid,
+  .climate-detail,
+  .remedy-grid,
   .hexagram-summary,
   .hexagram-board,
   .partial-board,
@@ -2722,6 +2780,8 @@ button.flow-cell.current:focus-visible {
   .luck-overview,
   .luck-period-list,
   .luck-year-grid,
+  .climate-detail,
+  .remedy-grid,
   .hexagram-summary,
   .hexagram-board,
   .moving-grid,

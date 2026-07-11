@@ -127,6 +127,53 @@ const seasonProfileByBranch: Record<
   丑: { season: '季冬', climate: '寒湿之土，水气入库', thermal: '寒湿未退，火可暖土解冻，使藏气能用。', moisture: '丑为湿土，水土相杂最易迟滞，木能疏土，火能化湿寒。', priority: '宜火暖寒湿，木疏冻土。', adjustment: ['火', '木'] },
 };
 
+const elementRemedyGuide: Record<ElementName, { items: string[]; environments: string[]; actions: string[]; avoid: string[] }> = {
+  木: {
+    items: ['绿植、木质书架、纸质笔记本', '青绿小物、长条形收纳、成长看板'],
+    environments: ['公园、树木多的街区、书房', '有晨光、通风、有学习氛围的空间'],
+    actions: ['固定学习和写作输出', '做长期项目拆解', '早晨散步、拉伸、建立新习惯'],
+    avoid: ['计划枝蔓过多', '只开头不收束', '被人情牵着走'],
+  },
+  火: {
+    items: ['暖光台灯、日程白板、红橙点缀', '可视化进度牌、运动装备'],
+    environments: ['采光好的南向空间', '明亮、温暖、能公开表达的场域'],
+    actions: ['每天安排短时运动', '主动汇报、演示、表达观点', '把任务做成可见成果'],
+    avoid: ['熬夜硬冲', '情绪上头', '同时承诺太多'],
+  },
+  土: {
+    items: ['陶瓷杯、方形收纳盒、石材摆件', '米黄土色桌垫、账本或预算表'],
+    environments: ['固定工位、稳定社区、山地或开阔平台', '少变动、可沉淀资料的空间'],
+    actions: ['整理房间和文件', '做预算、复盘、归档', '把目标拆成周计划并按时收口'],
+    avoid: ['拖延堆积', '过度保守', '只顾稳定不做更新'],
+  },
+  金: {
+    items: ['金属笔、计时器、白灰色收纳', '清单工具、文件夹、合同模板'],
+    environments: ['整洁低噪、规则明确的场所', '金融、法务、技术、流程化办公环境'],
+    actions: ['建立标准流程', '审合同、控边界、做减法', '训练表达精确度和交付质量'],
+    avoid: ['过度挑剔', '关系里太冷硬', '只讲规则不看人情'],
+  },
+  水: {
+    items: ['水杯、加湿器、蓝黑色小物', '复盘本、录音笔、资料库'],
+    environments: ['临水、安静、可深度思考的地方', '信息流动、咨询、研究、跨城跨平台场景'],
+    actions: ['做复盘和调研', '主动请教、收集信息', '给重大决定留缓冲期'],
+    avoid: ['想太多不行动', '信息过载', '边界模糊导致反复'],
+  },
+};
+
+const tenGodLuckMeanings: Record<string, { focus: string; opportunity: string; risk: string }> = {
+  正官: { focus: '规则、职位、名分与责任', opportunity: '适合争取正式身份、制度内晋升、证书资质和长期合作。', risk: '压力感会变强，若原局抗压不足，容易被规则、人情或上级节奏牵制。' },
+  偏官: { focus: '竞争、压力、突发任务与突破', opportunity: '适合处理硬仗、转型、竞争型岗位和高要求项目。', risk: '节奏过急时容易冒险，需有印星、流程或专业方法来化杀。' },
+  正印: { focus: '学习、贵人、资质与保护', opportunity: '适合深造、拿资格、做专业沉淀，也利获得长辈或组织支持。', risk: '印太重时会想得多、动得慢，容易依赖安全感。' },
+  偏印: { focus: '冷门技能、洞察、研究与非标路径', opportunity: '适合发展差异化能力、研究型项目、工具化方法和独立判断。', risk: '容易孤立、想偏或难被大众理解，必须用结果校准。' },
+  正财: { focus: '稳定收入、经营、现实责任', opportunity: '适合稳定现金流、客户经营、资产配置和长期积累。', risk: '财来伴随责任，若身弱承财，容易被成本、家庭或现实事务压住。' },
+  偏财: { focus: '项目资源、机会、人脉与流动财', opportunity: '适合商务合作、资源整合、副业项目和市场机会。', risk: '机会多也容易分心，忌贪快、贪多、贪轻松的钱。' },
+  食神: { focus: '作品、口碑、稳定输出与生活感', opportunity: '适合内容、产品、服务、教学和可持续输出。', risk: '太安逸会降低冲劲，遇到压力时容易回避锋芒。' },
+  伤官: { focus: '表达、创新、改革与锋芒', opportunity: '适合表达观点、重做流程、技术创新、品牌传播。', risk: '锋芒太露易冲官，重要关系中要留余地。' },
+  比肩: { focus: '自我、同辈、合伙与竞争', opportunity: '适合增强个人品牌、同业协作、建立自己的节奏。', risk: '同辈竞争和资源分摊明显，合伙要先谈规则。' },
+  劫财: { focus: '抢夺、合伙、资源重分配', opportunity: '适合破局、拉队伍、抢窗口，但要用制度管住资源。', risk: '钱、人、权容易被分走，忌冲动投资和口头承诺。' },
+  日主: { focus: '自我承担、身份确认与主动选择', opportunity: '适合重新确立主线，靠个人决断推进。', risk: '过度自我会忽略协作，需看外部反馈。' },
+};
+
 const palaceMeanings: Record<string, { title: string; time: string; space: string; body: string; people: string[] }> = {
   year: { title: '祖辈宫', time: '少年 1~18岁', space: '远方、祖籍', body: '头部、颈部', people: ['长辈', '外人', '祖上'] },
   month: { title: '父母宫 / 兄弟宫 / 事业宫', time: '青年 18~36岁', space: '家乡、成长环境', body: '胸背、脊柱、肩背', people: ['父母', '兄弟', '同事', '领导'] },
@@ -846,12 +893,24 @@ function getLuckPhase(period: BaziReading['daYun']['periods'][number]) {
 
 function describeLuckPeriod(reading: BaziReading, period: BaziReading['daYun']['periods'][number]) {
   const [stem, branch] = period.ganZhi.split('');
-  const stemWuXing = stemElement[stem] ?? '';
-  const branchWuXing = branchElement[branch] ?? '';
+  const stemWuXing = (stemElement[stem] ?? '') as ElementName;
+  const branchWuXing = (branchElement[branch] ?? '') as ElementName;
+  const stemTenGod = getTenGod(reading.dayMaster.stem, stem);
+  const hiddenStems = branchHiddenStems[branch] ?? [];
+  const branchTenGods = hiddenStems.map((hiddenStem) => getTenGod(reading.dayMaster.stem, hiddenStem));
+  const monthProfile = seasonProfileByBranch[reading.pillars[1].branch];
+  const tenGodMeaning = tenGodLuckMeanings[stemTenGod] ?? tenGodLuckMeanings.日主;
   const usefulHits = [stemWuXing, branchWuXing].filter((element): element is ElementName =>
     reading.usefulElements.includes(element as ElementName),
   );
   const repeatsDominant = [stemWuXing, branchWuXing].includes(reading.structure.dominantElement);
+  const climateHits = [stemWuXing, branchWuXing].filter((element): element is ElementName =>
+    monthProfile.adjustment.includes(element as ElementName),
+  );
+  const elementAction = [...new Set([stemWuXing, branchWuXing, ...usefulHits])]
+    .filter((element): element is ElementName => Boolean(elementRemedyGuide[element as ElementName]))
+    .map((element) => `${element}：${elementRemedyGuide[element].actions[0]}`)
+    .slice(0, 3);
   const branchNote = collectPairNotes(
     [...reading.pillars.map((pillar) => pillar.branch), branch],
     branchRelations,
@@ -863,21 +922,55 @@ function describeLuckPeriod(reading: BaziReading, period: BaziReading['daYun']['
     '与原局天干未见明显合化，重点看该运天干所带出的做事方式。',
   );
   const theme = usefulHits.length
-    ? `这步运带${usefulHits.join('、')}，能补命局所需，适合主动经营关键机会。`
+      ? `这步运带${usefulHits.join('、')}，能补命局所需，适合主动经营关键机会。`
     : repeatsDominant
       ? `这步运加重${reading.structure.dominantElement}气，优势会更明显，但也容易把原本的惯性放大。`
       : `这步运不直接落在首要喜用上，宜以稳定节奏和现实选择来借势。`;
+  const stemFocus = `天干${stem}属${stemWuXing || '未知'}，十神为${stemTenGod}，主外显事件、选择方式与别人首先看到的状态。${tenGodMeaning.focus}会成为此运的表层主题。`;
+  const branchFocus = `地支${branch}属${branchWuXing || '未知'}，藏干${hiddenStems.join('、') || '不显'}，对应${branchTenGods.join('、') || '十神不显'}，主底层环境、长期关系和真正消耗资源的地方。`;
+  const climateText = climateHits.length
+    ? `调候命中${climateHits.join('、')}，这步运不仅看机会，也能改善月令所带的寒暖燥湿问题。`
+    : `调候未直接命中${monthProfile.adjustment.join('、')}，这步运要靠环境和行动去补，不宜只等运势自然变好。`;
+  const opportunity = usefulHits.length
+    ? `${usefulHits.join('、')}为命局所喜，此运适合把长期想做但缺条件的事拿到台面推进。`
+    : repeatsDominant
+      ? `原局${reading.structure.dominantElement}气被放大，适合利用既有优势抢效率，但要主动补${reading.usefulElements.join('、')}来防偏。`
+      : `${stemWuXing || branchWuXing}运不算直接补用，胜在可以借十神主题做阶段转换：${tenGodMeaning.opportunity}`;
+  const risk = repeatsDominant
+    ? `风险在于惯性过强：越熟悉的打法越容易过度，尤其要防重复投入、情绪固执和单一路径押注。`
+    : usefulHits.length
+      ? `喜用被引动时也要防“顺手而贪多”，机会越多越要设预算、时间和承诺边界。`
+      : tenGodMeaning.risk;
   const action = period.isCurrent
     ? '当前正在此运，重要决定要同时看原局短板、流年触发和现实资源，不宜只凭一时情绪推进。'
     : period.startYear > new Date().getFullYear()
       ? '未来进入此运前，先把专业能力、现金流和关系边界准备好，届时更容易承接机会。'
       : '这步运可作为回测样本，回看学习、迁移、事业压力、关系变化是否在此阶段明显被触发。';
+  const actionSteps = [
+    period.isCurrent ? '当下先做资源盘点：时间、现金流、人脉、技能各列一张清单。' : period.startYear > new Date().getFullYear() ? '提前三年准备该运主题所需的证书、案例、作品或合作资源。' : '回看此运的关键年份，标出迁移、换岗、合作、收入和关系变化。',
+    usefulHits.length ? `主动选择带${usefulHits.join('、')}性质的岗位、合作和环境。` : `现实补${reading.usefulElements.join('、')}：${reading.usefulElements.map((element) => elementRemedyGuide[element].actions[0]).join('；')}。`,
+    climateHits.length ? `调候上继续顺用${climateHits.join('、')}，但避免补过头。` : `调候上额外补${monthProfile.adjustment.join('、')}：${monthProfile.adjustment.map((element) => elementRemedyGuide[element].environments[0]).join('；')}。`,
+    elementAction.length ? `落地动作：${elementAction.join('；')}。` : '落地动作：先定节奏、再看流年，不一次性做过大承诺。',
+  ];
+  const reviewPoint = period.isCurrent
+    ? '当前运每年都要看流年是否触发冲合刑害，尤其留意钱、人、岗位与健康节奏的压力点。'
+    : period.startYear > new Date().getFullYear()
+      ? `进入${period.ganZhi}运前，先观察前一年是否已经出现${stemTenGod}主题的预兆。`
+      : '此运适合做人生回测：哪些选择让你变顺，哪些选择只是重复旧惯性。';
 
   return {
     action,
+    actionSteps,
     branchNote,
+    branchFocus,
+    climateText,
     phase: getLuckPhase(period),
+    opportunity,
+    reviewPoint,
+    risk,
+    stemFocus,
     stemNote,
+    stemTenGod,
     theme,
     usefulText: usefulHits.length ? `喜用触发：${usefulHits.join('、')}` : `喜用未显：以${reading.usefulElements.join('、')}为调候方向`,
   };
@@ -1514,8 +1607,33 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
   const tiaohouHits = monthProfile.adjustment.filter((element) => reading.usefulElements.includes(element));
   const tensionElements = monthProfile.adjustment.filter((element) => !reading.usefulElements.includes(element));
   const scoreOf = (element: ElementName) => Math.round((reading.elementScores.find((item) => item.element === element)?.ratio ?? 0) * 100);
-  const thermalBalance = `火约${scoreOf('火')}%，水约${scoreOf('水')}%`;
-  const moistureBalance = `土约${scoreOf('土')}%，水约${scoreOf('水')}%，金约${scoreOf('金')}%`;
+  const fireScore = scoreOf('火');
+  const waterScore = scoreOf('水');
+  const earthScore = scoreOf('土');
+  const metalScore = scoreOf('金');
+  const thermalBalance = `火约${fireScore}%，水约${waterScore}%`;
+  const moistureBalance = `土约${earthScore}%，水约${waterScore}%，金约${metalScore}%`;
+  const thermalDiagnosis =
+    waterScore >= 30 && fireScore <= 15
+      ? '寒湿偏重，先补火的温度、曝光和行动力，再用土来收束水势。'
+      : fireScore >= 32 && waterScore <= 15
+        ? '偏热少润，宜补水金的冷静、复盘和边界，不宜再用高刺激方式催动。'
+        : fireScore >= 30
+          ? '火气较显，行动力和表达不弱，调候重点在防燥、防急、防过度消耗。'
+          : waterScore >= 28
+            ? '水气较显，思考、感受和流动性强，调候重点在用火把想法落实。'
+            : '寒暖不极端，关键不是单补某一行，而是让火水有来有往。';
+  const moistureDiagnosis =
+    waterScore + earthScore >= 55
+      ? '水土并重，容易形成湿滞：现实里表现为事情堆积、想法反复、推进速度慢，需要火来烘、木来疏。'
+      : fireScore + earthScore >= 55
+        ? '火土并重，容易偏燥：现实里表现为急、硬、耗，需水来润、金来收。'
+        : metalScore >= 28 && waterScore <= 15
+          ? '金旺少水，容易干脆但不够柔润，宜增加沟通缓冲和信息复盘。'
+          : waterScore <= 12
+            ? '水少偏燥，做事容易缺少回旋与耐心，宜补安静、复盘和长期流动资源。'
+            : '燥湿相对可调，重点看岁运是否突然加重水土或火土。';
+  const remedyElements = [...new Set([...monthProfile.adjustment, ...reading.usefulElements])].slice(0, 4);
   const usefulLogic =
     dayStrength === '偏弱'
       ? `日主${dayElement}偏弱，扶抑上先看印比：${supportElement}能补根气、增强承压，${controlElement}来克时则要先看有无通关。`
@@ -1588,8 +1706,32 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
           </ul>
         </article>
 
+        <article className="wide-card">
+          <h3>三、寒暖燥湿细看</h3>
+          <div className="climate-detail">
+            <div>
+              <strong>寒暖</strong>
+              <p>
+                {monthProfile.thermal} 盘面参考为{thermalBalance}。{thermalDiagnosis}
+              </p>
+            </div>
+            <div>
+              <strong>燥湿</strong>
+              <p>
+                {monthProfile.moisture} 盘面参考为{moistureBalance}。{moistureDiagnosis}
+              </p>
+            </div>
+            <div>
+              <strong>补法次第</strong>
+              <p>
+                先按月令处理{monthProfile.adjustment[0]}，再用{monthProfile.adjustment[1]}承接；若与扶抑喜用冲突，就“少量、持续、可回收”地补，不做极端改变。
+              </p>
+            </div>
+          </div>
+        </article>
+
         <article>
-          <h3>三、现实取用</h3>
+          <h3>四、现实取用</h3>
           <p>
             喜用落到现实，不是简单穿颜色或选方位，而是选择能补足{reading.usefulElements.join('、')}性质的环境、能力和节奏。
           </p>
@@ -1601,7 +1743,7 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
         </article>
 
         <article>
-          <h3>四、岁运观察</h3>
+          <h3>五、岁运观察</h3>
           <p>
             大运、流年见{reading.usefulElements.join('、')}时，往往更容易出现顺手的机会；若见{avoidElements.join('、') || reading.structure.dominantElement}过多，
             则要看是否冲动原局关系。
@@ -1611,6 +1753,28 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
             <li>可预判：未来岁运若同时补调候与扶抑，适合主动推进重要事项。</li>
             <li>可避险：岁运冲合刑害明显时，先做减法，避免在压力期硬扩张。</li>
           </ul>
+        </article>
+
+        <article className="wide-card">
+          <h3>六、调候补法清单</h3>
+          <p>以下按本盘调候与喜用合并给出，适合作为生活、工作和环境选择的参考，不是单纯迷信颜色或摆件。</p>
+          <div className="remedy-grid">
+            {remedyElements.map((element) => {
+              const guide = elementRemedyGuide[element];
+              return (
+                <div className="remedy-card" key={element}>
+                  <strong>
+                    补{element}
+                    <small>{monthProfile.adjustment.includes(element) ? '调候' : '喜用'}</small>
+                  </strong>
+                  <p>物品：{guide.items.join('；')}</p>
+                  <p>环境：{guide.environments.join('；')}</p>
+                  <p>行动：{guide.actions.join('；')}</p>
+                  <p>避忌：{guide.avoid.join('；')}</p>
+                </div>
+              );
+            })}
+          </div>
         </article>
       </div>
     </section>
@@ -2079,19 +2243,24 @@ function LuckIntegratedPanel({ reading }: { reading: BaziReading }) {
                   <ul>
                     <li>{currentDescription.stemNote}</li>
                     <li>{currentDescription.branchNote}</li>
+                    <li>{currentDescription.stemFocus}</li>
+                    <li>{currentDescription.branchFocus}</li>
                   </ul>
                 </div>
                 <div>
-                  <h4>较利方向</h4>
+                  <h4>机会窗口</h4>
                   <ul>
+                    <li>{currentDescription.opportunity}</li>
+                    <li>{currentDescription.climateText}</li>
                     {reading.deepDive.currentLuck.bestFor.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
                 <div>
-                  <h4>需要留意</h4>
+                  <h4>风险边界</h4>
                   <ul>
+                    <li>{currentDescription.risk}</li>
                     {reading.deepDive.currentLuck.caution.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
@@ -2102,6 +2271,10 @@ function LuckIntegratedPanel({ reading }: { reading: BaziReading }) {
                   <ul>
                     <li>{currentDescription.action}</li>
                     <li>{currentDescription.usefulText}</li>
+                    {currentDescription.actionSteps.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                    <li>{currentDescription.reviewPoint}</li>
                   </ul>
                 </div>
               </div>
@@ -2113,28 +2286,54 @@ function LuckIntegratedPanel({ reading }: { reading: BaziReading }) {
       </div>
 
       <div className="luck-period-list">
-        {reading.daYun.periods.map((period) => (
-          <article className={period.isCurrent ? 'luck-period-card current' : 'luck-period-card'} key={`${period.startYear}-${period.ganZhi}`}>
-            <div className="luck-period-head">
-              <div>
-                <strong>{period.ganZhi}</strong>
-                <span>{describeLuckPeriod(reading, period).phase}</span>
+        {reading.daYun.periods.map((period) => {
+          const description = describeLuckPeriod(reading, period);
+          return (
+            <article className={period.isCurrent ? 'luck-period-card current' : 'luck-period-card'} key={`${period.startYear}-${period.ganZhi}`}>
+              <div className="luck-period-head">
+                <div>
+                  <strong>{period.ganZhi}</strong>
+                  <span>{description.phase}</span>
+                </div>
+                <p>
+                  {period.startYear}-{period.endYear} · {period.startAge}-{period.endAge}岁
+                </p>
               </div>
-              <p>
-                {period.startYear}-{period.endYear} · {period.startAge}-{period.endAge}岁
-              </p>
-            </div>
-            <div className="luck-period-body">
-              <p>{describeLuckPeriod(reading, period).theme}</p>
-              <ul>
-                <li>{describeLuckPeriod(reading, period).stemNote}</li>
-                <li>{describeLuckPeriod(reading, period).branchNote}</li>
-                <li>{describeLuckPeriod(reading, period).action}</li>
-              </ul>
-            </div>
-            <small>空亡：{period.xunKong} · {describeLuckPeriod(reading, period).usefulText}</small>
-          </article>
-        ))}
+              <div className="luck-period-body">
+                <p>{description.theme}</p>
+                <div className="luck-detail-block">
+                  <h4>十神与原局</h4>
+                  <ul>
+                    <li>{description.stemFocus}</li>
+                    <li>{description.branchFocus}</li>
+                    <li>{description.stemNote}</li>
+                    <li>{description.branchNote}</li>
+                  </ul>
+                </div>
+                <div className="luck-detail-block">
+                  <h4>机会与风险</h4>
+                  <ul>
+                    <li>{description.opportunity}</li>
+                    <li>{description.risk}</li>
+                    <li>{description.climateText}</li>
+                  </ul>
+                </div>
+                <div className="luck-detail-block">
+                  <h4>行动清单</h4>
+                  <ul>
+                    {description.actionSteps.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                    <li>{description.reviewPoint}</li>
+                  </ul>
+                </div>
+              </div>
+              <small>
+                空亡：{period.xunKong} · {description.usefulText} · 十神主线：{description.stemTenGod}
+              </small>
+            </article>
+          );
+        })}
       </div>
 
       <article className="year-card">
@@ -2166,6 +2365,13 @@ function buildReportText(reading: BaziReading) {
   const avoidElements = reading.elementScores
     .filter((item) => item.tone === '偏旺' && !reading.usefulElements.includes(item.element))
     .map((item) => item.element);
+  const remedyElements = [...new Set([...monthProfile.adjustment, ...reading.usefulElements])].slice(0, 4);
+  const remedyText = remedyElements
+    .map((element) => {
+      const guide = elementRemedyGuide[element];
+      return `补${element}：物品 ${guide.items.join('、')}；环境 ${guide.environments.join('、')}；行动 ${guide.actions.join('、')}；避忌 ${guide.avoid.join('、')}`;
+    })
+    .join('\n');
   const deepDomains = reading.deepDive.domains
     .map((domain) => {
       return [
@@ -2184,7 +2390,15 @@ function buildReportText(reading: BaziReading) {
   const luckPeriods = reading.daYun.periods
     .map((period) => {
       const description = describeLuckPeriod(reading, period);
-      return `${period.ganZhi} ${period.startYear}-${period.endYear} ${period.startAge}-${period.endAge}岁：${description.theme} ${description.stemNote} ${description.branchNote} ${description.action}`;
+      return [
+        `${period.ganZhi} ${period.startYear}-${period.endYear} ${period.startAge}-${period.endAge}岁：${description.theme}`,
+        `十神主线：${description.stemFocus} ${description.branchFocus}`,
+        `原局触发：${description.stemNote} ${description.branchNote}`,
+        `机会：${description.opportunity}`,
+        `风险：${description.risk}`,
+        `调候：${description.climateText}`,
+        `行动：${description.actionSteps.join('；')}`,
+      ].join('\n');
     })
     .join('\n');
 
@@ -2198,6 +2412,7 @@ function buildReportText(reading: BaziReading) {
     `喜用：${reading.usefulElements.join('、')}`,
     `调候：${monthBranch}月属${monthProfile.season}，${monthProfile.climate}；调候取${monthProfile.adjustment.join('、')}，重点为${monthProfile.priority}`,
     `喜用详析：日主${reading.dayMaster.stem}属${reading.dayMaster.element}，整体${reading.dayMaster.strength}；用神${reading.usefulElements[0]}，喜神${reading.usefulElements[1] ?? elementGenerates[reading.usefulElements[0]]}。忌偏参考：${avoidElements.join('、') || reading.structure.dominantElement}。`,
+    `调候补法：\n${remedyText}`,
     `命宫：${reading.structure.mingGong}，身宫：${reading.structure.shenGong}，胎元：${reading.structure.taiYuan}`,
     '',
     '【专业详批：性格画像】',
