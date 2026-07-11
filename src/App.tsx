@@ -298,6 +298,15 @@ const hexagramThemes: Record<string, string> = {
   火水未济: '未完成，仍需补最后一环。',
 };
 
+const divinationPresets = [
+  '近期事业推进是否适合主动争取？',
+  '这段关系下一步应不应该继续投入？',
+  '当前合作是否值得推进？',
+  '近期财运与项目回款走势如何？',
+  '现在是否适合换工作或换方向？',
+  '这件事目前最大的阻碍在哪里？',
+];
+
 const tianYiMap: Record<string, string[]> = {
   甲: ['丑', '未'],
   戊: ['丑', '未'],
@@ -676,6 +685,30 @@ function movingLineAdvice(index: number, value: YaoValue) {
   return `${positions[index]}动：${phase[index]}${motion}`;
 }
 
+function buildDivinationDetail(base: ReturnType<typeof getHexagram>, changed: ReturnType<typeof getHexagram>, movingCount: number) {
+  const inner = `下卦${base.lower.name}为${base.lower.nature}，主自身、资源、底层条件，象为${base.lower.image}。`;
+  const outer = `上卦${base.upper.name}为${base.upper.nature}，主外部环境、对方态度、趋势压力，象为${base.upper.image}。`;
+  const change =
+    movingCount === 0
+      ? '此卦无动爻，说明事态短期内不宜频繁改变策略，应以本卦为主，观察结构是否稳定。'
+      : `动而成${changed.name}，说明此事不会停留在当前状态，后续会转向“${changed.theme}”所指的方向。`;
+  const action =
+    movingCount === 0
+      ? '行动上宜守住原计划，做复盘、补材料、稳关系，不急着推翻现有方案。'
+      : movingCount <= 2
+        ? '行动上宜抓住动爻所指的关键节点，先处理最能撬动局面的一个问题。'
+        : '行动上宜先降复杂度，把人、钱、时间、承诺拆开处理，不宜一次性押重注。';
+  const caution =
+    base.upper.name === '坎' || base.lower.name === '坎'
+      ? '卦中见坎，需特别注意风险、反复、信息不全和隐性成本。'
+      : base.upper.name === '艮' || base.lower.name === '艮'
+        ? '卦中见艮，止象明显，遇到阻滞时先设边界，不宜硬冲。'
+        : base.upper.name === '离' || base.lower.name === '离'
+          ? '卦中见离，重在看清事实、证据和依附关系，避免只凭情绪判断。'
+          : '此卦重点不在单点吉凶，而在内外卦是否能形成配合。';
+  return { inner, outer, change, action, caution };
+}
+
 function buildDivinationReading(question: string, lines: YaoValue[]) {
   if (lines.length !== 6) {
     return null;
@@ -691,7 +724,8 @@ function buildDivinationReading(question: string, lines: YaoValue[]) {
       : moving.length <= 2
         ? '动爻较少，事情有明确变化点，宜抓住关键节点处理。'
         : '动爻较多，局势变动明显，先稳住节奏，避免同时处理太多变量。';
-  return { base, changed, moving, questionText, trend };
+  const detail = buildDivinationDetail(base, changed, moving.length);
+  return { base, changed, detail, moving, questionText, trend };
 }
 
 function getShenShaForBranch(reading: BaziReading, targetStem: string, targetBranch: string) {
@@ -2196,14 +2230,30 @@ function buildReportText(reading: BaziReading) {
 function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => void }) {
   const [question, setQuestion] = useState('近期事业推进是否适合主动争取？');
   const [lines, setLines] = useState<YaoValue[]>([]);
+  const [isCasting, setIsCasting] = useState(false);
   const reading = useMemo(() => buildDivinationReading(question, lines), [question, lines]);
 
+  const castWithAnimation = (mode: 'full' | 'single') => {
+    if (isCasting) {
+      return;
+    }
+    setIsCasting(true);
+    window.setTimeout(() => {
+      if (mode === 'full') {
+        setLines(Array.from({ length: 6 }, () => castYao()));
+      } else {
+        setLines((current) => (current.length >= 6 ? [castYao()] : [...current, castYao()]));
+      }
+      setIsCasting(false);
+    }, 920);
+  };
+
   const castFullHexagram = () => {
-    setLines(Array.from({ length: 6 }, () => castYao()));
+    castWithAnimation('full');
   };
 
   const castOneLine = () => {
-    setLines((current) => (current.length >= 6 ? [castYao()] : [...current, castYao()]));
+    castWithAnimation('single');
   };
 
   return (
@@ -2234,17 +2284,29 @@ function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => 
           </div>
           <label>
             <span>所问事项</span>
+            <div className="question-presets">
+              {divinationPresets.map((preset) => (
+                <button className={question === preset ? 'active' : ''} key={preset} onClick={() => setQuestion(preset)} type="button">
+                  {preset}
+                </button>
+              ))}
+            </div>
             <textarea value={question} onChange={(event) => setQuestion(event.target.value)} />
           </label>
+          <div className={isCasting ? 'coin-stage casting' : 'coin-stage'} aria-hidden="true">
+            <span>山</span>
+            <span>易</span>
+            <span>爻</span>
+          </div>
           <div className="yijing-actions">
-            <button className="primary-button" onClick={castFullHexagram} type="button">
+            <button className="primary-button" disabled={isCasting} onClick={castFullHexagram} type="button">
               <Sparkles size={17} />
-              自动起卦
+              {isCasting ? '起卦中' : '自动起卦'}
             </button>
-            <button className="secondary-button" onClick={castOneLine} type="button">
+            <button className="secondary-button" disabled={isCasting} onClick={castOneLine} type="button">
               摇一爻 {lines.length ? `${lines.length}/6` : ''}
             </button>
-            <button className="secondary-button" onClick={() => setLines([])} type="button">
+            <button className="secondary-button" disabled={isCasting} onClick={() => setLines([])} type="button">
               清空
             </button>
           </div>
@@ -2257,8 +2319,8 @@ function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => 
         <section className="yijing-result">
           {!reading && (
             <div className="empty-divination section">
-              <h2>尚未成卦</h2>
-              <p>可以一次自动起卦，也可以逐爻摇出六爻。六爻完成后，会显示本卦、变卦、动爻和解读建议。</p>
+              <h2>{isCasting ? '铜钱正在落定' : '尚未成卦'}</h2>
+              <p>{isCasting ? '请稍候，系统正在模拟三枚铜钱起爻。' : '可以一次自动起卦，也可以逐爻摇出六爻。六爻完成后，会显示本卦、变卦、动爻和解读建议。'}</p>
             </div>
           )}
 
@@ -2314,9 +2376,22 @@ function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => 
                   <article>
                     <h3>现代解读</h3>
                     <p>
-                      本卦上卦主外部环境，呈{reading.base.upper.image}；下卦主自身处境，呈{reading.base.lower.image}。
+                      {reading.detail.outer}
+                      {reading.detail.inner}
                       若要推进此事，先看内外是否同向，再看动爻提示的变化位置。
                     </p>
+                  </article>
+                  <article>
+                    <h3>变卦方向</h3>
+                    <p>{reading.detail.change}</p>
+                  </article>
+                  <article>
+                    <h3>行动建议</h3>
+                    <p>{reading.detail.action}</p>
+                  </article>
+                  <article>
+                    <h3>避坑提醒</h3>
+                    <p>{reading.detail.caution}</p>
                   </article>
                 </div>
               </div>
