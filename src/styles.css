@@ -2319,6 +2319,105 @@ button.flow-cell.current:focus-visible {
   line-height: 1.8;
 }
 
+.partial-divination {
+  display: grid;
+  gap: 18px;
+}
+
+.partial-head {
+  display: grid;
+  gap: 8px;
+}
+
+.partial-head span {
+  color: #ad5b2a;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.partial-head h2 {
+  color: #17211d;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.partial-head p {
+  color: #61736b;
+  line-height: 1.8;
+}
+
+.partial-board {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.partial-hexagram {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(23, 33, 29, 0.08);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(19, 48, 42, 0.98), rgba(29, 88, 76, 0.92));
+  padding: 22px;
+}
+
+.yao-row.pending {
+  color: rgba(239, 247, 243, 0.48);
+}
+
+.yao-row.pending.active {
+  color: rgba(255, 216, 137, 0.9);
+}
+
+.yao-line.pending {
+  grid-template-columns: 1fr;
+}
+
+.yao-line.pending i {
+  border: 1px dashed rgba(242, 231, 205, 0.45);
+  background: transparent;
+}
+
+.yao-row.pending.active .yao-line.pending i {
+  border-color: #ffd889;
+  box-shadow: 0 0 0 4px rgba(255, 216, 137, 0.12);
+}
+
+.partial-line-list {
+  display: grid;
+  gap: 10px;
+}
+
+.partial-line-list article {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 8px 12px;
+  border: 1px solid rgba(23, 33, 29, 0.08);
+  border-radius: 8px;
+  background: #fbfdfb;
+  padding: 12px 14px;
+}
+
+.partial-line-list strong {
+  color: #17211d;
+}
+
+.partial-line-list span {
+  color: #ad5b2a;
+  font-weight: 900;
+}
+
+.partial-line-list p {
+  grid-column: 1 / -1;
+  color: #61736b;
+  line-height: 1.75;
+}
+
+.partial-line-list .next-line {
+  background: rgba(43, 122, 120, 0.045);
+}
+
 .hexagram-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2526,6 +2625,7 @@ button.flow-cell.current:focus-visible {
   .luck-year-grid,
   .hexagram-summary,
   .hexagram-board,
+  .partial-board,
   .moving-grid,
   .timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2585,6 +2685,11 @@ button.flow-cell.current:focus-visible {
   }
 
   .preview-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .partial-board,
+  .partial-line-list article {
     grid-template-columns: 1fr;
   }
 

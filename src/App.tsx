@@ -307,6 +307,9 @@ const divinationPresets = [
   '这件事目前最大的阻碍在哪里？',
 ];
 
+const yaoPositionLabels = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
+const yaoDisplayLabels = ['上爻', '五爻', '四爻', '三爻', '二爻', '初爻'];
+
 const tianYiMap: Record<string, string[]> = {
   甲: ['丑', '未'],
   戊: ['丑', '未'],
@@ -679,10 +682,9 @@ function formatYao(value: YaoValue) {
 }
 
 function movingLineAdvice(index: number, value: YaoValue) {
-  const positions = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
   const phase = ['事情刚起，先定方向。', '进入执行层，重在稳住基础。', '处在临界位，谨慎过度用力。', '开始接近外部环境，要看协作。', '来到主位，适合承担决策。', '事情到高处，防过满或收尾不当。'];
   const motion = value === 9 ? '阳动变阴，宜从强势转为收敛。' : '阴动变阳，宜从等待转为行动。';
-  return `${positions[index]}动：${phase[index]}${motion}`;
+  return `${yaoPositionLabels[index]}动：${phase[index]}${motion}`;
 }
 
 function buildDivinationDetail(base: ReturnType<typeof getHexagram>, changed: ReturnType<typeof getHexagram>, movingCount: number) {
@@ -2317,10 +2319,62 @@ function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => 
         </aside>
 
         <section className="yijing-result">
-          {!reading && (
+          {!reading && lines.length === 0 && (
             <div className="empty-divination section">
               <h2>{isCasting ? '铜钱正在落定' : '尚未成卦'}</h2>
               <p>{isCasting ? '请稍候，系统正在模拟三枚铜钱起爻。' : '可以一次自动起卦，也可以逐爻摇出六爻。六爻完成后，会显示本卦、变卦、动爻和解读建议。'}</p>
+            </div>
+          )}
+
+          {!reading && lines.length > 0 && (
+            <div className="partial-divination section">
+              <div className="partial-head">
+                <span>逐爻进度</span>
+                <h2>已摇出 {lines.length}/6 爻</h2>
+                <p>
+                  六爻自下而上记录。当前已成到{yaoPositionLabels[lines.length - 1]}，{lines.length < 6 ? `下一次将摇${yaoPositionLabels[lines.length]}。` : '六爻已齐，正在生成解读。'}
+                </p>
+              </div>
+              <div className="partial-board">
+                <div className="partial-hexagram" aria-label="阶段六爻图">
+                  {Array.from({ length: 6 }).map((_, reverseIndex) => {
+                    const index = 5 - reverseIndex;
+                    const line = lines[index];
+                    const completed = typeof line === 'number';
+                    const isNext = isCasting && index === lines.length;
+                    const rowClass = completed ? 'yao-row' : isNext ? 'yao-row pending active' : 'yao-row pending';
+                    return (
+                      <div className={rowClass} key={index}>
+                        <span>{yaoDisplayLabels[reverseIndex]}</span>
+                        <div className={completed ? (isYangLine(line) ? 'yao-line yang' : 'yao-line yin') : 'yao-line pending'}>
+                          <i />
+                          {completed && !isYangLine(line) && <i />}
+                        </div>
+                        <em className={completed && isMovingLine(line) ? 'moving' : ''}>{completed ? formatYao(line) : isNext ? '落定中' : '待摇'}</em>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="partial-line-list">
+                  {lines.map((line, index) => (
+                    <article key={`${index}-${line}`}>
+                      <strong>{yaoPositionLabels[index]}</strong>
+                      <span>
+                        {formatYao(line)} · {isYangLine(line) ? '阳爻' : '阴爻'}
+                        {isMovingLine(line) ? ' · 动爻' : ''}
+                      </span>
+                      <p>{isMovingLine(line) ? movingLineAdvice(index, line) : `${yaoPositionLabels[index]}为静爻，先记录其阴阳属性，待六爻齐后再合看本卦。`}</p>
+                    </article>
+                  ))}
+                  {lines.length < 6 && (
+                    <article className="next-line">
+                      <strong>{yaoPositionLabels[lines.length]}</strong>
+                      <span>{isCasting ? '铜钱落定中' : '等待摇出'}</span>
+                      <p>继续点击“摇一爻”，系统会把下一爻补入阶段盘；满六爻后自动生成本卦、变卦与动爻解读。</p>
+                    </article>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -2353,7 +2407,7 @@ function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => 
                     const yang = isYangLine(line);
                     return (
                       <div className="yao-row" key={`${index}-${line}`}>
-                        <span>{['上', '五', '四', '三', '二', '初'][reverseIndex]}爻</span>
+                        <span>{yaoDisplayLabels[reverseIndex]}</span>
                         <div className={yang ? 'yao-line yang' : 'yao-line yin'}>
                           <i />
                           {!yang && <i />}
