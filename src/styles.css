@@ -1929,10 +1929,50 @@ button.flow-cell.current:focus-visible {
   padding-left: 18px;
 }
 
-.climate-detail,
-.remedy-grid {
+.climate-detail {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.remedy-priority {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.remedy-priority > div {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  border: 1px solid rgba(200, 164, 93, 0.2);
+  border-radius: 8px;
+  background: rgba(200, 164, 93, 0.055);
+  padding: 12px;
+}
+
+.remedy-priority span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #2b7a78;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.remedy-priority p {
+  color: #4f655c;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.remedy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -1951,9 +1991,46 @@ button.flow-cell.current:focus-visible {
   margin-bottom: 7px;
 }
 
+.method-basis {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  border-top: 1px solid rgba(23, 33, 29, 0.08);
+  margin-top: 2px;
+  padding-top: 12px;
+}
+
+.method-basis strong {
+  color: #9b6a2f;
+}
+
+.method-basis a {
+  color: #2b7a78;
+  font-weight: 800;
+  margin: 0 3px;
+}
+
 .remedy-card strong {
   color: #9b6a2f;
   font-size: 18px;
+}
+
+.remedy-card-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+}
+
+.remedy-card-title strong {
+  margin: 0;
+}
+
+.remedy-card-title > span {
+  color: #17211d;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .remedy-card small {
@@ -1968,6 +2045,67 @@ button.flow-cell.current:focus-visible {
 
 .remedy-card p + p {
   margin-top: 6px;
+}
+
+.remedy-principle {
+  color: #344a42 !important;
+  font-weight: 700;
+}
+
+.remedy-card dl {
+  display: grid;
+  gap: 0;
+  margin: 12px 0 0;
+}
+
+.remedy-card dl > div {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 10px;
+  border-top: 1px solid rgba(43, 122, 120, 0.09);
+  padding: 8px 0;
+}
+
+.remedy-card dt {
+  color: #2b7a78;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.remedy-card dd {
+  color: #61736b;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.execution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.execution-grid > div {
+  border-left: 3px solid rgba(200, 164, 93, 0.62);
+  background: rgba(200, 164, 93, 0.055);
+  padding: 12px;
+}
+
+.execution-grid strong {
+  display: block;
+  color: #9b6a2f;
+  margin-bottom: 6px;
+}
+
+.verification-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-left: 20px !important;
+}
+
+.method-note {
+  border-top: 1px solid rgba(23, 33, 29, 0.08);
+  margin-top: 2px;
+  padding-top: 10px;
+  font-size: 12px !important;
 }
 
 .element-board {
@@ -2681,6 +2819,9 @@ button.flow-cell.current:focus-visible {
   .luck-year-grid,
   .climate-detail,
   .remedy-grid,
+  .remedy-priority,
+  .execution-grid,
+  .verification-list,
   .hexagram-summary,
   .hexagram-board,
   .partial-board,
@@ -2782,6 +2923,9 @@ button.flow-cell.current:focus-visible {
   .luck-year-grid,
   .climate-detail,
   .remedy-grid,
+  .remedy-priority,
+  .execution-grid,
+  .verification-list,
   .hexagram-summary,
   .hexagram-board,
   .moving-grid,

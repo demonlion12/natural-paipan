@@ -127,36 +127,79 @@ const seasonProfileByBranch: Record<
   丑: { season: '季冬', climate: '寒湿之土，水气入库', thermal: '寒湿未退，火可暖土解冻，使藏气能用。', moisture: '丑为湿土，水土相杂最易迟滞，木能疏土，火能化湿寒。', priority: '宜火暖寒湿，木疏冻土。', adjustment: ['火', '木'] },
 };
 
-const elementRemedyGuide: Record<ElementName, { items: string[]; environments: string[]; actions: string[]; avoid: string[] }> = {
+type ElementRemedyGuide = {
+  principle: string;
+  timing: string[];
+  environments: string[];
+  workModes: string[];
+  capabilities: string[];
+  relationships: string[];
+  actions: string[];
+  items: string[];
+  overuseSignals: string[];
+  avoid: string[];
+};
+
+const elementRemedyGuide: Record<ElementName, ElementRemedyGuide> = {
   木: {
-    items: ['绿植、木质书架、纸质笔记本', '青绿小物、长条形收纳、成长看板'],
-    environments: ['公园、树木多的街区、书房', '有晨光、通风、有学习氛围的空间'],
-    actions: ['固定学习和写作输出', '做长期项目拆解', '早晨散步、拉伸、建立新习惯'],
-    avoid: ['计划枝蔓过多', '只开头不收束', '被人情牵着走'],
+    principle: '取木之曲直与生发，用在建立方向、连续成长、疏通停滞，不等同于单纯增加绿色。',
+    timing: ['把高认知任务放在清晨或一天的启动段', '以季度为单位经营一项可持续成长的主线'],
+    environments: ['有自然光、通风、植物或书籍的学习空间', '公园、校园、文化机构、研发与教育场域'],
+    workModes: ['适合策划、教育、产品孵化、研究与长期项目', '先搭框架再迭代，让项目有枝干、有里程碑'],
+    capabilities: ['系统学习、写作表达、规划拆解', '柔韧沟通、持续迭代、把复杂问题理出脉络'],
+    relationships: ['多接触能给方向和方法的师友', '关系中明确成长目标，避免一味迁就而失去主线'],
+    actions: ['每天保留固定学习与输出时段', '每周推进一个长期项目里程碑', '散步、舒展和整理待办，使身心由滞转动'],
+    items: ['书籍、纸笔、成长看板、木质器物可作提醒', '青绿色和东方位只作辅助象意，不代替实际行动'],
+    overuseSignals: ['项目越开越多却没有收口', '想法繁盛、边界松散、长期被人情牵动'],
+    avoid: ['同时铺太多方向', '只强调成长而不验收成果', '把摆放绿植当成主要补法'],
   },
   火: {
-    items: ['暖光台灯、日程白板、红橙点缀', '可视化进度牌、运动装备'],
-    environments: ['采光好的南向空间', '明亮、温暖、能公开表达的场域'],
-    actions: ['每天安排短时运动', '主动汇报、演示、表达观点', '把任务做成可见成果'],
-    avoid: ['熬夜硬冲', '情绪上头', '同时承诺太多'],
+    principle: '取火之炎上与显明，用来暖局、启动、表达和把潜能变成可见成果；寒局尤重持续温养。',
+    timing: ['珍惜白天与午前后的有效光照，重要推进尽量不拖到深夜', '用短周期冲刺启动，再安排冷却与复盘'],
+    environments: ['采光良好、温暖干爽、交流活跃的空间', '演讲、展示、传播、运动和需要现场反馈的场域'],
+    workModes: ['适合公开表达、品牌传播、销售推动、带队与快速验证', '任务必须可视化，设置交付日期和反馈对象'],
+    capabilities: ['表达、呈现、决断、现场反应', '把抽象想法做成作品、演示、样品或明确结论'],
+    relationships: ['主动回应、及时赞赏、把真实态度说清楚', '选择能鼓励行动但不会煽动冲动的伙伴'],
+    actions: ['规律日间活动与适量运动', '每周至少一次公开输出或成果汇报', '当天完成一个能被看见的小闭环'],
+    items: ['暖光照明、日程白板、进度牌和运动装备可作助缘', '红橙色、南向与明亮陈设只作辅助，不宜满屋堆叠'],
+    overuseSignals: ['睡眠被挤压、讲话变急、承诺快速膨胀', '追求曝光胜过质量，容易情绪化决策'],
+    avoid: ['熬夜硬冲和持续高刺激', '用冲动消费或社交热闹代替行动', '火已偏旺时继续盲目加火'],
   },
   土: {
-    items: ['陶瓷杯、方形收纳盒、石材摆件', '米黄土色桌垫、账本或预算表'],
-    environments: ['固定工位、稳定社区、山地或开阔平台', '少变动、可沉淀资料的空间'],
-    actions: ['整理房间和文件', '做预算、复盘、归档', '把目标拆成周计划并按时收口'],
-    avoid: ['拖延堆积', '过度保守', '只顾稳定不做更新'],
+    principle: '取土之承载与稼穑，用来收束、沉淀、建立信用和稳定兑现；湿土要疏燥，燥土要先润。',
+    timing: ['固定睡起、用餐、结算和复盘时间', '以周为单位收口，以月为单位归档和清账'],
+    environments: ['固定工位、稳定社区、资料可归档的空间', '秩序清楚、责任明确、能够长期经营的组织'],
+    workModes: ['适合运营、项目管理、供应链、财务规划和长期服务', '把目标拆成责任人、期限、预算、验收四项'],
+    capabilities: ['预算、归档、复盘、风险预案', '耐心执行、资源承接、把口头承诺写成清单'],
+    relationships: ['以稳定兑现建立信任，减少含糊承诺', '照顾他人之前先确认自己的时间与资源容量'],
+    actions: ['每周清理空间、文件和未结事项', '建立现金流与时间预算', '一次只推进少量关键任务并按期验收'],
+    items: ['账本、收纳、档案系统、陶瓷与方正器物可作提醒', '黄色、中央位和土地意象只是辅助层'],
+    overuseSignals: ['事情越积越多、对变化本能抗拒', '责任全揽在身上，身体和情绪都显沉重'],
+    avoid: ['以稳定为名拖延决策', '湿滞时继续囤积物品与任务', '燥重时再用高压规则逼迫自己'],
   },
   金: {
-    items: ['金属笔、计时器、白灰色收纳', '清单工具、文件夹、合同模板'],
-    environments: ['整洁低噪、规则明确的场所', '金融、法务、技术、流程化办公环境'],
-    actions: ['建立标准流程', '审合同、控边界、做减法', '训练表达精确度和交付质量'],
-    avoid: ['过度挑剔', '关系里太冷硬', '只讲规则不看人情'],
+    principle: '取金之从革与裁成，用来立规矩、做取舍、提高精度，使生发之气最终成为器用。',
+    timing: ['在项目中段安排评审，在结束段安排验收', '固定留出做减法、清理和决策的时段'],
+    environments: ['整洁、低噪、工具齐全、规则明确的空间', '法务、金融、技术、工程、审计与标准化组织'],
+    workModes: ['适合流程设计、质量控制、谈判、技术与专业判断', '先定义标准和边界，再进入合作与交付'],
+    capabilities: ['逻辑判断、数据核验、合同意识、精准表达', '拒绝无效需求、建立模板与检查清单'],
+    relationships: ['重要合作先谈角色、钱、权、期限和退出机制', '表达原则时保留温度，避免把关系只处理成规则'],
+    actions: ['每周删减一个低价值承诺', '为高频任务建立标准流程', '重要决定使用核对表并留书面记录'],
+    items: ['计时器、金属工具、文件夹、合同模板可作助缘', '白灰色、西方位和圆形器物仅为象意辅助'],
+    overuseSignals: ['评价过密、对自己和他人都变得苛刻', '为了正确牺牲协作，关系明显冷硬'],
+    avoid: ['只讲规则不看情境', '频繁否定却不给替代方案', '金旺燥重时继续过度压缩与挑剔'],
   },
   水: {
-    items: ['水杯、加湿器、蓝黑色小物', '复盘本、录音笔、资料库'],
-    environments: ['临水、安静、可深度思考的地方', '信息流动、咨询、研究、跨城跨平台场景'],
-    actions: ['做复盘和调研', '主动请教、收集信息', '给重大决定留缓冲期'],
-    avoid: ['想太多不行动', '信息过载', '边界模糊导致反复'],
+    principle: '取水之润下与流通，用来润燥、蓄势、调研和保留回旋；寒湿命局补水必须受控。',
+    timing: ['把深度思考、复盘和信息整理放在安静时段', '重大决定设置冷静期，但必须给冷静期设截止时间'],
+    environments: ['安静、湿度舒适、信息可流动的空间', '研究、咨询、贸易、跨地域协作和临水但不阴寒的场域'],
+    workModes: ['适合调研、咨询、数据、策略、跨平台资源连接', '先收集事实与备选方案，再小步试水'],
+    capabilities: ['倾听、研究、复盘、情境判断', '建立资料库、信息筛选机制和风险缓冲'],
+    relationships: ['先听清需求再回应，重要冲突留出缓冲', '保持边界，避免因共情过度承担他人情绪'],
+    actions: ['每周做一次事实与判断分离的复盘', '重大选择准备至少两个替代方案', '主动请教并把信息转成下一步动作'],
+    items: ['水杯、加湿与资料工具可作生活支持', '蓝黑色、北方位和水景只是象意；寒湿重者不宜以水景叠加'],
+    overuseSignals: ['信息越收越多、迟迟不决定', '情绪反复、边界模糊、作息越来越晚'],
+    avoid: ['用思考代替行动', '无节制接收信息', '寒湿已重时继续追求阴暗、临水、夜间环境'],
   },
 };
 
@@ -1613,8 +1656,20 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
   const metalScore = scoreOf('金');
   const thermalBalance = `火约${fireScore}%，水约${waterScore}%`;
   const moistureBalance = `土约${earthScore}%，水约${waterScore}%，金约${metalScore}%`;
+  const isColdSeason = ['亥', '子', '丑'].includes(monthBranch);
+  const isHotSeason = ['巳', '午', '未'].includes(monthBranch);
+  const isWetSeason = ['亥', '子', '丑', '辰'].includes(monthBranch);
+  const isDrySeason = ['巳', '午', '未', '申', '酉', '戌'].includes(monthBranch);
   const thermalDiagnosis =
-    waterScore >= 30 && fireScore <= 15
+    isColdSeason && fireScore >= 28
+      ? `月令仍以寒论，但原局火约${fireScore}%，已经有解冻和发用的条件。重点是让火稳定、持续、有承接，不是继续追求更热。`
+      : isColdSeason
+        ? '寒气当令，火是第一层调候；宜先建立白天节律、行动与可见输出，再谈其他补偏。'
+        : isHotSeason && waterScore >= 24
+          ? `月令偏热，但原局水约${waterScore}%，已有润燥条件。重点是让水能收敛火势，不宜一边补水一边继续高刺激消耗。`
+          : isHotSeason
+            ? '热燥当令，先用水润、金收，使行动有回旋；不宜再用熬夜、冲刺和密集社交加火。'
+            : waterScore >= 30 && fireScore <= 15
       ? '寒湿偏重，先补火的温度、曝光和行动力，再用土来收束水势。'
       : fireScore >= 32 && waterScore <= 15
         ? '偏热少润，宜补水金的冷静、复盘和边界，不宜再用高刺激方式催动。'
@@ -1624,16 +1679,48 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
             ? '水气较显，思考、感受和流动性强，调候重点在用火把想法落实。'
             : '寒暖不极端，关键不是单补某一行，而是让火水有来有往。';
   const moistureDiagnosis =
-    waterScore + earthScore >= 55
+    isWetSeason && waterScore + earthScore >= 45
       ? '水土并重，容易形成湿滞：现实里表现为事情堆积、想法反复、推进速度慢，需要火来烘、木来疏。'
-      : fireScore + earthScore >= 55
+      : isWetSeason
+        ? '月令带湿，先看事情能否流动和收口。即使盘中见火，也应以持续温养、疏通积压为主，不按夏季燥局处理。'
+        : isDrySeason && fireScore + earthScore >= 45
         ? '火土并重，容易偏燥：现实里表现为急、硬、耗，需水来润、金来收。'
+        : isDrySeason
+          ? '月令带燥，优先保留弹性、恢复与信息回流，再看水金是否足以润收。'
         : metalScore >= 28 && waterScore <= 15
           ? '金旺少水，容易干脆但不够柔润，宜增加沟通缓冲和信息复盘。'
           : waterScore <= 12
             ? '水少偏燥，做事容易缺少回旋与耐心，宜补安静、复盘和长期流动资源。'
             : '燥湿相对可调，重点看岁运是否突然加重水土或火土。';
   const remedyElements = [...new Set([...monthProfile.adjustment, ...reading.usefulElements])].slice(0, 4);
+  const primaryClimateElement = monthProfile.adjustment[0];
+  const secondaryClimateElement = monthProfile.adjustment[1];
+  const primaryClimateScore = scoreOf(primaryClimateElement);
+  const remedyPlan = remedyElements.map((element) => {
+    const isPrimaryClimate = element === primaryClimateElement;
+    const isClimate = monthProfile.adjustment.includes(element);
+    const isUseful = reading.usefulElements.includes(element);
+    const score = scoreOf(element);
+    const level = isPrimaryClimate ? '第一优先' : isClimate && isUseful ? '重点协同' : isClimate ? '调候辅助' : '结构辅助';
+    const dosage = score >= 30
+      ? `盘中${element}约${score}%，已有明显基础，应以“疏导、规范、不过量”为主。`
+      : score <= 12
+        ? `盘中${element}约${score}%，根气偏少，宜小量持续建立，不宜短期猛补。`
+        : `盘中${element}约${score}%，可按现实反馈稳定使用，重点是形成流通。`;
+    return { element, guide: elementRemedyGuide[element], isClimate, isUseful, level, dosage };
+  });
+  const decisionOrder = [
+    `先调月令：先处理${primaryClimateElement}，目标是修正${monthProfile.climate}带来的发挥条件。`,
+    `再做承接：用${secondaryClimateElement}承接${primaryClimateElement}，避免只补一端造成新的偏枯。`,
+    `再扶日主：结合${dayStrength}，以${reading.usefulElements.join('、')}改善承压、输出或约束。`,
+    `最后看岁运：大运流年若已经补足同一五行，现实方案应减量，不再机械叠加。`,
+  ];
+  const verificationSignals = [
+    `启动：重要事情从决定到开始的时间是否缩短，同时没有明显冲动增加。`,
+    `持续：连续四周能否稳定完成关键任务，而不是三天用力、随后停摆。`,
+    `关系：表达与边界是否更清楚，冲突后恢复速度是否改善。`,
+    `资源：时间、现金流、睡眠和承诺是否仍在可控范围。若任一项持续恶化，说明补法过量或方向不合。`,
+  ];
   const usefulLogic =
     dayStrength === '偏弱'
       ? `日主${dayElement}偏弱，扶抑上先看印比：${supportElement}能补根气、增强承压，${controlElement}来克时则要先看有无通关。`
@@ -1668,7 +1755,7 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
           </p>
         </article>
         <article>
-          <span>忌偏</span>
+          <span>过量警示</span>
           <strong>{avoidElements.join('、') || reading.structure.dominantElement}</strong>
           <p>
             {avoidElements.length
@@ -1677,6 +1764,15 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
             取用要看能否形成流通，而不是把某一行越补越多。
           </p>
         </article>
+      </div>
+
+      <div className="remedy-priority" aria-label="调候执行顺序">
+        {decisionOrder.map((item, index) => (
+          <div key={item}>
+            <span>{index + 1}</span>
+            <p>{item}</p>
+          </div>
+        ))}
       </div>
 
       <div className="useful-grid">
@@ -1728,6 +1824,16 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
               </p>
             </div>
           </div>
+          <div className="method-basis">
+            <strong>判断依据</strong>
+            <p>
+              先以月令定四时寒暖燥湿，再用原局火、水、土、金的比例校验，最后才合看日主旺衰与岁运。五行的基本性质参考
+              <a href="https://ctext.org/shang-shu/great-plan/zhs" target="_blank" rel="noreferrer">《尚书·洪范》</a>
+              所述润下、炎上、曲直、从革、稼穑；燥湿不可偏枯的判断参考
+              <a href="https://zh.wikisource.org/zh/%E6%BB%B4%E5%A4%A9%E9%AB%93/16" target="_blank" rel="noreferrer">《滴天髓·燥湿》</a>。
+              现代方案是基于这些原则做的生活转译，不是古籍原文直接给出的物品清单。
+            </p>
+          </div>
         </article>
 
         <article>
@@ -1756,25 +1862,61 @@ function UsefulAndTiaohouPanel({ reading }: { reading: BaziReading }) {
         </article>
 
         <article className="wide-card">
-          <h3>六、调候补法清单</h3>
-          <p>以下按本盘调候与喜用合并给出，适合作为生活、工作和环境选择的参考，不是单纯迷信颜色或摆件。</p>
+          <h3>六、完整调候方案</h3>
+          <p>
+            以下先按月令调气候，再按日主旺衰补结构。物品、颜色和方位仅放在最后作为提醒；真正有分量的是时间安排、工作方式、能力结构、关系边界与长期环境。
+          </p>
           <div className="remedy-grid">
-            {remedyElements.map((element) => {
-              const guide = elementRemedyGuide[element];
+            {remedyPlan.map(({ element, guide, isClimate, isUseful, level, dosage }) => {
               return (
                 <div className="remedy-card" key={element}>
-                  <strong>
-                    补{element}
-                    <small>{monthProfile.adjustment.includes(element) ? '调候' : '喜用'}</small>
-                  </strong>
-                  <p>物品：{guide.items.join('；')}</p>
-                  <p>环境：{guide.environments.join('；')}</p>
-                  <p>行动：{guide.actions.join('；')}</p>
-                  <p>避忌：{guide.avoid.join('；')}</p>
+                  <div className="remedy-card-title">
+                    <strong>取{element}</strong>
+                    <span>{level}</span>
+                    {isClimate && <small>调候</small>}
+                    {isUseful && <small>喜用</small>}
+                  </div>
+                  <p className="remedy-principle">{guide.principle}</p>
+                  <p><b>剂量判断：</b>{dosage}</p>
+                  <dl>
+                    <div><dt>时间节律</dt><dd>{guide.timing.join('；')}</dd></div>
+                    <div><dt>空间环境</dt><dd>{guide.environments.join('；')}</dd></div>
+                    <div><dt>工作路径</dt><dd>{guide.workModes.join('；')}</dd></div>
+                    <div><dt>能力训练</dt><dd>{guide.capabilities.join('；')}</dd></div>
+                    <div><dt>人际策略</dt><dd>{guide.relationships.join('；')}</dd></div>
+                    <div><dt>日常动作</dt><dd>{guide.actions.join('；')}</dd></div>
+                    <div><dt>资源与器用</dt><dd>{guide.items.join('；')}</dd></div>
+                    <div><dt>过量信号</dt><dd>{guide.overuseSignals.join('；')}</dd></div>
+                    <div><dt>避免</dt><dd>{guide.avoid.join('；')}</dd></div>
+                  </dl>
                 </div>
               );
             })}
           </div>
+        </article>
+
+        <article className="wide-card verification-card">
+          <h3>七、执行周期与纠偏</h3>
+          <div className="execution-grid">
+            <div>
+              <strong>前 7 天 · 减少阻塞</strong>
+              <p>先停止最明显的反向习惯：{elementRemedyGuide[primaryClimateElement].avoid[0]}。只选一个最小动作开始，不同时改造全部生活。</p>
+            </div>
+            <div>
+              <strong>第 2-4 周 · 建立主线</strong>
+              <p>{elementRemedyGuide[primaryClimateElement].actions[0]}；同时用{secondaryClimateElement}的方式承接：{elementRemedyGuide[secondaryClimateElement].actions[0]}。</p>
+            </div>
+            <div>
+              <strong>第 2-3 月 · 看现实结果</strong>
+              <p>把方案放进真实工作、关系和资源选择中。若只有情绪感受变好、交付和边界没有改善，就需要调整剂量。</p>
+            </div>
+          </div>
+          <ul className="verification-list">
+            {verificationSignals.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+          <p className="method-note">
+            本盘首调{primaryClimateElement}，当前占比约{primaryClimateScore}%。调候取法只用于传统命理的生活规划参考；涉及饮食、睡眠、身体不适或情绪问题时，应以医学与专业意见为准。
+          </p>
         </article>
       </div>
     </section>
@@ -2369,9 +2511,20 @@ function buildReportText(reading: BaziReading) {
   const remedyText = remedyElements
     .map((element) => {
       const guide = elementRemedyGuide[element];
-      return `补${element}：物品 ${guide.items.join('、')}；环境 ${guide.environments.join('、')}；行动 ${guide.actions.join('、')}；避忌 ${guide.avoid.join('、')}`;
+      return [
+        `取${element}：${guide.principle}`,
+        `时间节律：${guide.timing.join('；')}`,
+        `空间环境：${guide.environments.join('；')}`,
+        `工作路径：${guide.workModes.join('；')}`,
+        `能力训练：${guide.capabilities.join('；')}`,
+        `人际策略：${guide.relationships.join('；')}`,
+        `日常动作：${guide.actions.join('；')}`,
+        `资源与器用：${guide.items.join('；')}`,
+        `过量信号：${guide.overuseSignals.join('；')}`,
+        `避免：${guide.avoid.join('；')}`,
+      ].join('\n');
     })
-    .join('\n');
+    .join('\n\n');
   const deepDomains = reading.deepDive.domains
     .map((domain) => {
       return [

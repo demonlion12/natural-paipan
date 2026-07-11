@@ -42,6 +42,24 @@ const STEM_POLARITY: Record<string, '阳' | '阴'> = {
   癸: '阴',
 };
 
+const BRANCH_MAIN_STEM: Record<string, string> = {
+  子: '癸',
+  丑: '己',
+  寅: '甲',
+  卯: '乙',
+  辰: '戊',
+  巳: '丙',
+  午: '丁',
+  未: '己',
+  申: '庚',
+  酉: '辛',
+  戌: '戊',
+  亥: '壬',
+};
+
+const BRANCH_COMBINES = [['子', '丑'], ['寅', '亥'], ['卯', '戌'], ['辰', '酉'], ['巳', '申'], ['午', '未']];
+const BRANCH_CLASHES = [['子', '午'], ['丑', '未'], ['寅', '申'], ['卯', '酉'], ['辰', '戌'], ['巳', '亥']];
+
 const BRANCH_HIDDEN_WEIGHTS = [8, 4, 2];
 const ELEMENTS: ElementName[] = ['木', '火', '土', '金', '水'];
 const GENERATES: Record<ElementName, ElementName> = {
@@ -230,6 +248,42 @@ function getChildElement(element: ElementName) {
 
 function getControlledBy(element: ElementName) {
   return (Object.keys(CONTROLS) as ElementName[]).find((key) => CONTROLS[key] === element)!;
+}
+
+function getTenGodFromStems(dayStem: string, targetStem: string) {
+  const dayElement = STEM_ELEMENT[dayStem];
+  const targetElement = STEM_ELEMENT[targetStem];
+  const samePolarity = STEM_POLARITY[dayStem] === STEM_POLARITY[targetStem];
+
+  if (dayElement === targetElement) {
+    return samePolarity ? '比肩' : '劫财';
+  }
+  if (GENERATES[dayElement] === targetElement) {
+    return samePolarity ? '食神' : '伤官';
+  }
+  if (GENERATES[targetElement] === dayElement) {
+    return samePolarity ? '偏印' : '正印';
+  }
+  if (CONTROLS[dayElement] === targetElement) {
+    return samePolarity ? '偏财' : '正财';
+  }
+  return samePolarity ? '七杀' : '正官';
+}
+
+function getAnnualBranchNotes(branch: string, pillars: Pillar[]) {
+  const notes = new Set<string>();
+  pillars.forEach((pillar) => {
+    if (BRANCH_COMBINES.some(([a, b]) => (a === branch && b === pillar.branch) || (b === branch && a === pillar.branch))) {
+      notes.add(`${branch}${pillar.branch}合（引动${pillar.label}）`);
+    }
+    if (BRANCH_CLASHES.some(([a, b]) => (a === branch && b === pillar.branch) || (b === branch && a === pillar.branch))) {
+      notes.add(`${branch}${pillar.branch}冲（推动${pillar.label}变化）`);
+    }
+    if (branch === pillar.branch) {
+      notes.add(`${branch}${pillar.branch}伏吟（${pillar.label}主题重复）`);
+    }
+  });
+  return [...notes];
 }
 
 function createPillar(key: PillarKey, eightChar: EightChar): Pillar {
@@ -704,19 +758,48 @@ function createDeepDiveReport(args: {
   const futureYears = [0, 1, 2].map((offset) => {
     const year = new Date().getFullYear() + offset;
     const ganZhi = getGanZhiYear(year);
-    const yearElement = getElementFromGanZhi(ganZhi);
-    const aligned = usefulElements.includes(yearElement);
+    const [yearStem, yearBranch] = ganZhi.split('');
+    const stemElement = STEM_ELEMENT[yearStem];
+    const branchMainStem = BRANCH_MAIN_STEM[yearBranch];
+    const branchElement = STEM_ELEMENT[branchMainStem];
+    const stemTenGod = getTenGodFromStems(dayPillar.stem, yearStem);
+    const branchTenGod = getTenGodFromStems(dayPillar.stem, branchMainStem);
+    const profile = TEN_GOD_PROFILE[stemTenGod];
+    const branchProfile = TEN_GOD_PROFILE[branchTenGod];
+    const usefulHits = [stemElement, branchElement].filter((element) => usefulElements.includes(element));
+    const aligned = usefulHits.length > 0;
+    const relationNotes = getAnnualBranchNotes(yearBranch, pillars);
+    const relationText = relationNotes.length ? relationNotes.join('、') : '与原局地支未见直接六合、六冲或伏吟';
+    const career = ['正官', '七杀'].includes(stemTenGod)
+      ? '事业主线落在权责、规则和位置变化，适合争取明确职级或承担关键任务，但要把压力写进时间与资源预算。'
+      : ['正印', '偏印'].includes(stemTenGod)
+        ? '事业宜先做资质、研究、方法和专业壁垒；学习必须转成证书、案例、流程或作品，避免只输入不交付。'
+        : ['食神', '伤官'].includes(stemTenGod)
+          ? '事业利输出、产品、表达和创新，适合发布成果、优化流程；与上级或制度互动时要留证据、留余地。'
+          : ['正财', '偏财'].includes(stemTenGod)
+            ? '事业与客户、项目、资源和收入直接相连，适合谈商业结果；先定成本、回款与退出条件。'
+            : '事业会突出自我主张、团队和同业竞争，适合建立个人品牌，但合作必须先定责权利。';
+    const relationship = relationNotes.some((note) => note.includes('日柱'))
+      ? `流年直接引动日柱，关系、自身状态和居所安排更容易发生变化；${relationText}。重要决定要把感受与现实条件分开讨论。`
+      : ['正财', '偏财', '正官', '七杀'].includes(stemTenGod)
+        ? `关系议题更重承诺、责任与现实安排。${relationText}，适合把时间、金钱、家庭边界说清楚。`
+        : `关系重点在沟通节奏与相互支持。${relationText}，不要用沉默或忙碌代替回应。`;
+    const money = ['正财', '偏财'].includes(stemTenGod)
+      ? '财星透出，资源与交易机会会增加；正财重稳定兑现，偏财重项目筛选，均须设置预算、回款节点与风险上限。'
+      : ['比肩', '劫财'].includes(stemTenGod)
+        ? '比劫年份钱财容易受同伴、合伙和竞争牵动，谨慎借贷、担保、人情消费与口头分账。'
+        : ['食神', '伤官'].includes(stemTenGod)
+          ? '收入更适合从作品、技术、内容和服务转化而来，先验证付费需求，再扩投入。'
+          : '财务宜守现金流，以专业积累和稳定配置为主，不因单一消息改变长期计划。';
     return {
       year,
       ganZhi,
-      theme: aligned ? '顺势推进' : '调频守中',
-      focus: aligned
-        ? `${year}年${yearElement}气对你较有帮助，适合把重要计划推到台前。`
-        : `${year}年${yearElement}气未必完全合用，宜先稳节奏、清边界、少分散。`,
-      career: aligned ? '事业上宜争取关键项目、作品发布、资质升级。' : '事业上宜整理流程、复盘方向，不宜盲目换赛道。',
-      relationship: aligned ? '关系上适合推进承诺与共同计划。' : '关系上需减少误解，旧问题要及时沟通。',
-      money: aligned ? '财务上可做稳健扩张，但仍需预算。' : '财务上重现金流和风险上限。',
-      caution: aligned ? '顺时也忌贪多，机会要筛选。' : '不顺时更忌硬拧，先保存实力。',
+      theme: aligned ? `${stemTenGod}主事 · 喜用有应` : `${stemTenGod}主事 · 调频守中`,
+      focus: `${yearStem}属${stemElement}，为${stemTenGod}；${yearBranch}主气属${branchElement}，为${branchTenGod}。${profile?.drive ?? ''}${aligned ? `干支中见喜用${usefulHits.join('、')}，可以主动承接，但仍要看原局触发。` : `干支未直接补足喜用${usefulElements.join('、')}，宜借现实环境和选择做平衡。`}`,
+      career,
+      relationship,
+      money,
+      caution: `${profile?.shadow ?? '避免在信息不全时做长期承诺。'} 地支底层还带${branchTenGod}：${branchProfile?.shadow ?? '需观察长期环境变化。'} ${relationText}。`,
     };
   });
 
