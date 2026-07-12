@@ -3482,13 +3482,19 @@ button.flow-cell.current:focus-visible {
 
 .chapter-blocks {
   display: grid;
-  gap: 30px;
+  gap: 0;
   margin-top: 24px;
 }
 
 .chapter-blocks > section {
   display: grid;
-  gap: 12px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(23, 33, 29, 0.055);
+  padding: 12px 0;
+}
+
+.chapter-blocks > section:last-child {
+  border-bottom: 0;
 }
 
 .chapter-blocks h3 {
@@ -3504,11 +3510,13 @@ button.flow-cell.current:focus-visible {
 }
 
 .original-text blockquote {
-  margin: 7px 0 0;
+  margin: 5px 0 0;
   color: #18241f;
   font-family: "Songti SC", SimSun, serif;
-  font-size: 22px;
-  line-height: 1.9;
+  font-size: 18px;
+  line-height: 1.85;
+  text-align: justify;
+  overflow-wrap: anywhere;
 }
 
 .old-commentary {
@@ -3521,6 +3529,35 @@ button.flow-cell.current:focus-visible {
   color: #61736b;
   font-family: "Songti SC", SimSun, serif;
   line-height: 1.9;
+}
+
+.example-block {
+  border-bottom: 0 !important;
+  padding: 5px 0 !important;
+}
+
+.classic-example-chart {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border: 1px solid rgba(181, 138, 67, 0.18);
+  border-radius: 5px;
+  background: rgba(200, 164, 93, 0.055);
+  padding: 10px 12px;
+}
+
+.classic-example-chart span {
+  color: #9b6a2f;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.classic-example-chart p {
+  color: #344a42;
+  font-family: "Songti SC", SimSun, serif;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .chapter-pagination {

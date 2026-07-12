@@ -34,7 +34,23 @@ function normalizeSource(wikitext) {
     .replace(/'''?/g, '')
     .split('\n')
     .map((line) => line.replace(/^[\s　]+/, '').trim())
-    .filter((line) => line && line !== '欽定四庫全書');
+    .filter((line) => line && line !== '欽定四庫全書')
+    .flatMap((line) => splitLongText(line));
+}
+
+function splitLongText(value, limit = 460) {
+  const chunks = [];
+  let rest = value;
+  while (rest.length > limit) {
+    const window = rest.slice(0, limit + 1);
+    const candidates = ['。', '！', '？', '〕', '；'].map((mark) => window.lastIndexOf(mark));
+    const boundary = Math.max(...candidates);
+    const cut = boundary >= Math.floor(limit * 0.48) ? boundary + 1 : limit;
+    chunks.push(rest.slice(0, cut).trim());
+    rest = rest.slice(cut).trim();
+  }
+  if (rest) chunks.push(rest);
+  return chunks;
 }
 
 const chapters = volumes.map(([title, guide], index) => {

@@ -36,11 +36,33 @@ function clean(value) {
     .replace(/'''?/g, '')
     .replace(/\{\{[^{}]*\}\}/g, '')
     .replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, '$2')
+    .replace(/[{}]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
-const lines = wikitext.split('\n');
+function formatPillars(value) {
+  return [...clean(value)].filter((character) => /[甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥]/.test(character)).join(' ');
+}
+
+function convertWikiTables(source) {
+  return source.replace(/\{\|[\s\S]*?\|\}/g, (table) => {
+    const examples = table.split(/\|时日月年/).slice(1).map((entry) => {
+      const parts = entry
+        .replace(/^\s+|\s+$/g, '')
+        .split(/\n+/)
+        .map((item) => clean(item.replace(/^\|/, '')))
+        .filter(Boolean);
+      const stems = formatPillars(parts[0] ?? '');
+      const branches = formatPillars(parts[1] ?? '');
+      const note = parts.slice(2).join(' · ');
+      return stems && branches ? `@@EXAMPLE@@四柱：${stems} / ${branches}${note ? ` · ${note}` : ''}` : '';
+    }).filter(Boolean);
+    return `\n\n${examples.join('\n\n')}\n\n`;
+  });
+}
+
+const lines = convertWikiTables(wikitext).split('\n');
 const chapters = [];
 let chapter = null;
 let subheading = '';
@@ -82,6 +104,11 @@ for (const rawLine of lines) {
   if (levelThree) {
     flushParagraph();
     subheading = clean(levelThree[1]);
+    continue;
+  }
+  if (line.startsWith('@@EXAMPLE@@')) {
+    flushParagraph();
+    chapter?.blocks.push({ heading: '命式示例', original: line.replace('@@EXAMPLE@@', ''), commentary: '' });
     continue;
   }
   if (!line) {

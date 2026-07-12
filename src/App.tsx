@@ -2889,9 +2889,13 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                         {readerLayer !== 'original' && <section className="chapter-guide"><strong>白话导读</strong><p>{activeChapter.guide}</p></section>}
                         {readerLayer !== 'guide' && <div className="chapter-blocks">
                           {activeChapter.blocks.map((block, index) => (
-                            <section key={`${activeChapter.id}-${index}`}>
-                              {block.heading && <h3>{block.heading}</h3>}
-                              <div className="original-text"><span>原典正文</span><blockquote>{block.original}</blockquote></div>
+                            <section className={block.heading === '命式示例' ? 'example-block' : ''} key={`${activeChapter.id}-${index}`}>
+                              {block.heading && block.heading !== '命式示例' && <h3>{block.heading}</h3>}
+                              {block.heading === '命式示例' ? (
+                                <div className="classic-example-chart"><span>命式示例</span><p>{block.original}</p></div>
+                              ) : (
+                                <div className="original-text">{index === 0 && <span>原典正文</span>}<blockquote>{block.original}</blockquote></div>
+                              )}
                               {readerLayer === 'all' && block.commentary && <div className="old-commentary"><span>底本旧注</span>{block.commentary.split('\n').map((line) => <p key={line}>{line}</p>)}</div>}
                             </section>
                           ))}
