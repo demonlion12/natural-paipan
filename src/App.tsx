@@ -14,6 +14,7 @@ import {
   GraduationCap,
   LibraryBig,
   LogIn,
+  LogOut,
   MapPin,
   RefreshCw,
   RotateCcw,
@@ -34,7 +35,7 @@ const initialInput: BirthInput = {
   birthplace: '未知地 北京时间',
 };
 
-type AppStep = 'login' | 'birth' | 'report' | 'yijing' | 'learning';
+type AppStep = 'login' | 'home' | 'birth' | 'report' | 'yijing' | 'learning';
 type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 type DiagramTab = 'ganzhi' | 'flow' | 'palace' | 'kinship';
@@ -3081,20 +3082,83 @@ function YijingPage({ onBack, onGoBazi, onLearning }: { onBack: () => void; onGo
   );
 }
 
+function HomePage({
+  profileName,
+  onBazi,
+  onLearning,
+  onLogout,
+  onYijing,
+}: {
+  profileName: string;
+  onBazi: () => void;
+  onLearning: () => void;
+  onLogout: () => void;
+  onYijing: () => void;
+}) {
+  return (
+    <main className="app-home-shell">
+      <header className="app-home-topbar">
+        <div className="topnav-brand">
+          <div className="brand-symbol">山</div>
+          <div>
+            <strong>山易排盘</strong>
+            <span>传统命理工具</span>
+          </div>
+        </div>
+        <div className="home-profile">
+          <span>当前档案</span>
+          <strong>{profileName || '游客'}</strong>
+          <button aria-label="退出登录" onClick={onLogout} title="退出登录" type="button">
+            <LogOut size={18} />
+          </button>
+        </div>
+      </header>
+
+      <section className="home-workspace">
+        <div className="home-heading">
+          <span className="eyebrow">功能首页</span>
+          <h1>选择要进入的功能</h1>
+        </div>
+
+        <div className="home-module-grid">
+          <button className="home-module bazi" onClick={onBazi} type="button">
+            <span className="home-module-icon"><CalendarDays size={28} /></span>
+            <span className="home-module-index">01</span>
+            <strong>八字排盘</strong>
+            <small>录入生辰 · 四柱细盘 · 专业详批 · 大运合参</small>
+            <ArrowRight size={20} />
+          </button>
+          <button className="home-module learning" onClick={onLearning} type="button">
+            <span className="home-module-icon"><GraduationCap size={28} /></span>
+            <span className="home-module-index">02</span>
+            <strong>命理学堂</strong>
+            <small>知识体系 · 基础速查 · 古籍原文与译解</small>
+            <ArrowRight size={20} />
+          </button>
+          <button className="home-module yijing" onClick={onYijing} type="button">
+            <span className="home-module-icon"><Sparkles size={28} /></span>
+            <span className="home-module-index">03</span>
+            <strong>易经起卦</strong>
+            <small>自动起卦 · 逐爻摇卦 · 本卦变卦 · 详细解读</small>
+            <ArrowRight size={20} />
+          </button>
+        </div>
+      </section>
+
+    </main>
+  );
+}
+
 function LoginPage({
   profileName,
   onChangeName,
   onLogin,
   onGuest,
-  onLearning,
-  onYijing,
 }: {
   profileName: string;
   onChangeName: (value: string) => void;
   onLogin: () => void;
   onGuest: () => void;
-  onLearning: () => void;
-  onYijing: () => void;
 }) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -3160,8 +3224,8 @@ function LoginPage({
           <span>四柱排盘</span>
           <span>五行气势</span>
           <span>专业深度页</span>
-          <button onClick={onLearning} type="button">命理学堂</button>
-          <button onClick={onYijing} type="button">易经求卦</button>
+          <span>命理学堂</span>
+          <span>易经起卦</span>
         </div>
       </section>
 
@@ -3330,11 +3394,13 @@ function BirthSetupPage({
 
 function ReportTopNav({
   activeNav,
+  onHome,
   onNavigate,
   onLearning,
   onYijing,
 }: {
   activeNav: NavTarget;
+  onHome: () => void;
   onNavigate: (target: NavTarget) => void;
   onLearning: () => void;
   onYijing: () => void;
@@ -3359,6 +3425,9 @@ function ReportTopNav({
       </div>
 
       <nav className="topnav-tabs" aria-label="报告导航">
+        <button onClick={onHome} type="button">
+          功能首页
+        </button>
         {navItems.map((item) => (
           <button className={activeNav === item.key ? 'active' : ''} key={item.key} onClick={() => onNavigate(item.key)} type="button">
             {item.label}
@@ -3469,16 +3538,29 @@ export default function App() {
         onChangeName={(name) => setInput((current) => ({ ...current, name }))}
         onGuest={() => {
           setToast('已进入游客体验');
-          setStep('birth');
+          setStep('home');
         }}
         onLogin={() => {
-          setToast('登录成功，继续录入生辰');
-          setStep('birth');
+          setToast('登录成功');
+          setStep('home');
         }}
-        onLearning={openLearning}
-        onYijing={openYijing}
         profileName={input.name}
       />
+    );
+  }
+
+  if (step === 'home') {
+    return (
+      <>
+        <HomePage
+          onBazi={() => setStep('birth')}
+          onLearning={openLearning}
+          onLogout={() => setStep('login')}
+          onYijing={openYijing}
+          profileName={input.name}
+        />
+        {toast && <div className="toast">{toast}</div>}
+      </>
     );
   }
 
@@ -3510,7 +3592,7 @@ export default function App() {
       <>
         <BirthSetupPage
           input={input}
-          onBack={() => setStep('login')}
+          onBack={() => setStep('home')}
           onChange={setInput}
           onLearning={openLearning}
           onYijing={openYijing}
@@ -3530,7 +3612,7 @@ export default function App() {
 
   return (
     <main className="report-shell">
-      <ReportTopNav activeNav={activeNav} onLearning={openLearning} onNavigate={scrollTo} onYijing={openYijing} />
+      <ReportTopNav activeNav={activeNav} onHome={() => setStep('home')} onLearning={openLearning} onNavigate={scrollTo} onYijing={openYijing} />
 
       <div className="report-main">
         {error && <div className="error-box">{error}</div>}
