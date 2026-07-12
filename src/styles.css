@@ -3480,6 +3480,29 @@ button.flow-cell.current:focus-visible {
   line-height: 1.85;
 }
 
+.chapter-loading {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 220px;
+  color: #71837b;
+}
+
+.chapter-loading span {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(43, 122, 120, 0.16);
+  border-top-color: #2b7a78;
+  border-radius: 50%;
+  animation: chapter-spin 0.75s linear infinite;
+}
+
+@keyframes chapter-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .chapter-blocks {
   display: grid;
   gap: 0;

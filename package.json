@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "sync:classics": "node scripts/sync-ditiansui.mjs && node scripts/sync-lixu.mjs && node scripts/sync-qiongtong.mjs"
+    "sync:classics": "node scripts/sync-ditiansui.mjs && node scripts/sync-lixu.mjs && node scripts/sync-qiongtong.mjs && node scripts/split-classics.mjs",
+    "split:classics": "node scripts/split-classics.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^6.0.1",

@@ -26,7 +26,7 @@ import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
 import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, stemQuickReference, tenGodQuickReference } from './knowledge';
-import type { ClassicBook } from './knowledge';
+import type { ClassicBook, ClassicChapter } from './knowledge';
 
 const initialInput: BirthInput = {
   name: '1232',
@@ -2631,9 +2631,12 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
   const [classicMode, setClassicMode] = useState<ClassicLibraryMode>('shelf');
   const [classicBook, setClassicBook] = useState<ClassicBook | null>(null);
   const [classicLoading, setClassicLoading] = useState(false);
+  const [chapterLoading, setChapterLoading] = useState(false);
+  const [activeChapterData, setActiveChapterData] = useState<ClassicChapter | null>(null);
   const [classicError, setClassicError] = useState('');
   const [activeChapterId, setActiveChapterId] = useState('01');
   const [readerLayer, setReaderLayer] = useState<'all' | 'original' | 'guide'>('all');
+  const chapterLoadRequest = useRef(0);
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
       return JSON.parse(window.localStorage.getItem('shanyi-learning-progress') || '[]') as string[];
@@ -2662,8 +2665,50 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
   });
   const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
   const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
-  const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide, ...chapter.blocks.flatMap((block) => [block.heading, block.original, block.commentary])].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
+  const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
   const relatedModules = activeChapter && classicBook ? getClassicRelatedModules(classicBook.id, activeChapter.title) : [];
+
+  const loadClassicChapter = async (book: ClassicBook, chapterId: string) => {
+    const chapter = book.chapters.find((item) => item.id === chapterId);
+    if (!chapter) return;
+    const requestId = ++chapterLoadRequest.current;
+    const cacheKey = `shanyi-classic:${book.id}:${book.version}:${chapter.id}`;
+    setChapterLoading(true);
+    setClassicError('');
+    try {
+      let cached: string | null = null;
+      try {
+        cached = window.localStorage.getItem(cacheKey);
+      } catch {
+        cached = null;
+      }
+      if (cached) {
+        if (requestId === chapterLoadRequest.current) setActiveChapterData(JSON.parse(cached) as ClassicChapter);
+        return;
+      }
+      const response = await fetch(`${import.meta.env.BASE_URL}${chapter.path}`, { cache: 'force-cache' });
+      if (!response.ok) throw new Error(`篇章载入失败（${response.status}）`);
+      const data = await response.json() as ClassicChapter;
+      if (requestId !== chapterLoadRequest.current) return;
+      setActiveChapterData(data);
+      try {
+        window.localStorage.setItem(cacheKey, JSON.stringify(data));
+      } catch {
+        // Storage can be unavailable in private browsing; HTTP caching still applies.
+      }
+    } catch (error) {
+      if (requestId === chapterLoadRequest.current) setClassicError(error instanceof Error ? error.message : '篇章载入失败');
+    } finally {
+      if (requestId === chapterLoadRequest.current) setChapterLoading(false);
+    }
+  };
+
+  const selectClassicChapter = (chapterId: string, book = classicBook) => {
+    if (!book) return;
+    setActiveChapterId(chapterId);
+    setActiveChapterData(null);
+    void loadClassicChapter(book, chapterId);
+  };
 
   const openClassicBook = async (bookId: string) => {
     const meta = classicShelf.find((book) => book.id === bookId);
@@ -2673,11 +2718,23 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
     setClassicError('');
     setQuery('');
     try {
-      const response = await fetch(`${import.meta.env.BASE_URL}${meta.path}`);
+      const response = await fetch(`${import.meta.env.BASE_URL}${meta.path}`, { cache: 'force-cache' });
       if (!response.ok) throw new Error(`古籍载入失败（${response.status}）`);
       const book = await response.json() as ClassicBook;
+      const currentCachePrefix = `shanyi-classic:${book.id}:${book.version}:`;
+      try {
+        for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+          const key = window.localStorage.key(index);
+          if (key?.startsWith(`shanyi-classic:${book.id}:`) && !key.startsWith(currentCachePrefix)) window.localStorage.removeItem(key);
+        }
+      } catch {
+        // The reader works without persistent storage when the browser blocks it.
+      }
       setClassicBook(book);
-      setActiveChapterId(book.chapters[0]?.id ?? '01');
+      const firstChapterId = book.chapters[0]?.id ?? '01';
+      setActiveChapterId(firstChapterId);
+      setActiveChapterData(null);
+      void loadClassicChapter(book, firstChapterId);
     } catch (error) {
       setClassicError(error instanceof Error ? error.message : '古籍载入失败');
     } finally {
@@ -2689,7 +2746,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
     if (!classicBook || !activeChapter) return;
     const next = classicBook.chapters[Math.max(0, Math.min(classicBook.chapters.length - 1, chapterIndex + offset))];
     if (next) {
-      setActiveChapterId(next.id);
+      selectClassicChapter(next.id);
       window.scrollTo({ top: 260, behavior: 'smooth' });
     }
   };
@@ -2784,7 +2841,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
         </div>
         <label className="knowledge-search">
           <Search size={17} />
-          <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、十神、调候或古籍原文" value={query} />
+          <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、十神、调候或古籍篇名" value={query} />
         </label>
       </section>
 
@@ -2873,7 +2930,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                   <div className="classic-reader-layout">
                     <aside className="classic-toc">
                       <div><strong>全书目录</strong><span>{filteredChapters.length}/{classicBook.chapterCount}</span></div>
-                      {filteredChapters.map((chapter) => <button className={chapter.id === activeChapter?.id ? 'active' : ''} key={chapter.id} onClick={() => setActiveChapterId(chapter.id)} type="button"><span>{chapter.id}</span>{chapter.title}</button>)}
+                      {filteredChapters.map((chapter) => <button className={chapter.id === activeChapter?.id ? 'active' : ''} key={chapter.id} onClick={() => selectClassicChapter(chapter.id)} type="button"><span>{chapter.id}</span>{chapter.title}</button>)}
                       {!filteredChapters.length && <p>目录中没有匹配内容。</p>}
                     </aside>
                     {activeChapter && (
@@ -2887,8 +2944,9 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                           </div>
                         </div>
                         {readerLayer !== 'original' && <section className="chapter-guide"><strong>白话导读</strong><p>{activeChapter.guide}</p></section>}
-                        {readerLayer !== 'guide' && <div className="chapter-blocks">
-                          {activeChapter.blocks.map((block, index) => (
+                        {chapterLoading && <div className="chapter-loading"><span /><p>正在读取本地篇章…</p></div>}
+                        {!chapterLoading && readerLayer !== 'guide' && activeChapterData && <div className="chapter-blocks">
+                          {activeChapterData.blocks.map((block, index) => (
                             <section className={block.heading === '命式示例' ? 'example-block' : ''} key={`${activeChapter.id}-${index}`}>
                               {block.heading && block.heading !== '命式示例' && <h3>{block.heading}</h3>}
                               {block.heading === '命式示例' ? (
@@ -2910,7 +2968,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                     <aside className="classic-meta">
                       <strong>版本说明</strong>
                       <p>{classicBook.editionNote}</p>
-                      <dl><dt>底本</dt><dd>{classicBook.sourceLabel}</dd><dt>整理日期</dt><dd>{classicBook.updatedAt}</dd><dt>收录状态</dt><dd>{classicBook.status} · {classicBook.chapterCount} 篇</dd></dl>
+                      <dl><dt>底本</dt><dd>{classicBook.sourceLabel}</dd><dt>整理日期</dt><dd>{classicBook.updatedAt}</dd><dt>收录状态</dt><dd>{classicBook.status} · {classicBook.chapterCount} 篇</dd><dt>加载方式</dt><dd>本地分篇 · 已读缓存</dd></dl>
                       <strong>阅读建议</strong>
                       <ol><li>先读正文，不急于套命盘。</li><li>再看旧注的时代语境。</li><li>用白话导读提炼问题。</li><li>回到知识体系核对概念。</li></ol>
                       <strong>关联知识</strong>

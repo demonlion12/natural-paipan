@@ -1,0 +1,121 @@
+{
+  "id": "qiongtong",
+  "title": "穷通宝鉴",
+  "dynasty": "清刊本系统",
+  "attribution": "旧题余春台辑；传本源流复杂，本站沿用维基文库题名",
+  "status": "全文",
+  "chapterCount": 15,
+  "description": "以五行、十干和十二月令为线索，集中讨论寒暖燥湿与调候取用。",
+  "editionNote": "全文据维基文库《穷通宝鉴》页面整理，按“五行总论、五行分论、十干分论”重建目录；保留来源页正文与标点。白话导读为本站重新撰写，旨在说明篇章问题意识，不替代逐句训诂。",
+  "sourceLabel": "维基文库《穷通宝鉴》",
+  "sourceUrl": "https://zh.wikisource.org/wiki/穷通宝鉴",
+  "updatedAt": "2026-07-12",
+  "chapters": [
+    {
+      "id": "01",
+      "title": "五行总论",
+      "guide": "从阴阳寒热说明五行的来源、性情、生克与中和原则，是全书的理论入口。阅读时要把“折衷中道”理解为动态平衡，而不是五行数量平均。",
+      "path": "knowledge/classics/qiongtong/chapters/01.json",
+      "blockCount": 8
+    },
+    {
+      "id": "02",
+      "title": "论木",
+      "guide": "总论木在春夏秋冬的状态，强调水、火、土、金对生木、死木和季节木气的不同作用。",
+      "path": "knowledge/classics/qiongtong/chapters/02.json",
+      "blockCount": 5
+    },
+    {
+      "id": "03",
+      "title": "论甲木",
+      "guide": "甲木各月取用的核心是辨季节、根气与庚丁壬癸等配合。原文包含大量具体断语，学习时应提炼条件，不宜逐句机械套用。",
+      "path": "knowledge/classics/qiongtong/chapters/03.json",
+      "blockCount": 65
+    },
+    {
+      "id": "04",
+      "title": "论乙木",
+      "guide": "乙木重在柔木能否得阳和、滋润与依托。四季取用随寒暖、燥湿和木气强弱改变。",
+      "path": "knowledge/classics/qiongtong/chapters/04.json",
+      "blockCount": 57
+    },
+    {
+      "id": "05",
+      "title": "论火",
+      "guide": "总论火的炎上、光明与调候作用，强调木生、土泄、水济和季节旺衰之间的尺度。",
+      "path": "knowledge/classics/qiongtong/chapters/05.json",
+      "blockCount": 6
+    },
+    {
+      "id": "06",
+      "title": "论丙火",
+      "guide": "丙火取太阳之象，重点看照暖、制化与壬庚甲等配合。旺季需节制，寒季需生扶。",
+      "path": "knowledge/classics/qiongtong/chapters/06.json",
+      "blockCount": 98
+    },
+    {
+      "id": "07",
+      "title": "论丁火",
+      "guide": "丁火取灯烛炉火之象，更重根源、依附和持续性。不同月份要辨木助、金材与水制是否有情。",
+      "path": "knowledge/classics/qiongtong/chapters/07.json",
+      "blockCount": 72
+    },
+    {
+      "id": "08",
+      "title": "论土",
+      "guide": "总论土随四时而变、承载转化的性质。湿土、燥土及寒暖土不可同断。",
+      "path": "knowledge/classics/qiongtong/chapters/08.json",
+      "blockCount": 10
+    },
+    {
+      "id": "09",
+      "title": "论戊土",
+      "guide": "戊土偏阳厚，取用常围绕疏土、润燥、暖局和日主能否承载展开。",
+      "path": "knowledge/classics/qiongtong/chapters/09.json",
+      "blockCount": 66
+    },
+    {
+      "id": "10",
+      "title": "论己土",
+      "guide": "己土偏阴湿，重培育、收纳和去湿暖土。原文按月说明丙癸甲等如何配合。",
+      "path": "knowledge/classics/qiongtong/chapters/10.json",
+      "blockCount": 56
+    },
+    {
+      "id": "11",
+      "title": "论庚金",
+      "guide": "庚金重锻炼与成器，火炼、水洗、土生、木材都须符合季节与强弱。",
+      "path": "knowledge/classics/qiongtong/chapters/11.json",
+      "blockCount": 76
+    },
+    {
+      "id": "12",
+      "title": "论辛金",
+      "guide": "辛金取珠玉精金之象，重淘洗、润泽与显用，忌泥滞、过火或水泛。",
+      "path": "knowledge/classics/qiongtong/chapters/12.json",
+      "blockCount": 71
+    },
+    {
+      "id": "13",
+      "title": "论水",
+      "guide": "总论水润下、流动与寒湿之性。水要有源、有归、有堤防，过旺则泛，过弱则涸。",
+      "path": "knowledge/classics/qiongtong/chapters/13.json",
+      "blockCount": 6
+    },
+    {
+      "id": "14",
+      "title": "论壬水",
+      "guide": "壬水取江河之象，重源流、疏导与堤岸。四季分别观察庚辛发源、戊土制约及丙火调候。",
+      "path": "knowledge/classics/qiongtong/chapters/14.json",
+      "blockCount": 68
+    },
+    {
+      "id": "15",
+      "title": "论癸水",
+      "guide": "癸水取雨露泉脉之象，重滋润与通达。寒湿时需暖土，燥热时需有源，仍须结合月令。",
+      "path": "knowledge/classics/qiongtong/chapters/15.json",
+      "blockCount": 54
+    }
+  ],
+  "version": "2026-07-12-718"
+}
