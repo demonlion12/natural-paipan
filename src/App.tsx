@@ -25,7 +25,7 @@ import {
 import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
-import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, stemQuickReference, tenGodQuickReference } from './knowledge';
+import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, knowledgeTerms, learningPaths, stemQuickReference, tenGodQuickReference } from './knowledge';
 import type { ClassicBook, ClassicChapter } from './knowledge';
 
 const initialInput: BirthInput = {
@@ -2604,7 +2604,7 @@ function buildReportText(reading: BaziReading) {
   ].join('\n');
 }
 
-type LearningView = 'curriculum' | 'classics' | 'reference';
+type LearningView = 'paths' | 'curriculum' | 'glossary' | 'classics' | 'reference';
 type ClassicLibraryMode = 'shelf' | 'reader' | 'excerpts';
 
 function getClassicRelatedModules(bookId: string, chapterTitle: string) {
@@ -2624,7 +2624,7 @@ function getClassicRelatedModules(bookId: string, chapterTitle: string) {
 }
 
 function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGoBazi: () => void; onYijing: () => void }) {
-  const [view, setView] = useState<LearningView>('curriculum');
+  const [view, setView] = useState<LearningView>('paths');
   const [activeModuleId, setActiveModuleId] = useState(knowledgeModules[0].id);
   const [query, setQuery] = useState('');
   const [activeBook, setActiveBook] = useState('全部');
@@ -2636,6 +2636,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
   const [classicError, setClassicError] = useState('');
   const [activeChapterId, setActiveChapterId] = useState('01');
   const [readerLayer, setReaderLayer] = useState<'all' | 'original' | 'guide'>('all');
+  const [termCategory, setTermCategory] = useState('全部');
   const chapterLoadRequest = useRef(0);
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
@@ -2662,6 +2663,12 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
       .toLowerCase()
       .includes(normalizedQuery);
     return matchesBook && matchesQuery;
+  });
+  const termCategories = ['全部', ...new Set(knowledgeTerms.map((term) => term.category))];
+  const filteredTerms = knowledgeTerms.filter((term) => {
+    const matchesCategory = termCategory === '全部' || term.category === termCategory;
+    const matchesQuery = !normalizedQuery || [term.term, ...term.aliases, term.definition, term.caution].join(' ').toLowerCase().includes(normalizedQuery);
+    return matchesCategory && matchesQuery;
   });
   const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
   const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
@@ -2710,7 +2717,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
     void loadClassicChapter(book, chapterId);
   };
 
-  const openClassicBook = async (bookId: string) => {
+  const openClassicBook = async (bookId: string, targetChapterId?: string) => {
     const meta = classicShelf.find((book) => book.id === bookId);
     if (!meta || !('path' in meta)) return;
     setClassicMode('reader');
@@ -2731,7 +2738,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
         // The reader works without persistent storage when the browser blocks it.
       }
       setClassicBook(book);
-      const firstChapterId = book.chapters[0]?.id ?? '01';
+      const firstChapterId = targetChapterId && book.chapters.some((chapter) => chapter.id === targetChapterId) ? targetChapterId : book.chapters[0]?.id ?? '01';
       setActiveChapterId(firstChapterId);
       setActiveChapterData(null);
       void loadClassicChapter(book, firstChapterId);
@@ -2829,21 +2836,64 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
 
       <section className="learning-toolbar">
         <div className="learning-tabs" role="tablist" aria-label="学习内容">
+          <button aria-selected={view === 'paths'} className={view === 'paths' ? 'active' : ''} onClick={() => { setView('paths'); setQuery(''); }} role="tab" type="button">
+            <GraduationCap size={17} /> 学习路线
+          </button>
           <button aria-selected={view === 'curriculum'} className={view === 'curriculum' ? 'active' : ''} onClick={() => setView('curriculum')} role="tab" type="button">
-            <GraduationCap size={17} /> 知识体系
+            <BookOpen size={17} /> 课程体系
+          </button>
+          <button aria-selected={view === 'glossary'} className={view === 'glossary' ? 'active' : ''} onClick={() => { setView('glossary'); setQuery(''); }} role="tab" type="button">
+            <FileText size={17} /> 术语词典
           </button>
           <button aria-selected={view === 'classics'} className={view === 'classics' ? 'active' : ''} onClick={() => setView('classics')} role="tab" type="button">
             <LibraryBig size={17} /> 古籍研读
           </button>
           <button aria-selected={view === 'reference'} className={view === 'reference' ? 'active' : ''} onClick={() => setView('reference')} role="tab" type="button">
-            <FileText size={17} /> 基础速查
+            <Search size={17} /> 基础速查
           </button>
         </div>
-        <label className="knowledge-search">
+        {view !== 'paths' && view !== 'reference' && <label className="knowledge-search">
           <Search size={17} />
           <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、十神、调候或古籍篇名" value={query} />
-        </label>
+        </label>}
       </section>
+
+      {view === 'paths' && (
+        <section className="learning-path-library">
+          <div className="learning-overview">
+            <div><strong>{knowledgeModules.length}</strong><span>课程章节</span></div>
+            <div><strong>{totalLessons}</strong><span>核心课节</span></div>
+            <div><strong>{knowledgeTerms.length}</strong><span>术语词条</span></div>
+            <div><strong>{classicShelf.filter((book) => 'path' in book).length}</strong><span>全文古籍</span></div>
+          </div>
+          <div className="knowledge-section-head">
+            <div><span>按目标进入</span><h2>专题学习路线</h2></div>
+            <p>每条路线只组合完成目标所需章节；已学进度会自动计入。</p>
+          </div>
+          <div className="learning-path-grid">
+            {learningPaths.map((path, pathIndex) => {
+              const modules = path.moduleIds.map((id) => knowledgeModules.find((module) => module.id === id)).filter((module): module is (typeof knowledgeModules)[number] => Boolean(module));
+              const lessonIds = modules.flatMap((module) => module.lessons.map((lesson) => lesson.id));
+              const learned = lessonIds.filter((id) => completedLessons.includes(id)).length;
+              const pathProgress = Math.round((learned / lessonIds.length) * 100);
+              return (
+                <article className="learning-path-card" key={path.id}>
+                  <header><span>{String(pathIndex + 1).padStart(2, '0')}</span><small>{path.duration}</small></header>
+                  <h3>{path.title}</h3>
+                  <strong>{path.audience}</strong>
+                  <p>{path.summary}</p>
+                  <div className="path-progress"><span style={{ width: `${pathProgress}%` }} /></div>
+                  <small>{learned}/{lessonIds.length} 节 · {pathProgress}%</small>
+                  <div className="path-module-list">
+                    {modules.map((module) => <button key={module.id} onClick={() => { setActiveModuleId(module.id); setView('curriculum'); }} type="button"><span>{String(module.order).padStart(2, '0')}</span>{module.title}<ArrowRight size={13} /></button>)}
+                  </div>
+                  <footer><strong>完成后</strong><p>{path.outcome}</p></footer>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {view === 'curriculum' && (
         <section className="curriculum-layout">
@@ -3013,6 +3063,36 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
             {!filteredClassics.length && <div className="empty-knowledge">未找到相关古籍段落。</div>}
             </div>
           </>}
+        </section>
+      )}
+
+      {view === 'glossary' && (
+        <section className="glossary-library">
+          <div className="glossary-filter" aria-label="术语分类">
+            {termCategories.map((category) => <button className={termCategory === category ? 'active' : ''} key={category} onClick={() => setTermCategory(category)} type="button">{category}</button>)}
+          </div>
+          <div className="knowledge-section-head">
+            <div><span>概念速查</span><h2>{normalizedQuery ? `找到 ${filteredTerms.length} 个术语` : `${termCategory} · ${filteredTerms.length} 条`}</h2></div>
+            <p>释义说明它是什么，“辨析”提醒它最容易被误用在哪里。</p>
+          </div>
+          <div className="glossary-grid">
+            {filteredTerms.map((term) => {
+              const module = knowledgeModules.find((item) => item.id === term.moduleId);
+              return (
+                <article className="glossary-card" key={term.id}>
+                  <header><span>{term.category}</span>{term.aliases.length > 0 && <small>又称：{term.aliases.join('、')}</small>}</header>
+                  <h3>{term.term}</h3>
+                  <p>{term.definition}</p>
+                  <div><strong>辨析</strong><p>{term.caution}</p></div>
+                  <footer>
+                    {module && <button onClick={() => { setActiveModuleId(module.id); setQuery(''); setView('curriculum'); }} type="button">相关课程 · {module.title}<ArrowRight size={13} /></button>}
+                    {term.classicRef && <button onClick={() => { setQuery(''); setView('classics'); void openClassicBook(term.classicRef!.bookId, term.classicRef!.chapterId); }} type="button">原典 · {term.classicRef.label}<ArrowRight size={13} /></button>}
+                  </footer>
+                </article>
+              );
+            })}
+            {!filteredTerms.length && <div className="empty-knowledge">没有匹配的术语，请更换关键词或分类。</div>}
+          </div>
         </section>
       )}
 

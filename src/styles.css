@@ -3035,6 +3035,263 @@ button.flow-cell.current:focus-visible {
   color: #17211d;
 }
 
+.learning-path-library,
+.glossary-library {
+  display: grid;
+  gap: 16px;
+}
+
+.learning-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.learning-overview > div {
+  display: grid;
+  gap: 3px;
+  border-right: 1px solid rgba(23, 33, 29, 0.08);
+  padding: 18px 20px;
+}
+
+.learning-overview > div:last-child {
+  border-right: 0;
+}
+
+.learning-overview strong {
+  color: #9b6a2f;
+  font-size: 27px;
+}
+
+.learning-overview span {
+  color: #71837b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.learning-path-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.learning-path-card {
+  display: grid;
+  align-content: start;
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 22px;
+}
+
+.learning-path-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.learning-path-card > header span {
+  color: #b58a43;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.learning-path-card > header small,
+.learning-path-card > small {
+  color: #71837b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.learning-path-card h3 {
+  margin-top: 13px;
+  font-size: 24px;
+}
+
+.learning-path-card > strong {
+  margin-top: 4px;
+  color: #2b7a78;
+  font-size: 12px;
+}
+
+.learning-path-card > p {
+  min-height: 54px;
+  margin: 10px 0 14px;
+  color: #61736b;
+  line-height: 1.7;
+}
+
+.path-progress {
+  overflow: hidden;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(23, 33, 29, 0.08);
+}
+
+.path-progress span {
+  display: block;
+  height: 100%;
+  background: #2b7a78;
+}
+
+.learning-path-card > small {
+  margin-top: 6px;
+  text-align: right;
+}
+
+.path-module-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.path-module-list button,
+.glossary-card footer button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid rgba(43, 122, 120, 0.12);
+  border-radius: 5px;
+  background: rgba(43, 122, 120, 0.04);
+  color: #344a42;
+  padding: 9px 10px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.path-module-list button span {
+  color: #b58a43;
+  font-size: 10px;
+}
+
+.learning-path-card > footer {
+  display: grid;
+  grid-template-columns: 55px minmax(0, 1fr);
+  gap: 8px;
+  border-top: 1px solid rgba(23, 33, 29, 0.08);
+  margin-top: 16px;
+  padding-top: 13px;
+}
+
+.learning-path-card > footer strong {
+  color: #9b6a2f;
+  font-size: 12px;
+}
+
+.learning-path-card > footer p {
+  color: #61736b;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.glossary-filter {
+  display: flex;
+  overflow-x: auto;
+  gap: 7px;
+  padding-bottom: 3px;
+  scrollbar-width: thin;
+}
+
+.glossary-filter button {
+  flex: 0 0 auto;
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #61736b;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.glossary-filter button.active {
+  border-color: #2b7a78;
+  background: #2b7a78;
+  color: #fff;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.glossary-card {
+  display: grid;
+  align-content: start;
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 18px;
+}
+
+.glossary-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.glossary-card > header span {
+  color: #9b6a2f;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.glossary-card > header small {
+  overflow: hidden;
+  color: #8a9993;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.glossary-card h3 {
+  margin-top: 12px;
+  font-size: 24px;
+}
+
+.glossary-card > p {
+  min-height: 72px;
+  margin-top: 7px;
+  color: #465b52;
+  line-height: 1.7;
+}
+
+.glossary-card > div:not(.classic-related-modules) {
+  border-left: 2px solid rgba(181, 138, 67, 0.55);
+  background: rgba(200, 164, 93, 0.055);
+  margin-top: 13px;
+  padding: 10px 12px;
+}
+
+.glossary-card > div strong {
+  color: #9b6a2f;
+  font-size: 11px;
+}
+
+.glossary-card > div p {
+  margin-top: 4px;
+  color: #687a72;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.glossary-card footer {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.glossary-card footer button {
+  grid-template-columns: minmax(0, 1fr) auto;
+  color: #2b7a78;
+}
+
 .curriculum-layout {
   display: grid;
   grid-template-columns: 270px minmax(0, 1fr);
@@ -3902,6 +4159,29 @@ button.flow-cell.current:focus-visible {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .learning-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .learning-tabs {
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: thin;
+  }
+
+  .learning-tabs button {
+    flex: 0 0 auto;
+  }
+
+  .knowledge-search {
+    width: 100%;
+  }
+
+  .glossary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .classic-reader-layout {
     grid-template-columns: 190px minmax(0, 1fr);
   }
@@ -4027,18 +4307,19 @@ button.flow-cell.current:focus-visible {
     position: static;
   }
 
-  .learning-top-actions,
-  .learning-tabs {
+  .learning-top-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
 
   .learning-tabs {
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    overflow-x: auto;
   }
 
   .learning-tabs button {
     justify-content: center;
+    flex: 0 0 auto;
     padding: 0 8px;
     font-size: 13px;
   }
@@ -4058,6 +4339,23 @@ button.flow-cell.current:focus-visible {
   .curriculum-layout,
   .reference-library,
   .classic-two-layer {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .learning-overview > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .learning-overview > div:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(23, 33, 29, 0.08);
+  }
+
+  .learning-path-grid,
+  .glossary-grid {
     grid-template-columns: 1fr;
   }
 

@@ -15,6 +15,33 @@ export type KnowledgeModule = {
   lessons: KnowledgeLesson[];
 };
 
+export type ClassicReference = {
+  bookId: 'ditiansui' | 'qiongtong' | 'lixu';
+  chapterId: string;
+  label: string;
+};
+
+export type KnowledgeTerm = {
+  id: string;
+  term: string;
+  aliases: string[];
+  category: '基础坐标' | '力量判断' | '干支关系' | '格局取用' | '调候气象' | '岁运应用';
+  definition: string;
+  caution: string;
+  moduleId: string;
+  classicRef?: ClassicReference;
+};
+
+export type LearningPath = {
+  id: string;
+  title: string;
+  audience: string;
+  duration: string;
+  summary: string;
+  moduleIds: string[];
+  outcome: string;
+};
+
 export type ClassicExcerpt = {
   id: string;
   book: string;
@@ -438,6 +465,86 @@ export const knowledgeModules: KnowledgeModule[] = [
       { id: 'bias-control', title: '控制确认偏误', summary: '命理学习最容易只记应验、忽略不应验，因此必须保存失败记录。', points: ['预测前写下时间戳和条件', '不随反馈偷偷改写原结论', '统计命中和未命中，不只讲精彩案例', '把不确定性作为模型信息而非失败遮掩'], practice: '复盘三条过去判断，至少保留一条不应验记录并分析原因。' },
     ],
   },
+  {
+    id: 'climate-calendar', title: '十二月令调候专题', level: '进阶', order: 18,
+    summary: '把寒暖燥湿落实到十二月令，辨认季节主气、余气和气候转折。',
+    lessons: [
+      { id: 'twelve-climates', title: '十二月气候总纲', summary: '寅至丑十二月不是十二个静态标签，而是一条从生发、炎热、收敛到严寒的连续曲线。', points: ['寅卯辰由余寒转温润，辰为春夏转换', '巳午未由升温至炎燥，未月火退而土燥', '申酉戌由暑气未尽转为肃杀燥凉', '亥子丑由初寒转严寒，丑月寒湿凝滞', '节气初交、中气和月末的气感并不完全相同'], practice: '为十二月令各写一个寒暖词和一个燥湿词，再标出四个季节转折点。' },
+      { id: 'wet-dry-earth', title: '辰丑湿土与未戌燥土', summary: '同为土，辰丑偏湿寒，未戌偏燥暖，承载和通关方式不同。', points: ['湿土可能蓄水、晦火，也能培木', '燥土可能脆金、耗水，也能制湿', '土多不一定都一样，须先辨温度和含水状态', '岁运改变寒暖时，原有土性也会随之变化'], practice: '比较辰土和戌土对火、水、木、金的不同影响。' },
+      { id: 'climate-versus-strength', title: '调候与扶抑冲突时怎么判', summary: '某五行可能调候有利，却在强弱层面造成过量，需要分层确定先后和剂量。', points: ['先问命局能否正常生化，再问日主能否承载', '调候用神解决气候，扶抑用神解决力量', '同一五行在两层意见相反时，宜小量、有源、有制', '现实建议应采用可逆、渐进、能验证的方式'], practice: '找一例冬月身强水旺命盘，分别写调候需求和扶抑需求。' },
+    ],
+  },
+  {
+    id: 'useful-god-method', title: '用神辨析专题', level: '实战', order: 19,
+    summary: '把用神拆成格局、调候、扶抑、通关四个问题，避免只报一个五行答案。',
+    lessons: [
+      { id: 'four-useful-layers', title: '四层取用模型', summary: '格局取用看结构，调候取用看气候，扶抑取用看承载，通关取用看相战。', points: ['四层可能指向同一五行，也可能不同', '先写每层解决的问题，再综合主次', '用神要在原局有来源或能由岁运引入', '没有条件成立的“用神”只是概念标签'], practice: '为同一命盘填写四层取用表，每层只写一个主要矛盾。' },
+      { id: 'useful-real-false', title: '用神的真、假、清、浊', summary: '用神出现不等于可用，还要看得令、通根、位置、受制与是否被混杂。', points: ['透而无根可能显而不实', '有根不透可能潜藏待运', '用神被合绊、冲伤时作用打折', '多个用神互相冲突会形成清浊问题', '岁运扶起真用往往比单纯补数量更有效'], practice: '检查命盘候选用神的根、源、位置和受制，给出可信度。' },
+      { id: 'useful-changing', title: '喜忌会不会随大运变化', summary: '原局核心病处相对稳定，但岁运会改变力量、气候与作用路径，因此阶段用法会调整。', points: ['原局用神与阶段喜神需要区分', '大运补足某一环后，下一阶段矛盾可能转移', '喜神过量也会反成偏性', '判断变化要解释结构，不可每十年随意换说法'], practice: '选择两步相邻大运，说明主矛盾如何变化、哪些需求保持不变。' },
+    ],
+  },
+  {
+    id: 'case-workshop', title: '综合案例工作坊', level: '实战', order: 20,
+    summary: '用争议案例训练多方案比较、证据权重和岁运回测。',
+    lessons: [
+      { id: 'strength-dispute', title: '身强身弱争议案例', summary: '当得令、得地、得助与克泄耗互相冲突时，用权重和现实验证处理边界盘。', points: ['分别列支持身强和支持身弱的证据', '月令权重大，但不能忽略成局和透干', '比较两套喜忌在过去岁运中的解释力', '保留“中和偏强、随运摆动”等中间结论'], practice: '选择一个边界命盘，写正反两份论证，最后说明倾向和不确定性。' },
+      { id: 'climate-case', title: '寒暖燥湿案例', summary: '从月令气候出发，再叠加原局火水、湿燥土和流通条件。', points: ['先写纯月令气候诊断', '再加入四柱修正寒暖燥湿', '区分需要的五行与现实可执行方案', '用过去冬夏月份的状态差异做回测'], practice: '对一个冬月命盘写“气候—结构—表现—方案—验证”五段分析。' },
+      { id: 'luck-case', title: '大运流年复盘案例', summary: '把一件已发生事件放回原局、大运、流年、流月四层，检查重复触发。', points: ['先记录事件事实，不先写命理解释', '标出被触发的宫位、十神和干支关系', '区分背景条件、直接触发和个人选择', '写出若模型正确，下一次类似触发应出现什么'], practice: '选择一次工作或迁居变化，完成四层时间轴并写反证条件。' },
+    ],
+  },
+];
+
+export const learningPaths: LearningPath[] = [
+  { id: 'starter', title: '零基础入门', audience: '第一次接触四柱', duration: '7天', summary: '先建立干支、五行、四柱和十神坐标，不急着判断吉凶。', moduleIds: ['foundation', 'yin-yang-elements', 'stems', 'branches', 'ten-gods'], outcome: '能读懂基础命盘，独立换算藏干和十神。' },
+  { id: 'structure', title: '结构判断进阶', audience: '会排盘但不会分析', duration: '14天', summary: '训练旺衰、流通、格局、喜用和干支关系的固定判断顺序。', moduleIds: ['strength-roots', 'structure-useful', 'relations-deep', 'structure-patterns', 'useful-god-method'], outcome: '能写出有依据的命局主线与分层喜用。' },
+  { id: 'climate', title: '调候专项', audience: '想深入寒暖燥湿', duration: '10天', summary: '从十二月令出发，将调候、扶抑和现实改善方案区分开。', moduleIds: ['structure-useful', 'climate-calendar', 'useful-god-method', 'case-workshop'], outcome: '能完成寒暖燥湿诊断，并控制补偏的先后与剂量。' },
+  { id: 'timing', title: '岁运实战', audience: '想学习大运流年', duration: '12天', summary: '从原局到大运、流年、流月逐层定位，用过去事件回测。', moduleIds: ['luck-cycle', 'monthly-practice', 'case-validation', 'case-workshop'], outcome: '能建立年度观察表和可验证的趋势判断。' },
+  { id: 'classics', title: '古籍研读', audience: '想系统阅读原典', duration: '21天', summary: '先学习版本、正文与旧注层次，再精读调候、格局、岁运专题。', moduleIds: ['classic-reading', 'structure-useful', 'structure-patterns', 'climate-calendar'], outcome: '能区分原文、旧注和现代解释，不再断章套诀。' },
+];
+
+export const knowledgeTerms: KnowledgeTerm[] = [
+  { id: 'day-master', term: '日主', aliases: ['日元', '日干'], category: '基础坐标', definition: '出生日天干，是十神关系和强弱判断的中心坐标。', caution: '以日主为中心不等于只看日干；月令、根气和全局组合仍决定其状态。', moduleId: 'foundation' },
+  { id: 'month-command', term: '月令', aliases: ['月支', '提纲'], category: '基础坐标', definition: '出生月的地支，代表季节主气，是旺衰、格局和调候的重要入口。', caution: '月令权重大但不包办全局，须结合透干、会局和日主根气。', moduleId: 'foundation', classicRef: { bookId: 'ditiansui', chapterId: '17', label: '《滴天髓·月令论》' } },
+  { id: 'hidden-stem', term: '藏干', aliases: ['人元', '支中所藏'], category: '基础坐标', definition: '地支内部所含的一至三个天干，分本气、中气和余气。', caution: '藏干有层次和季节权重，不能把三个藏干视为等量。', moduleId: 'branches' },
+  { id: 'revealed-stem', term: '透干', aliases: ['透出'], category: '基础坐标', definition: '地支所藏之气在天干出现，通常更容易形成可见角色和事件。', caution: '透出若无根无源，可能显而不实；藏而不透也不等于不存在。', moduleId: 'stems' },
+  { id: 'rooting', term: '通根', aliases: ['得根', '根气'], category: '基础坐标', definition: '天干在地支藏干中找到同类或生扶落点，获得持续承载。', caution: '本气根、中余气根、远近位置和是否受冲，力量并不相同。', moduleId: 'strength-roots' },
+  { id: 'seasonal-ruler', term: '司令', aliases: ['当令', '司权'], category: '基础坐标', definition: '月令内部在出生节气阶段实际主事的气。', caution: '不同流派对分日司令表有差异，临界日期应注明算法。', moduleId: 'time-correction' },
+  { id: 'season-support', term: '得令', aliases: ['乘令'], category: '力量判断', definition: '某五行符合月令季节旺相，获得最直接的时令支持。', caution: '得令不一定最终身强；若无根、被制或大量泄耗，仍需综合。', moduleId: 'strength-roots' },
+  { id: 'ground-support', term: '得地', aliases: ['得根'], category: '力量判断', definition: '天干在地支获得根、禄旺或其他实质落点。', caution: '根被冲坏、合化或隔远时，实际可用程度会变化。', moduleId: 'strength-roots' },
+  { id: 'momentum', term: '得势', aliases: ['成势'], category: '力量判断', definition: '同类众多、透藏呼应或成方成局，形成整体气势。', caution: '数量多未必同心，杂乱、无令或彼此牵制时不一定成势。', moduleId: 'strength-roots' },
+  { id: 'prosperity', term: '旺衰', aliases: ['旺相休囚死'], category: '力量判断', definition: '五行在季节、根气和组合中的阶段性状态。', caution: '旺衰不是简单计数，也不直接等同人的能力或命运高低。', moduleId: 'strength-roots', classicRef: { bookId: 'ditiansui', chapterId: '12', label: '《滴天髓·衰旺论》' } },
+  { id: 'storage', term: '墓库', aliases: ['四库'], category: '力量判断', definition: '辰戌丑未兼具季节转换、收藏与杂气特征。', caution: '“墓”和“库”要结合对象是否旺衰、有无引动，不能固定断为收藏或困住。', moduleId: 'branches' },
+  { id: 'growth-cycle', term: '十二长生', aliases: ['长生十二宫'], category: '力量判断', definition: '描述天干在十二地支中的生长、旺盛、衰退和收藏阶段。', caution: '它是辅助坐标，不能脱离月令、通根和实际组合单独论吉凶。', moduleId: 'strength-roots' },
+  { id: 'six-combine', term: '六合', aliases: ['地支六合'], category: '干支关系', definition: '子丑、寅亥、卯戌、辰酉、巳申、午未六组相合。', caution: '合可能是聚合、牵引或羁绊，是否化气另需条件。', moduleId: 'relations-deep' },
+  { id: 'three-combine', term: '三合局', aliases: ['三合'], category: '干支关系', definition: '申子辰水、亥卯未木、寅午戌火、巳酉丑金的生旺墓组合。', caution: '三字齐全也要看月令、透干和破坏条件；两字只能称半合或拱局倾向。', moduleId: 'relations-deep' },
+  { id: 'seasonal-meeting', term: '三会方', aliases: ['三会局'], category: '干支关系', definition: '寅卯辰东方木、巳午未南方火、申酉戌西方金、亥子丑北方水。', caution: '三会强调季节方气，是否完全改变原局仍须比较强弱和逆气。', moduleId: 'relations-deep' },
+  { id: 'five-stem-combine', term: '天干五合', aliases: ['五合'], category: '干支关系', definition: '甲己、乙庚、丙辛、丁壬、戊癸五组天干相合。', caution: '见合先论牵引，合化需得令、得势、有化神。', moduleId: 'stems' },
+  { id: 'transformation', term: '合化', aliases: ['化气'], category: '干支关系', definition: '相合双方在条件充分时改变原有作用，趋向新的五行气势。', caution: '合而不化远多于真正合化，不可见合就改变五行。', moduleId: 'relations-deep' },
+  { id: 'binding', term: '合绊', aliases: ['贪合忘用'], category: '干支关系', definition: '关键力量因相合而被牵制，暂时难以发挥原有作用。', caution: '是否成绊取决于位置、强弱、岁运和另一方是否有力。', moduleId: 'relations-deep', classicRef: { bookId: 'ditiansui', chapterId: '37', label: '《滴天髓·绊神论》' } },
+  { id: 'six-clash', term: '六冲', aliases: ['地支相冲'], category: '干支关系', definition: '子午、丑未、寅申、卯酉、辰戌、巳亥六组对冲。', caution: '冲常带位移、变化和对立，不等于必然灾祸。', moduleId: 'relations-deep' },
+  { id: 'punishment', term: '三刑', aliases: ['相刑'], category: '干支关系', definition: '寅巳申、丑未戌、子卯及自刑等结构性摩擦关系。', caution: '刑的体系流派差异较多，应结合重复触发和现实主题。', moduleId: 'relations-deep' },
+  { id: 'harm', term: '六害', aliases: ['相害'], category: '干支关系', definition: '六组地支之间的暗中牵制与不协调关系。', caution: '害通常不如冲直接，不能一见便断人际背叛或疾病。', moduleId: 'relations-deep' },
+  { id: 'break', term: '六破', aliases: ['相破'], category: '干支关系', definition: '表示关系松动、结构破损或计划不稳的一组辅助关系。', caution: '六破在不同流派权重差异大，应低于月令、旺衰和主要合冲。', moduleId: 'relations-deep' },
+  { id: 'structure', term: '格局', aliases: ['成格'], category: '格局取用', definition: '以月令透藏和十神制化形成的稳定成事结构。', caution: '格局名称不是等级结论，还要看成败、相神、清浊与日主承载。', moduleId: 'structure-patterns', classicRef: { bookId: 'ditiansui', chapterId: '06', label: '《滴天髓·格局论》' } },
+  { id: 'assistant-god', term: '相神', aliases: ['辅格之神'], category: '格局取用', definition: '维护格局、协助用神并解决结构阻碍的关键力量。', caution: '相神依格局而定，不是固定对应某个五行。', moduleId: 'structure-patterns' },
+  { id: 'useful-god-term', term: '用神', aliases: ['取用'], category: '格局取用', definition: '解决命局主要矛盾、使结构得以运转的关键力量。', caution: '格局、调候、扶抑、通关各有取用角度，不能只报一个五行。', moduleId: 'useful-god-method', classicRef: { bookId: 'ditiansui', chapterId: '10', label: '《滴天髓·体用论》' } },
+  { id: 'favorable-god', term: '喜神', aliases: ['喜用'], category: '格局取用', definition: '帮助用神、改善流通或增强承载的有利力量。', caution: '喜神也有剂量，过量或破坏其他层次时不再纯喜。', moduleId: 'useful-god-method' },
+  { id: 'unfavorable-god', term: '忌神', aliases: ['忌'], category: '格局取用', definition: '加重命局主要病处、破坏用神或阻断流通的力量。', caution: '忌神受制时也可能成为结构的一部分，不能简单视为坏元素。', moduleId: 'useful-god-method' },
+  { id: 'illness-medicine', term: '病药', aliases: ['病药法'], category: '格局取用', definition: '先找命局最突出的问题为“病”，再找能有针对性解决的力量为“药”。', caution: '病药是结构比喻，不是医学诊断；药过量同样可能成为新病。', moduleId: 'useful-god-method' },
+  { id: 'mediation', term: '通关', aliases: ['引通'], category: '格局取用', definition: '在两种相战五行之间引入中介，使克战转为连续相生路径。', caution: '通关五行必须有根、有位置并能真实参与作用。', moduleId: 'useful-god-method', classicRef: { bookId: 'ditiansui', chapterId: '20', label: '《滴天髓·通隔论》' } },
+  { id: 'support-control', term: '扶抑', aliases: ['扶弱抑强'], category: '格局取用', definition: '根据日主与全局承载关系，对过弱者生扶、过强者疏泄制约。', caution: '扶抑不是唯一取用法，也不能用五行个数代替力量判断。', moduleId: 'useful-god-method' },
+  { id: 'climate-adjustment', term: '调候', aliases: ['调候用神'], category: '调候气象', definition: '针对出生季节造成的寒暖燥湿，使五行具备正常生化条件。', caution: '调候解决气候，不自动等同格局或扶抑用神。', moduleId: 'climate-calendar', classicRef: { bookId: 'ditiansui', chapterId: '16', label: '《滴天髓·寒暖论》' } },
+  { id: 'cold-warm', term: '寒暖', aliases: ['寒热'], category: '调候气象', definition: '由季节、火水配置和湿燥共同形成的温度状态。', caution: '冬生不一定都寒，夏生也不一定都热，须看原局修正。', moduleId: 'climate-calendar', classicRef: { bookId: 'qiongtong', chapterId: '01', label: '《穷通宝鉴·五行总论》' } },
+  { id: 'dry-wet', term: '燥湿', aliases: ['湿燥'], category: '调候气象', definition: '气局中水分、润泽和凝滞程度，常与四季土性密切相关。', caution: '水多不等于润，寒水可能凝；火多不等于燥，也要看湿土和水源。', moduleId: 'climate-calendar', classicRef: { bookId: 'ditiansui', chapterId: '16', label: '《滴天髓·寒暖论》' } },
+  { id: 'following-structure', term: '从格', aliases: ['从势'], category: '格局取用', definition: '日主失去独立依托而顺从全局主势的特殊结构。', caution: '条件严格；日主有根、有援或逆势力量时通常不能轻言从格。', moduleId: 'structure-patterns', classicRef: { bookId: 'ditiansui', chapterId: '07', label: '《滴天髓·从化论·真》' } },
+  { id: 'exclusive-prosperity', term: '专旺', aliases: ['一行专旺'], category: '格局取用', definition: '某一五行得令成方成局、气势纯一并少有逆气的特殊结构。', caution: '五行数量多不等于专旺，杂气、克泄和日主关系都需检验。', moduleId: 'structure-patterns' },
+  { id: 'major-luck', term: '大运', aliases: ['运程'], category: '岁运应用', definition: '约十年一阶段的干支环境，改变原局力量和现实主题。', caution: '大运不是独立命盘，必须与原局同看，交运年龄也依算法而定。', moduleId: 'luck-cycle', classicRef: { bookId: 'ditiansui', chapterId: '09', label: '《滴天髓·岁运论》' } },
+  { id: 'annual-luck', term: '流年', aliases: ['太岁'], category: '岁运应用', definition: '某一公历节气年对应的干支，用于观察年度触发。', caution: '流年要放在大运背景中，不可用一个字直接断全年事件。', moduleId: 'luck-cycle' },
+  { id: 'monthly-luck', term: '流月', aliases: ['月运'], category: '岁运应用', definition: '流年内按节气切换的十二个月干支，用于定位阶段窗口。', caution: '流月不是农历初一切换，且层级低于大运和流年。', moduleId: 'monthly-practice' },
+  { id: 'repetition', term: '伏吟', aliases: ['同柱复现'], category: '岁运应用', definition: '岁运干支与原局某柱相同，形成主题重复和加强。', caution: '伏吟表示重复、停滞或强化，不固定等同凶事。', moduleId: 'monthly-practice' },
+  { id: 'opposition', term: '反吟', aliases: ['天克地冲'], category: '岁运应用', definition: '岁运与原局某柱形成强烈对冲或相反结构。', caution: '常见变化幅度增大，但结果仍取决于冲到喜神还是忌神及现实条件。', moduleId: 'monthly-practice' },
+  { id: 'luck-transition', term: '交运', aliases: ['起运', '换运'], category: '岁运应用', definition: '从一柱大运切换到下一柱大运的时间节点。', caution: '交运并非某天必然突变，更常表现为前后数月到一两年的主题过渡。', moduleId: 'luck-cycle' },
+  { id: 'symbolic-stars', term: '神煞', aliases: ['星煞'], category: '岁运应用', definition: '依据干支组合推导的辅助类象系统，如天乙、驿马、桃花。', caution: '神煞只能辅助定位，不能凌驾于月令、五行、十神和格局。', moduleId: 'special-markers' },
 ];
 
 export const classicExcerpts: ClassicExcerpt[] = [
