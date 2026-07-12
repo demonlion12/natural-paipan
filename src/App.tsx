@@ -5,21 +5,26 @@ import {
   ArrowRight,
   BookOpen,
   CalendarDays,
+  CheckCircle2,
   Clock3,
   Copy,
   Download,
   Edit3,
   FileText,
+  GraduationCap,
+  LibraryBig,
   LogIn,
   MapPin,
   RefreshCw,
   RotateCcw,
+  Search,
   Sparkles,
   UserRound,
 } from 'lucide-react';
 import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
+import { branchQuickReference, classicExcerpts, knowledgeModules, stemQuickReference, tenGodQuickReference } from './knowledge';
 
 const initialInput: BirthInput = {
   name: '1232',
@@ -29,7 +34,7 @@ const initialInput: BirthInput = {
   birthplace: '未知地 北京时间',
 };
 
-type AppStep = 'login' | 'birth' | 'report' | 'yijing';
+type AppStep = 'login' | 'birth' | 'report' | 'yijing' | 'learning';
 type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 type DiagramTab = 'ganzhi' | 'flow' | 'palace' | 'kinship';
@@ -2597,7 +2602,233 @@ function buildReportText(reading: BaziReading) {
   ].join('\n');
 }
 
-function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => void }) {
+type LearningView = 'curriculum' | 'classics' | 'reference';
+
+function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGoBazi: () => void; onYijing: () => void }) {
+  const [view, setView] = useState<LearningView>('curriculum');
+  const [activeModuleId, setActiveModuleId] = useState(knowledgeModules[0].id);
+  const [query, setQuery] = useState('');
+  const [activeBook, setActiveBook] = useState('全部');
+  const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
+    try {
+      return JSON.parse(window.localStorage.getItem('shanyi-learning-progress') || '[]') as string[];
+    } catch {
+      return [];
+    }
+  });
+  const totalLessons = knowledgeModules.reduce((sum, module) => sum + module.lessons.length, 0);
+  const completedCount = completedLessons.filter((id) => knowledgeModules.some((module) => module.lessons.some((lesson) => lesson.id === id))).length;
+  const progress = Math.round((completedCount / totalLessons) * 100);
+  const normalizedQuery = query.trim().toLowerCase();
+  const activeModule = knowledgeModules.find((module) => module.id === activeModuleId) ?? knowledgeModules[0];
+  const searchResults = normalizedQuery
+    ? knowledgeModules.flatMap((module) => module.lessons
+      .filter((lesson) => [module.title, lesson.title, lesson.summary, ...lesson.points].join(' ').toLowerCase().includes(normalizedQuery))
+      .map((lesson) => ({ module, lesson })))
+    : [];
+  const books = ['全部', ...new Set(classicExcerpts.map((excerpt) => excerpt.book))];
+  const filteredClassics = classicExcerpts.filter((excerpt) => {
+    const matchesBook = activeBook === '全部' || excerpt.book === activeBook;
+    const matchesQuery = !normalizedQuery || [excerpt.book, excerpt.chapter, excerpt.original, excerpt.translation, ...excerpt.notes]
+      .join(' ')
+      .toLowerCase()
+      .includes(normalizedQuery);
+    return matchesBook && matchesQuery;
+  });
+
+  const toggleLesson = (lessonId: string) => {
+    setCompletedLessons((current) => {
+      const next = current.includes(lessonId) ? current.filter((id) => id !== lessonId) : [...current, lessonId];
+      window.localStorage.setItem('shanyi-learning-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const renderLesson = (lesson: (typeof knowledgeModules)[number]['lessons'][number], moduleTitle?: string) => {
+    const isComplete = completedLessons.includes(lesson.id);
+    return (
+      <article className={isComplete ? 'lesson-card completed' : 'lesson-card'} key={lesson.id}>
+        <div className="lesson-heading">
+          <div>
+            {moduleTitle && <span>{moduleTitle}</span>}
+            <h3>{lesson.title}</h3>
+          </div>
+          <button aria-pressed={isComplete} onClick={() => toggleLesson(lesson.id)} type="button">
+            <CheckCircle2 size={16} />
+            {isComplete ? '已学' : '标记已学'}
+          </button>
+        </div>
+        <p className="lesson-summary">{lesson.summary}</p>
+        <ul>
+          {lesson.points.map((point) => <li key={point}>{point}</li>)}
+        </ul>
+        <div className="lesson-practice">
+          <strong>练习</strong>
+          <p>{lesson.practice}</p>
+        </div>
+      </article>
+    );
+  };
+
+  return (
+    <main className="learning-shell">
+      <header className="learning-topbar">
+        <button className="icon-text-button" onClick={onBack} type="button">
+          <ArrowLeft size={17} />
+          返回
+        </button>
+        <div className="topnav-brand">
+          <div className="brand-symbol">学</div>
+          <div>
+            <strong>山易命理学堂</strong>
+            <span>四柱知识库</span>
+          </div>
+        </div>
+        <div className="learning-top-actions">
+          <button className="secondary-button slim" onClick={onGoBazi} type="button">
+            <BookOpen size={16} />
+            八字排盘
+          </button>
+          <button className="secondary-button slim" onClick={onYijing} type="button">
+            <Sparkles size={16} />
+            易经求卦
+          </button>
+        </div>
+      </header>
+
+      <section className="learning-hero">
+        <div>
+          <span className="eyebrow">从概念到实盘</span>
+          <h1>四柱八字知识库</h1>
+          <p>按固定推盘顺序学习，先理解原理，再读古籍，最后用真实命盘回测。</p>
+        </div>
+        <div className="learning-progress">
+          <div>
+            <strong>{completedCount}/{totalLessons}</strong>
+            <span>已完成知识点</span>
+          </div>
+          <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
+          <small>{progress}%</small>
+        </div>
+      </section>
+
+      <section className="learning-toolbar">
+        <div className="learning-tabs" role="tablist" aria-label="学习内容">
+          <button aria-selected={view === 'curriculum'} className={view === 'curriculum' ? 'active' : ''} onClick={() => setView('curriculum')} role="tab" type="button">
+            <GraduationCap size={17} /> 知识体系
+          </button>
+          <button aria-selected={view === 'classics'} className={view === 'classics' ? 'active' : ''} onClick={() => setView('classics')} role="tab" type="button">
+            <LibraryBig size={17} /> 古籍研读
+          </button>
+          <button aria-selected={view === 'reference'} className={view === 'reference' ? 'active' : ''} onClick={() => setView('reference')} role="tab" type="button">
+            <FileText size={17} /> 基础速查
+          </button>
+        </div>
+        <label className="knowledge-search">
+          <Search size={17} />
+          <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、十神、调候或古籍原文" value={query} />
+        </label>
+      </section>
+
+      {view === 'curriculum' && (
+        <section className="curriculum-layout">
+          <aside className="curriculum-nav">
+            <div className="section-title">
+              <h2>学习路径</h2>
+              <span>共 {knowledgeModules.length} 章</span>
+            </div>
+            {knowledgeModules.map((module) => {
+              const learned = module.lessons.filter((lesson) => completedLessons.includes(lesson.id)).length;
+              return (
+                <button className={activeModule.id === module.id ? 'active' : ''} key={module.id} onClick={() => { setActiveModuleId(module.id); setQuery(''); }} type="button">
+                  <span>{String(module.order).padStart(2, '0')}</span>
+                  <div><strong>{module.title}</strong><small>{module.level} · {learned}/{module.lessons.length}</small></div>
+                </button>
+              );
+            })}
+          </aside>
+          <div className="curriculum-content">
+            {normalizedQuery ? (
+              <>
+                <div className="knowledge-section-head">
+                  <div><span>搜索结果</span><h2>找到 {searchResults.length} 个知识点</h2></div>
+                </div>
+                {searchResults.length ? searchResults.map(({ module, lesson }) => renderLesson(lesson, module.title)) : <div className="empty-knowledge">未找到相关知识点，请换一个关键词。</div>}
+              </>
+            ) : (
+              <>
+                <div className="knowledge-section-head">
+                  <div><span>{activeModule.level} · 第 {activeModule.order} 章</span><h2>{activeModule.title}</h2></div>
+                  <p>{activeModule.summary}</p>
+                </div>
+                {activeModule.lessons.map((lesson) => renderLesson(lesson))}
+              </>
+            )}
+          </div>
+        </section>
+      )}
+
+      {view === 'classics' && (
+        <section className="classics-library">
+          <div className="book-filter" aria-label="古籍筛选">
+            {books.map((book) => <button className={activeBook === book ? 'active' : ''} key={book} onClick={() => setActiveBook(book)} type="button">{book}</button>)}
+          </div>
+          <div className="classic-intro">
+            <strong>编校说明</strong>
+            <p>原文采用可校核的公版古籍段落，并链接全文来源；“白话译解”由本站依据上下文重新翻译，不冒充原注。不同版本可能存在异文，学习时以链接版本为校核底本。近现代仍受版权保护的著作只整理知识索引，不整本复制。</p>
+          </div>
+          <div className="classic-study-list">
+            {filteredClassics.map((excerpt) => (
+              <article className="classic-study-card" key={excerpt.id}>
+                <header>
+                  <div><span>{excerpt.book}</span><h2>{excerpt.chapter}</h2></div>
+                  <div className="related-tags">{excerpt.related.map((item) => <small key={item}>{item}</small>)}</div>
+                </header>
+                <div className="classic-two-layer">
+                  <div>
+                    <span>古籍原文</span>
+                    <blockquote>{excerpt.original}</blockquote>
+                  </div>
+                  <div>
+                    <span>白话译解</span>
+                    <p>{excerpt.translation}</p>
+                  </div>
+                </div>
+                <div className="classic-notes">
+                  <strong>学习要点</strong>
+                  <ul>{excerpt.notes.map((note) => <li key={note}>{note}</li>)}</ul>
+                </div>
+                <a href={excerpt.sourceUrl} rel="noreferrer" target="_blank">查看原文与版本出处 · {excerpt.sourceLabel} <ArrowRight size={15} /></a>
+              </article>
+            ))}
+            {!filteredClassics.length && <div className="empty-knowledge">未找到相关古籍段落。</div>}
+          </div>
+        </section>
+      )}
+
+      {view === 'reference' && (
+        <section className="reference-library">
+          <article>
+            <div className="knowledge-section-head"><div><span>基础编码</span><h2>十天干速查</h2></div></div>
+            <div className="reference-table-wrap"><table><thead><tr><th>天干</th><th>阴阳五行</th><th>核心类象</th></tr></thead><tbody>{stemQuickReference.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div>
+          </article>
+          <article>
+            <div className="knowledge-section-head"><div><span>季节与根气</span><h2>十二地支速查</h2></div></div>
+            <div className="reference-table-wrap"><table><thead><tr><th>地支</th><th>五行</th><th>藏干</th><th>季节</th></tr></thead><tbody>{branchQuickReference.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div>
+          </article>
+          <article>
+            <div className="knowledge-section-head"><div><span>以日主为中心</span><h2>十神速查</h2></div></div>
+            <div className="reference-table-wrap"><table><thead><tr><th>十神</th><th>生成关系</th><th>现实主题</th></tr></thead><tbody>{tenGodQuickReference.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div>
+          </article>
+        </section>
+      )}
+
+      <p className="disclaimer">知识库用于传统文化学习与结构化思考，不应替代医学、法律、财务或其他专业意见。</p>
+    </main>
+  );
+}
+
+function YijingPage({ onBack, onGoBazi, onLearning }: { onBack: () => void; onGoBazi: () => void; onLearning: () => void }) {
   const [question, setQuestion] = useState('近期事业推进是否适合主动争取？');
   const [lines, setLines] = useState<YaoValue[]>([]);
   const [isCasting, setIsCasting] = useState(false);
@@ -2640,10 +2871,16 @@ function YijingPage({ onBack, onGoBazi }: { onBack: () => void; onGoBazi: () => 
             <span>起卦 · 解卦 · 动爻参考</span>
           </div>
         </div>
-        <button className="secondary-button slim" onClick={onGoBazi} type="button">
-          <BookOpen size={16} />
-          八字排盘
-        </button>
+        <div className="learning-top-actions">
+          <button className="secondary-button slim" onClick={onLearning} type="button">
+            <GraduationCap size={16} />
+            命理学堂
+          </button>
+          <button className="secondary-button slim" onClick={onGoBazi} type="button">
+            <BookOpen size={16} />
+            八字排盘
+          </button>
+        </div>
       </header>
 
       <section className="yijing-layout">
@@ -2849,12 +3086,14 @@ function LoginPage({
   onChangeName,
   onLogin,
   onGuest,
+  onLearning,
   onYijing,
 }: {
   profileName: string;
   onChangeName: (value: string) => void;
   onLogin: () => void;
   onGuest: () => void;
+  onLearning: () => void;
   onYijing: () => void;
 }) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -2921,6 +3160,7 @@ function LoginPage({
           <span>四柱排盘</span>
           <span>五行气势</span>
           <span>专业深度页</span>
+          <button onClick={onLearning} type="button">命理学堂</button>
           <button onClick={onYijing} type="button">易经求卦</button>
         </div>
       </section>
@@ -2964,6 +3204,7 @@ function BirthSetupPage({
   input,
   onBack,
   onChange,
+  onLearning,
   onYijing,
   onReset,
   onSubmit,
@@ -2971,6 +3212,7 @@ function BirthSetupPage({
   input: BirthInput;
   onBack: () => void;
   onChange: (input: BirthInput) => void;
+  onLearning: () => void;
   onYijing: () => void;
   onReset: () => void;
   onSubmit: (input: BirthInput) => void;
@@ -2998,6 +3240,10 @@ function BirthSetupPage({
           <button className="icon-text-button" onClick={onYijing} type="button">
             <BookOpen size={17} />
             易经求卦
+          </button>
+          <button className="icon-text-button" onClick={onLearning} type="button">
+            <GraduationCap size={17} />
+            命理学堂
           </button>
         </div>
 
@@ -3085,10 +3331,12 @@ function BirthSetupPage({
 function ReportTopNav({
   activeNav,
   onNavigate,
+  onLearning,
   onYijing,
 }: {
   activeNav: NavTarget;
   onNavigate: (target: NavTarget) => void;
+  onLearning: () => void;
   onYijing: () => void;
 }) {
   const navItems: Array<{ key: NavTarget; label: string }> = [
@@ -3119,6 +3367,9 @@ function ReportTopNav({
         <button onClick={onYijing} type="button">
           易经求卦
         </button>
+        <button onClick={onLearning} type="button">
+          命理学堂
+        </button>
       </nav>
     </header>
   );
@@ -3129,6 +3380,7 @@ export default function App() {
   const [submitted, setSubmitted] = useState(initialInput);
   const [step, setStep] = useState<AppStep>('login');
   const [yijingBackStep, setYijingBackStep] = useState<AppStep>('login');
+  const [learningBackStep, setLearningBackStep] = useState<AppStep>('login');
   const [activeNav, setActiveNav] = useState<NavTarget>('paipan');
   const [toast, setToast] = useState('');
   const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
@@ -3163,6 +3415,11 @@ export default function App() {
   const openYijing = () => {
     setYijingBackStep(step);
     setStep('yijing');
+  };
+
+  const openLearning = () => {
+    setLearningBackStep(step);
+    setStep('learning');
   };
 
   const copyReport = async () => {
@@ -3218,8 +3475,19 @@ export default function App() {
           setToast('登录成功，继续录入生辰');
           setStep('birth');
         }}
+        onLearning={openLearning}
         onYijing={openYijing}
         profileName={input.name}
+      />
+    );
+  }
+
+  if (step === 'learning') {
+    return (
+      <LearningPage
+        onBack={() => setStep(learningBackStep === 'learning' ? 'login' : learningBackStep)}
+        onGoBazi={() => setStep('birth')}
+        onYijing={openYijing}
       />
     );
   }
@@ -3227,7 +3495,11 @@ export default function App() {
   if (step === 'yijing') {
     return (
       <>
-        <YijingPage onBack={() => setStep(yijingBackStep === 'yijing' ? 'login' : yijingBackStep)} onGoBazi={() => setStep('birth')} />
+        <YijingPage
+          onBack={() => setStep(yijingBackStep === 'yijing' ? 'login' : yijingBackStep)}
+          onGoBazi={() => setStep('birth')}
+          onLearning={openLearning}
+        />
         {toast && <div className="toast">{toast}</div>}
       </>
     );
@@ -3240,6 +3512,7 @@ export default function App() {
           input={input}
           onBack={() => setStep('login')}
           onChange={setInput}
+          onLearning={openLearning}
           onYijing={openYijing}
           onReset={resetCase}
           onSubmit={(nextInput) => {
@@ -3257,7 +3530,7 @@ export default function App() {
 
   return (
     <main className="report-shell">
-      <ReportTopNav activeNav={activeNav} onNavigate={scrollTo} onYijing={openYijing} />
+      <ReportTopNav activeNav={activeNav} onLearning={openLearning} onNavigate={scrollTo} onYijing={openYijing} />
 
       <div className="report-main">
         {error && <div className="error-box">{error}</div>}
