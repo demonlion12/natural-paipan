@@ -3593,6 +3593,27 @@ button.flow-cell.current:focus-visible {
   margin: 0;
 }
 
+.classic-related-modules {
+  display: grid;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.classic-related-modules button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  border: 1px solid rgba(43, 122, 120, 0.15);
+  border-radius: 5px;
+  background: rgba(43, 122, 120, 0.05);
+  color: #2b7a78;
+  padding: 8px 9px;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: left;
+}
+
 .book-filter {
   display: flex;
   overflow-x: auto;

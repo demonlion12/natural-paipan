@@ -2607,6 +2607,22 @@ function buildReportText(reading: BaziReading) {
 type LearningView = 'curriculum' | 'classics' | 'reference';
 type ClassicLibraryMode = 'shelf' | 'reader' | 'excerpts';
 
+function getClassicRelatedModules(bookId: string, chapterTitle: string) {
+  const ids = new Set<string>(['classic-reading']);
+  if (bookId === 'qiongtong') {
+    ids.add('structure-useful');
+    ids.add('strength-roots');
+  }
+  if (/五行|木|火|土|金|水|坎離|震兌/.test(chapterTitle)) ids.add('yin-yang-elements');
+  if (/天干|甲|乙|丙|丁|戊|己|庚|辛|壬|癸/.test(chapterTitle)) ids.add('stems');
+  if (/地支|方局|戰合|順反|恩怨/.test(chapterTitle)) ids.add('relations-deep');
+  if (/格局|從化|體用|真假|清濁|眾寡/.test(chapterTitle)) ids.add('structure-patterns');
+  if (/寒暖|中和|衰旺|月令|源流|通隔/.test(chapterTitle)) ids.add('structure-useful');
+  if (/六親|夫妻|子女|父母/.test(chapterTitle)) ids.add('palace-kinship');
+  if (/歲運|貞元|生時/.test(chapterTitle)) ids.add('luck-cycle');
+  return knowledgeModules.filter((module) => ids.has(module.id));
+}
+
 function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGoBazi: () => void; onYijing: () => void }) {
   const [view, setView] = useState<LearningView>('curriculum');
   const [activeModuleId, setActiveModuleId] = useState(knowledgeModules[0].id);
@@ -2647,6 +2663,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
   const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
   const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
   const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide, ...chapter.blocks.flatMap((block) => [block.heading, block.original, block.commentary])].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
+  const relatedModules = activeChapter && classicBook ? getClassicRelatedModules(classicBook.id, activeChapter.title) : [];
 
   const openClassicBook = async (bookId: string) => {
     const meta = classicShelf.find((book) => book.id === bookId);
@@ -2829,7 +2846,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                   <article className={ready ? 'classic-book-card ready' : 'classic-book-card'} key={book.id}>
                     <div className="classic-book-mark">{book.title.slice(0, 1)}</div>
                     <div>
-                      <span>{book.dynasty} · {book.chapterCount} {book.id === 'ditiansui' ? '篇' : '卷/篇'}</span>
+                      <span>{book.dynasty} · {book.chapterCount} {book.id === 'lixu' ? '卷' : '篇'}</span>
                       <h2>{book.title}</h2>
                       <p>{book.summary}</p>
                     </div>
@@ -2892,6 +2909,10 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                       <dl><dt>底本</dt><dd>{classicBook.sourceLabel}</dd><dt>整理日期</dt><dd>{classicBook.updatedAt}</dd><dt>收录状态</dt><dd>{classicBook.status} · {classicBook.chapterCount} 篇</dd></dl>
                       <strong>阅读建议</strong>
                       <ol><li>先读正文，不急于套命盘。</li><li>再看旧注的时代语境。</li><li>用白话导读提炼问题。</li><li>回到知识体系核对概念。</li></ol>
+                      <strong>关联知识</strong>
+                      <div className="classic-related-modules">
+                        {relatedModules.map((module) => <button key={module.id} onClick={() => { setActiveModuleId(module.id); setQuery(''); setView('curriculum'); }} type="button">{module.title}<ArrowRight size={13} /></button>)}
+                      </div>
                     </aside>
                   </div>
                 </>

@@ -63,7 +63,7 @@ export const classicShelf = [
   },
   { id: 'sanming', title: '三命通会', dynasty: '明', status: '目录校勘中', chapterCount: 12, summary: '汇集禄命法、子平法、神煞与诸家论法的大型命理文献。' },
   { id: 'yuanhai', title: '渊海子平', dynasty: '宋元以来', status: '目录校勘中', chapterCount: 5, summary: '子平法重要汇编，包含定格、诗诀、六亲和岁运诸法。' },
-  { id: 'qiongtong', title: '穷通宝鉴', dynasty: '清刊本系统', status: '目录校勘中', chapterCount: 10, summary: '以月令和十干为线索讨论寒暖燥湿与调候取用。' },
+  { id: 'qiongtong', title: '穷通宝鉴', dynasty: '清刊本系统', status: '全文', chapterCount: 15, summary: '以月令和十干为线索讨论寒暖燥湿与调候取用。', path: 'knowledge/classics/qiongtong.json' },
   { id: 'wuxing', title: '五行精纪', dynasty: '宋', status: '目录校勘中', chapterCount: 34, summary: '汇集唐宋禄命材料，是研究早期命理体系的重要文献。' },
   { id: 'lixu', title: '李虚中命书', dynasty: '唐宋文献系统', status: '全文', chapterCount: 3, summary: '早期禄命法文献，适合用来理解子平法之前的历史脉络。', path: 'knowledge/classics/lixu.json' },
 ] as const;
