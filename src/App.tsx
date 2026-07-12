@@ -25,7 +25,8 @@ import {
 import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
-import { branchQuickReference, classicExcerpts, knowledgeModules, stemQuickReference, tenGodQuickReference } from './knowledge';
+import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, stemQuickReference, tenGodQuickReference } from './knowledge';
+import type { ClassicBook } from './knowledge';
 
 const initialInput: BirthInput = {
   name: '1232',
@@ -2604,12 +2605,19 @@ function buildReportText(reading: BaziReading) {
 }
 
 type LearningView = 'curriculum' | 'classics' | 'reference';
+type ClassicLibraryMode = 'shelf' | 'reader' | 'excerpts';
 
 function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGoBazi: () => void; onYijing: () => void }) {
   const [view, setView] = useState<LearningView>('curriculum');
   const [activeModuleId, setActiveModuleId] = useState(knowledgeModules[0].id);
   const [query, setQuery] = useState('');
   const [activeBook, setActiveBook] = useState('全部');
+  const [classicMode, setClassicMode] = useState<ClassicLibraryMode>('shelf');
+  const [classicBook, setClassicBook] = useState<ClassicBook | null>(null);
+  const [classicLoading, setClassicLoading] = useState(false);
+  const [classicError, setClassicError] = useState('');
+  const [activeChapterId, setActiveChapterId] = useState('01');
+  const [readerLayer, setReaderLayer] = useState<'all' | 'original' | 'guide'>('all');
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
       return JSON.parse(window.localStorage.getItem('shanyi-learning-progress') || '[]') as string[];
@@ -2636,6 +2644,38 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
       .includes(normalizedQuery);
     return matchesBook && matchesQuery;
   });
+  const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
+  const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
+  const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide, ...chapter.blocks.flatMap((block) => [block.heading, block.original, block.commentary])].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
+
+  const openClassicBook = async (bookId: string) => {
+    const meta = classicShelf.find((book) => book.id === bookId);
+    if (!meta || !('path' in meta)) return;
+    setClassicMode('reader');
+    setClassicLoading(true);
+    setClassicError('');
+    setQuery('');
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}${meta.path}`);
+      if (!response.ok) throw new Error(`古籍载入失败（${response.status}）`);
+      const book = await response.json() as ClassicBook;
+      setClassicBook(book);
+      setActiveChapterId(book.chapters[0]?.id ?? '01');
+    } catch (error) {
+      setClassicError(error instanceof Error ? error.message : '古籍载入失败');
+    } finally {
+      setClassicLoading(false);
+    }
+  };
+
+  const moveChapter = (offset: number) => {
+    if (!classicBook || !activeChapter) return;
+    const next = classicBook.chapters[Math.max(0, Math.min(classicBook.chapters.length - 1, chapterIndex + offset))];
+    if (next) {
+      setActiveChapterId(next.id);
+      window.scrollTo({ top: 260, behavior: 'smooth' });
+    }
+  };
 
   const toggleLesson = (lessonId: string) => {
     setCompletedLessons((current) => {
@@ -2771,15 +2811,100 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
 
       {view === 'classics' && (
         <section className="classics-library">
-          <div className="book-filter" aria-label="古籍筛选">
-            {books.map((book) => <button className={activeBook === book ? 'active' : ''} key={book} onClick={() => setActiveBook(book)} type="button">{book}</button>)}
+          <div className="classic-library-nav" role="tablist" aria-label="古籍阅读方式">
+            <button className={classicMode === 'shelf' ? 'active' : ''} onClick={() => { setClassicMode('shelf'); setQuery(''); }} role="tab" type="button"><LibraryBig size={16} /> 全文书架</button>
+            <button className={classicMode === 'excerpts' ? 'active' : ''} onClick={() => { setClassicMode('excerpts'); setQuery(''); }} role="tab" type="button"><BookOpen size={16} /> 经典摘读</button>
+            {classicMode === 'reader' && <button className="active" role="tab" type="button"><FileText size={16} /> {classicBook?.title ?? '全文阅读'}</button>}
           </div>
           <div className="classic-intro">
             <strong>编校说明</strong>
-            <p>原文采用可校核的公版古籍段落，并链接全文来源；“白话译解”由本站依据上下文重新翻译，不冒充原注。不同版本可能存在异文，学习时以链接版本为校核底本。近现代仍受版权保护的著作只整理知识索引，不整本复制。</p>
+            <p>公版古籍按书、卷、篇整理全文，并区分原典正文、旧注与本站白话导读；每部书标明底本和版本说明。仍受版权保护的近现代著作只制作知识索引，不复制整本或现成译注。</p>
           </div>
-          <div className="classic-study-list">
-            {filteredClassics.map((excerpt) => (
+
+          {classicMode === 'shelf' && (
+            <div className="classic-shelf">
+              {classicShelf.map((book) => {
+                const ready = 'path' in book;
+                return (
+                  <article className={ready ? 'classic-book-card ready' : 'classic-book-card'} key={book.id}>
+                    <div className="classic-book-mark">{book.title.slice(0, 1)}</div>
+                    <div>
+                      <span>{book.dynasty} · {book.chapterCount} {book.id === 'ditiansui' ? '篇' : '卷/篇'}</span>
+                      <h2>{book.title}</h2>
+                      <p>{book.summary}</p>
+                    </div>
+                    <button disabled={!ready} onClick={() => openClassicBook(book.id)} type="button">
+                      {ready ? <>阅读全文 <ArrowRight size={15} /></> : '全文校勘中'}
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+
+          {classicMode === 'reader' && (
+            <div className="classic-reader">
+              {classicLoading && <div className="empty-knowledge">正在载入全文与目录…</div>}
+              {classicError && <div className="empty-knowledge">{classicError}</div>}
+              {classicBook && !classicLoading && (
+                <>
+                  <header className="classic-reader-head">
+                    <button className="icon-text-button" onClick={() => setClassicMode('shelf')} type="button"><ArrowLeft size={15} /> 返回书架</button>
+                    <div><span>{classicBook.dynasty} · 全 {classicBook.chapterCount} 篇</span><h2>{classicBook.title}</h2><p>{classicBook.attribution}</p></div>
+                    <a href={classicBook.sourceUrl} rel="noreferrer" target="_blank">核对底本 <ArrowRight size={14} /></a>
+                  </header>
+                  <div className="classic-reader-layout">
+                    <aside className="classic-toc">
+                      <div><strong>全书目录</strong><span>{filteredChapters.length}/{classicBook.chapterCount}</span></div>
+                      {filteredChapters.map((chapter) => <button className={chapter.id === activeChapter?.id ? 'active' : ''} key={chapter.id} onClick={() => setActiveChapterId(chapter.id)} type="button"><span>{chapter.id}</span>{chapter.title}</button>)}
+                      {!filteredChapters.length && <p>目录中没有匹配内容。</p>}
+                    </aside>
+                    {activeChapter && (
+                      <article className="classic-chapter">
+                        <div className="classic-chapter-title">
+                          <div><span>第 {Number(activeChapter.id)} 篇</span><h1>{activeChapter.title}</h1></div>
+                          <div className="reader-layer-switch" aria-label="阅读层次">
+                            <button className={readerLayer === 'all' ? 'active' : ''} onClick={() => setReaderLayer('all')} type="button">对照</button>
+                            <button className={readerLayer === 'original' ? 'active' : ''} onClick={() => setReaderLayer('original')} type="button">原文</button>
+                            <button className={readerLayer === 'guide' ? 'active' : ''} onClick={() => setReaderLayer('guide')} type="button">导读</button>
+                          </div>
+                        </div>
+                        {readerLayer !== 'original' && <section className="chapter-guide"><strong>白话导读</strong><p>{activeChapter.guide}</p></section>}
+                        {readerLayer !== 'guide' && <div className="chapter-blocks">
+                          {activeChapter.blocks.map((block, index) => (
+                            <section key={`${activeChapter.id}-${index}`}>
+                              {block.heading && <h3>{block.heading}</h3>}
+                              <div className="original-text"><span>原典正文</span><blockquote>{block.original}</blockquote></div>
+                              {readerLayer === 'all' && block.commentary && <div className="old-commentary"><span>底本旧注</span>{block.commentary.split('\n').map((line) => <p key={line}>{line}</p>)}</div>}
+                            </section>
+                          ))}
+                        </div>}
+                        <footer className="chapter-pagination">
+                          <button disabled={chapterIndex <= 0} onClick={() => moveChapter(-1)} type="button"><ArrowLeft size={15} /> 上一篇</button>
+                          <span>{chapterIndex + 1} / {classicBook.chapterCount}</span>
+                          <button disabled={chapterIndex >= classicBook.chapters.length - 1} onClick={() => moveChapter(1)} type="button">下一篇 <ArrowRight size={15} /></button>
+                        </footer>
+                      </article>
+                    )}
+                    <aside className="classic-meta">
+                      <strong>版本说明</strong>
+                      <p>{classicBook.editionNote}</p>
+                      <dl><dt>底本</dt><dd>{classicBook.sourceLabel}</dd><dt>整理日期</dt><dd>{classicBook.updatedAt}</dd><dt>收录状态</dt><dd>{classicBook.status} · {classicBook.chapterCount} 篇</dd></dl>
+                      <strong>阅读建议</strong>
+                      <ol><li>先读正文，不急于套命盘。</li><li>再看旧注的时代语境。</li><li>用白话导读提炼问题。</li><li>回到知识体系核对概念。</li></ol>
+                    </aside>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {classicMode === 'excerpts' && <>
+            <div className="book-filter" aria-label="古籍筛选">
+              {books.map((book) => <button className={activeBook === book ? 'active' : ''} key={book} onClick={() => setActiveBook(book)} type="button">{book}</button>)}
+            </div>
+            <div className="classic-study-list">
+              {filteredClassics.map((excerpt) => (
               <article className="classic-study-card" key={excerpt.id}>
                 <header>
                   <div><span>{excerpt.book}</span><h2>{excerpt.chapter}</h2></div>
@@ -2803,7 +2928,8 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
               </article>
             ))}
             {!filteredClassics.length && <div className="empty-knowledge">未找到相关古籍段落。</div>}
-          </div>
+            </div>
+          </>}
         </section>
       )}
 

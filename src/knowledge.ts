@@ -27,6 +27,47 @@ export type ClassicExcerpt = {
   sourceUrl: string;
 };
 
+export type ClassicTextBlock = {
+  heading: string;
+  original: string;
+  commentary: string;
+};
+
+export type ClassicChapter = {
+  id: string;
+  title: string;
+  guide: string;
+  blocks: ClassicTextBlock[];
+};
+
+export type ClassicBook = {
+  id: string;
+  title: string;
+  dynasty: string;
+  attribution: string;
+  status: string;
+  chapterCount: number;
+  description: string;
+  editionNote: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  updatedAt: string;
+  chapters: ClassicChapter[];
+};
+
+export const classicShelf = [
+  {
+    id: 'ditiansui', title: '滴天髓', dynasty: '明', status: '全文', chapterCount: 42,
+    summary: '通天、干支、格局、体用、寒暖、六亲与岁运等四十二论。',
+    path: 'knowledge/classics/ditiansui.json',
+  },
+  { id: 'sanming', title: '三命通会', dynasty: '明', status: '目录校勘中', chapterCount: 12, summary: '汇集禄命法、子平法、神煞与诸家论法的大型命理文献。' },
+  { id: 'yuanhai', title: '渊海子平', dynasty: '宋元以来', status: '目录校勘中', chapterCount: 5, summary: '子平法重要汇编，包含定格、诗诀、六亲和岁运诸法。' },
+  { id: 'qiongtong', title: '穷通宝鉴', dynasty: '清刊本系统', status: '目录校勘中', chapterCount: 10, summary: '以月令和十干为线索讨论寒暖燥湿与调候取用。' },
+  { id: 'wuxing', title: '五行精纪', dynasty: '宋', status: '目录校勘中', chapterCount: 34, summary: '汇集唐宋禄命材料，是研究早期命理体系的重要文献。' },
+  { id: 'lixu', title: '李虚中命书', dynasty: '唐宋文献系统', status: '全文', chapterCount: 3, summary: '早期禄命法文献，适合用来理解子平法之前的历史脉络。', path: 'knowledge/classics/lixu.json' },
+] as const;
+
 export const knowledgeModules: KnowledgeModule[] = [
   {
     id: 'foundation',
@@ -326,6 +367,69 @@ export const knowledgeModules: KnowledgeModule[] = [
         points: ['五行数量不等于五行力量', '合而不化与合化要分开', '冲可能是变化、调整和位移，不必然是灾', '喜用五行也可能过量', '健康、法律、投资问题不能由命盘替代专业判断', '命理分析应当帮助观察和规划，而不是制造恐惧'],
         practice: '检查一份旧报告，标出所有绝对化、恐吓式和无依据结论。',
       },
+    ],
+  },
+  {
+    id: 'time-correction', title: '历法、校时与真太阳时', level: '进阶', order: 11,
+    summary: '排盘先解决时间坐标：历法、节气、时区、出生地与时辰边界。',
+    lessons: [
+      { id: 'calendar-boundary', title: '年界、月界与日界', summary: '干支年通常以立春为界，月令以十二节为界，日界还涉及子初换日流派差异。', points: ['农历正月初一不等于干支年的固定起点', '月柱依节气切换，不按农历初一', '子时换日存在晚子时与早子时分法，应注明算法', '临界出生时间要保留两个盘作事件回测'], practice: '选择一位出生在立春或交节当天的人，比较交节前后四柱。' },
+      { id: 'timezone-solar', title: '时区与真太阳时', summary: '钟表时间是统一行政时间，真太阳时按经度与均时差修正。', points: ['先确认出生地当时采用的法定时区', '经度每差一度约对应四分钟地方时差', '均时差会随日期变化，不能只做固定经度修正', '修正跨越时辰边界时，应把两个时柱都纳入验证'], practice: '计算出生地与东经120度的经度差，再检查是否接近时辰边界。' },
+      { id: 'unknown-hour', title: '时辰不详怎么处理', summary: '缺时辰时应缩小结论边界，以已知事件反推而非凭感觉硬定。', points: ['先只分析年月日三柱能稳定支持的结论', '列出可能时柱对格局与六亲的关键差异', '用迁移、婚育、职业转折等时间点回测', '无法确认时明确标记不确定性'], practice: '为一个未知时辰案例列出三条“无论何时柱都成立”的结论。' },
+    ],
+  },
+  {
+    id: 'palace-kinship', title: '宫位与六亲专题', level: '进阶', order: 12,
+    summary: '把四柱宫位、十神六亲和人生阶段交叉起来，避免只凭一颗星断关系。',
+    lessons: [
+      { id: 'four-palaces', title: '四柱宫位的层次', summary: '年、月、日、时既是时间序列，也是远近、内外与关系位置。', points: ['年柱偏外部、祖上、早年和远方', '月柱偏成长环境、父母、事业平台和同事', '日柱偏自身与伴侣，日支为贴近日常的夫妻宫', '时柱偏成果、晚辈、下属、晚景与长期归宿'], practice: '把一件真实事件同时标注发生年龄、涉及宫位和对应十神。' },
+      { id: 'kinship-crosscheck', title: '六亲交叉验证', summary: '六亲要同时看代表十神、所居宫位、根气和岁运触发。', points: ['同一六亲在不同性别与流派中取星可能不同', '星弱不等于关系一定差，更不能断存亡', '宫位受冲可表现为距离、变化或相处模式调整', '岁运引动时才更容易形成可观察事件'], practice: '选择父母、伴侣或子女主题，写出星、宫、运三层依据。' },
+      { id: 'relationship-boundary', title: '关系判断的边界', summary: '命理适合讨论互动结构和阶段压力，不适合替他人定性。', points: ['不以单个桃花判断忠诚', '不以财官数量断婚姻次数', '不把刑冲直接等同分离', '结论应给出沟通、边界和现实验证方法'], practice: '把“婚姻不顺”改写成可验证的关系模式与建议。' },
+    ],
+  },
+  {
+    id: 'relations-deep', title: '合冲刑害破专题', level: '进阶', order: 13,
+    summary: '把干支关系视为气势重组和触发机制，逐项辨认成立条件。',
+    lessons: [
+      { id: 'combine-transform', title: '合、合绊与合化', summary: '见合先论牵引，再看是否绊住，最后才检验能否化气。', points: ['天干五合与地支六合的作用层级不同', '合化要得时、得势并有化神承接', '相合可能保护用神，也可能使其失去作用', '岁运加入第三方后，原有合局可能改变'], practice: '找出命盘全部合关系，分别标注“合象、合绊、可能化气”。' },
+      { id: 'clash-punish-harm', title: '冲、刑、害、破', summary: '冲偏位移对立，刑偏结构摩擦，害偏暗损，破偏松动，均须落到宫位和十神。', points: ['旺冲衰与衰冲旺的结果不同', '冲库、冲根、冲夫妻宫不能同断', '刑害常需要重复或岁运触发才明显', '喜神受冲与忌神受冲的意义可能相反'], practice: '为一组地支关系写出至少三种现实可能，不使用绝对吉凶词。' },
+      { id: 'relation-priority', title: '多重关系的优先级', summary: '当合冲刑害并见，应按月令、位置、强弱和岁运时效排序。', points: ['先处理能改变月令气势或成局的关系', '邻近、透出、有根的作用通常更直接', '同一字被合又被冲时，要比较双方力量与到达顺序', '原局是长期结构，岁运是阶段触发'], practice: '给一个多重关系命盘画作用图，只保留三条最重要路径。' },
+    ],
+  },
+  {
+    id: 'structure-patterns', title: '格局与组合专题', level: '实战', order: 14,
+    summary: '从月令立格，再看相神、忌神、救应和现实成事路径。',
+    lessons: [
+      { id: 'regular-patterns', title: '正格八格', summary: '财、官、印、食、杀、伤等格从月令透藏入手，重点在成格条件。', points: ['月令本气、中气、余气透出时权重不同', '立格后要找维护格局的相神', '日主承载不足时，格局名称成立也难发挥', '杂气月与多透要辨主次清浊'], practice: '选一盘写出格神、相神、忌神和救应，不只写格局名称。' },
+      { id: 'common-chains', title: '常见十神链条', summary: '官印相生、食伤生财、杀印相生等，是能量如何转化的结构描述。', points: ['链条每一环都要有根有力', '中间一环受伤会造成流通中断', '组合好坏取决于是否解决原局主要矛盾', '岁运补齐缺环时，相关主题更易落实'], practice: '把命盘画成“源头→转化→结果”的十神链。' },
+      { id: 'special-structure', title: '从格、化格与专旺', summary: '特殊格局条件严格，应先排除日主有根、逆势和破局因素。', points: ['从格看是否真正无依并顺从全局大势', '化格看合化是否得令并有化神', '专旺看同类成方成局且无强力逆气', '岁运逆势时特殊格局波动通常更明显'], practice: '对疑似从格案例同时写普通格和特殊格两套解释，再用往事验证。' },
+    ],
+  },
+  {
+    id: 'monthly-practice', title: '流年流月实战', level: '实战', order: 15,
+    summary: '把十年、年度、月份和日期放回同一时间层级，建立可回测的节奏判断。',
+    lessons: [
+      { id: 'time-layers', title: '岁运四层模型', summary: '大运定舞台，流年定年度主题，流月定阶段窗口，流日用于具体安排。', points: ['下层时间不能推翻上层长期背景', '同一五行在多层重复时信号更集中', '流月按节气切换，每个流年完整观察十二个月', '流日宜用于执行节奏，不作重大宿命判断'], practice: '选择一个过去年份，按大运、流年、流月记录一件可核对事件。' },
+      { id: 'annual-trigger', title: '岁运触发清单', summary: '优先观察伏吟反吟、合冲刑害、用忌到位和宫位重复引动。', points: ['先列原局关键字和关键关系', '再看大运是否建立长期触发条件', '流年到位时判断哪一宫、哪一十神被引动', '最后结合现实年龄和可用资源筛选事件类型'], practice: '为当前流年制作触发清单，不直接写必然事件。' },
+      { id: 'monthly-journal', title: '十二月观察日志', summary: '逐月记录计划、行动和结果，用事实检验命理模型。', points: ['每月节气切换时记录预期主题', '月底只记可核对事实与情绪偏差', '区分外部事件、主动选择和解释偏见', '连续一年后再总结稳定规律'], practice: '建立十二行年度表，列出节气、干支、主题、事实与复盘。' },
+    ],
+  },
+  {
+    id: 'classic-reading', title: '古籍阅读方法', level: '进阶', order: 16,
+    summary: '学会区分正文、原注、后注、版本异文和现代解释，避免断章取义。',
+    lessons: [
+      { id: 'text-layers', title: '正文、注与疏', summary: '同一页面可能叠加多个时代的文字，必须先辨认作者层次。', points: ['正文是被解释的核心文本', '注解释字句或提出一套读法', '疏进一步解释旧注', '现代译文应标明是直译、意译还是导读'], practice: '打开一篇古籍，分别标出正文、旧注和本站导读。' },
+      { id: 'edition-check', title: '版本与异文校核', summary: '不同刻本、抄本与数据库录入可能出现字词、标点和篇章差异。', points: ['记录底本来源、卷次与篇名', '优先核对影印本或可靠全文库', '遇到讹字先保留原貌并加校记', '标点属于现代整理，也可能影响理解'], practice: '对同一句古文寻找两个来源，记录至少一处差异。' },
+      { id: 'context-reading', title: '从上下文到命盘', summary: '先理解篇章在讨论什么问题，再把原则用于具体命盘。', points: ['不要从诗诀截一句直接套人', '区分普遍原则与特定月令条件', '把古文命题改写成可验证条件', '用多个案例检验，不以单个巧合证明'], practice: '选择一句原文，写出适用条件、不适用条件和验证方法。' },
+    ],
+  },
+  {
+    id: 'case-validation', title: '案例回测与论证', level: '实战', order: 17,
+    summary: '把命理判断写成可追溯、可证伪、能复盘的分析，而不是事后附会。',
+    lessons: [
+      { id: 'case-record', title: '案例资料标准', summary: '记录时间来源、地点、已知误差和事件时间，保护隐私并避免诱导信息。', points: ['出生时间注明来自证件、家人回忆或推测', '事件用年月和客观事实记录', '先排盘再收集反馈，减少反向迎合', '公开案例应去标识化'], practice: '制作一张不含姓名的案例资料表。' },
+      { id: 'claim-evidence', title: '结论—依据—验证', summary: '每条判断都应能回到命盘结构，并给出现实验证点。', points: ['结论说明主题和条件', '依据注明干支、十神、宫位与岁运', '给出至少两个可能现实表现', '注明什么事实会推翻或修正判断'], practice: '把一条性格判断写成四列表格：结论、依据、验证、反证。' },
+      { id: 'bias-control', title: '控制确认偏误', summary: '命理学习最容易只记应验、忽略不应验，因此必须保存失败记录。', points: ['预测前写下时间戳和条件', '不随反馈偷偷改写原结论', '统计命中和未命中，不只讲精彩案例', '把不确定性作为模型信息而非失败遮掩'], practice: '复盘三条过去判断，至少保留一条不应验记录并分析原因。' },
     ],
   },
 ];
