@@ -2,6 +2,10 @@ export type Gender = 'male' | 'female';
 export type ElementName = '木' | '火' | '土' | '金' | '水';
 export type PillarKey = 'year' | 'month' | 'day' | 'time';
 export type ReadingSection = 'overview' | 'career' | 'relationship' | 'health' | 'growth';
+export type CalendarType = 'solar' | 'lunar';
+export type TimeMode = 'clock' | 'trueSolar';
+export type DayBoundary = 'midnight' | 'lateZi';
+export type BirthTimeSource = 'certificate' | 'family' | 'memory' | 'estimated' | 'unknown';
 
 export interface BirthInput {
   name: string;
@@ -9,6 +13,16 @@ export interface BirthInput {
   birthDate: string;
   birthTime: string;
   birthplace: string;
+  calendarType: CalendarType;
+  lunarLeapMonth: boolean;
+  timezoneOffset: number;
+  longitude: number;
+  timeMode: TimeMode;
+  daylightSaving: boolean;
+  dayBoundary: DayBoundary;
+  unknownHour: boolean;
+  birthTimeSource: BirthTimeSource;
+  uncertaintyMinutes: number;
 }
 
 export interface Pillar {
@@ -113,6 +127,19 @@ export interface BaziReading {
   solarText: string;
   lunarText: string;
   zodiac: string;
+  calculation: {
+    version: string;
+    originalText: string;
+    convertedSolarText: string;
+    effectiveSolarText: string;
+    correctionMinutes: number;
+    longitudeCorrectionMinutes: number;
+    equationOfTimeMinutes: number;
+    daylightSavingMinutes: number;
+    dayBoundaryText: string;
+    reliabilityText: string;
+    warnings: string[];
+  };
   pillars: Pillar[];
   dayMaster: {
     stem: string;

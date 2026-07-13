@@ -8,6 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "test": "tsc -p tsconfig.test.json && node --test tests/*.test.cjs",
+    "check": "npm run typecheck && npm run test && npm run build",
     "sync:classics": "node scripts/sync-ditiansui.mjs && node scripts/sync-lixu.mjs && node scripts/sync-qiongtong.mjs && node scripts/split-classics.mjs",
     "split:classics": "node scripts/split-classics.mjs"
   },

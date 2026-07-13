@@ -1,0 +1,19 @@
+{
+  "name": "山易排盘",
+  "short_name": "山易排盘",
+  "description": "四柱八字排盘、岁运合参、易经求卦与传统命理知识库。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf3f0",
+  "theme_color": "#1f746b",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "ignoreDeprecations": "6.0",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "test-runtime",
+    "rootDir": "src",
+    "noEmit": false
+  },
+  "include": [
+    "src/core/bazi.ts",
+    "src/core/types.ts",
+    "src/lunar-javascript.d.ts"
+  ]
+}

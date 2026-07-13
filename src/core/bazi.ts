@@ -1,4 +1,4 @@
-import { Solar } from 'lunar-javascript';
+import { Lunar, Solar } from 'lunar-javascript';
 import type { DaYun, EightChar } from 'lunar-javascript';
 import type {
   BaziReading,
@@ -15,6 +15,8 @@ import type {
   ReadingAdvice,
   ReadingSection,
 } from './types';
+
+export const CALCULATION_VERSION = '2026.07.1';
 
 const STEM_ELEMENT: Record<string, ElementName> = {
   甲: '木',
@@ -223,13 +225,87 @@ const ELEMENT_HEALTH: Record<ElementName, string> = {
 
 function parseDateTime(input: BirthInput) {
   const [year, month, day] = input.birthDate.split('-').map(Number);
-  const [hour, minute] = input.birthTime.split(':').map(Number);
+  const [rawHour, rawMinute] = input.birthTime.split(':').map(Number);
+  const hour = input.unknownHour ? 12 : rawHour;
+  const minute = input.unknownHour ? 0 : rawMinute;
 
   if (![year, month, day, hour, minute].every(Number.isFinite)) {
     throw new Error('请输入完整的出生日期和时间');
   }
 
   return { year, month, day, hour, minute };
+}
+
+function pad(value: number) {
+  return `${value}`.padStart(2, '0');
+}
+
+function formatParts(parts: { year: number; month: number; day: number; hour: number; minute: number }) {
+  return `${parts.year}-${pad(parts.month)}-${pad(parts.day)} ${pad(parts.hour)}:${pad(parts.minute)}`;
+}
+
+function addMinutes(parts: { year: number; month: number; day: number; hour: number; minute: number }, minutes: number) {
+  const date = new Date(Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute));
+  date.setUTCMinutes(date.getUTCMinutes() + minutes);
+  return {
+    year: date.getUTCFullYear(),
+    month: date.getUTCMonth() + 1,
+    day: date.getUTCDate(),
+    hour: date.getUTCHours(),
+    minute: date.getUTCMinutes(),
+  };
+}
+
+function getEquationOfTimeMinutes(year: number, month: number, day: number) {
+  const current = Date.UTC(year, month - 1, day);
+  const start = Date.UTC(year, 0, 0);
+  const dayOfYear = Math.floor((current - start) / 86400000);
+  const angle = (2 * Math.PI * (dayOfYear - 81)) / 364;
+  return 9.87 * Math.sin(2 * angle) - 7.53 * Math.cos(angle) - 1.5 * Math.sin(angle);
+}
+
+export function resolveBirthMoment(input: BirthInput) {
+  const parsed = parseDateTime(input);
+  let converted = parsed;
+  if (input.calendarType === 'lunar') {
+    const lunarMonth = input.lunarLeapMonth ? -Math.abs(parsed.month) : parsed.month;
+    const solar = Lunar.fromYmdHms(parsed.year, lunarMonth, parsed.day, parsed.hour, parsed.minute, 0).getSolar();
+    converted = {
+      year: solar.getYear(),
+      month: solar.getMonth(),
+      day: solar.getDay(),
+      hour: solar.getHour(),
+      minute: solar.getMinute(),
+    };
+  }
+
+  const longitudeCorrection = input.timeMode === 'clock' ? 4 * (input.longitude - input.timezoneOffset * 15) : 0;
+  const equationOfTime = input.timeMode === 'clock' ? getEquationOfTimeMinutes(converted.year, converted.month, converted.day) : 0;
+  const daylightSavingMinutes = input.timeMode === 'clock' && input.daylightSaving ? -60 : 0;
+  const correctionMinutes = Math.round(longitudeCorrection + equationOfTime + daylightSavingMinutes);
+  const effective = addMinutes(converted, correctionMinutes);
+  const warnings: string[] = [];
+  if (input.unknownHour) warnings.push('出生时刻未知，当前以正午占位；时柱及依赖时柱的结论仅供比较，不作确定判断。');
+  const minuteOfDay = converted.hour * 60 + converted.minute;
+  const hourBoundaries = [60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260, 1380];
+  const nearestHourBoundary = Math.min(...hourBoundaries.map((boundary) => Math.min(Math.abs(minuteOfDay - boundary), 1440 - Math.abs(minuteOfDay - boundary))));
+  if (!input.unknownHour && input.uncertaintyMinutes >= nearestHourBoundary) warnings.push(`出生时间误差约±${input.uncertaintyMinutes}分钟，范围覆盖时辰边界，建议生成相邻时柱对照。`);
+  else if (input.uncertaintyMinutes >= 60) warnings.push(`出生时间误差约±${input.uncertaintyMinutes}分钟，跨时辰边界时应生成相邻命盘对照。`);
+  if (Math.abs(correctionMinutes) >= 30) warnings.push(`校正前后相差${Math.abs(correctionMinutes)}分钟，请确认经度、时区和夏令时设置。`);
+  if (formatParts(converted).slice(0, 10) !== formatParts(effective).slice(0, 10)) warnings.push('真太阳时校正后跨越公历日期，日柱可能随换日规则改变，请重点核对出生地点与钟表时间。');
+
+  return {
+    converted,
+    effective,
+    correctionMinutes,
+    longitudeCorrectionMinutes: Math.round(longitudeCorrection),
+    equationOfTimeMinutes: Math.round(equationOfTime),
+    daylightSavingMinutes,
+    originalText: `${input.calendarType === 'lunar' ? '农历' : '公历'} ${input.birthDate} ${input.unknownHour ? '时辰未知' : input.birthTime}`,
+    convertedSolarText: formatParts(converted),
+    effectiveSolarText: formatParts(effective),
+    warnings,
+  };
 }
 
 function normalizeArray(value: string[] | string): string[] {
@@ -848,10 +924,12 @@ function getAnnualReading(dayElement: ElementName, usefulElements: ElementName[]
 }
 
 export function createBaziReading(input: BirthInput): BaziReading {
-  const { year, month, day, hour, minute } = parseDateTime(input);
+  const moment = resolveBirthMoment(input);
+  const { year, month, day, hour, minute } = moment.effective;
   const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
   const lunar = solar.getLunar();
   const eightChar = lunar.getEightChar();
+  eightChar.setSect(input.dayBoundary === 'lateZi' ? 1 : 2);
   const pillars: Pillar[] = ['year', 'month', 'day', 'time'].map((key) => createPillar(key as PillarKey, eightChar));
   const scores = scoreElements(pillars);
   const elementScores = normalizeScores(scores);
@@ -889,6 +967,19 @@ export function createBaziReading(input: BirthInput): BaziReading {
     solarText: solar.toYmdHms(),
     lunarText: `${lunar.getYearInChinese()}年${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`,
     zodiac: lunar.getYearShengXiao(),
+    calculation: {
+      version: CALCULATION_VERSION,
+      originalText: moment.originalText,
+      convertedSolarText: moment.convertedSolarText,
+      effectiveSolarText: moment.effectiveSolarText,
+      correctionMinutes: moment.correctionMinutes,
+      longitudeCorrectionMinutes: moment.longitudeCorrectionMinutes,
+      equationOfTimeMinutes: moment.equationOfTimeMinutes,
+      daylightSavingMinutes: moment.daylightSavingMinutes,
+      dayBoundaryText: input.dayBoundary === 'lateZi' ? '子初换日（23:00）' : '午夜换日（00:00）',
+      reliabilityText: input.unknownHour ? '时辰未知' : `${input.birthTimeSource === 'certificate' ? '证件记录' : input.birthTimeSource === 'family' ? '家人记录' : input.birthTimeSource === 'memory' ? '本人记忆' : input.birthTimeSource === 'estimated' ? '估算时间' : '来源未说明'} · 误差±${input.uncertaintyMinutes}分钟`,
+      warnings: moment.warnings,
+    },
     pillars,
     dayMaster: {
       stem: dayStem,

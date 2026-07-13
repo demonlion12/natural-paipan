@@ -1,5 +1,6 @@
 node_modules/
 dist/
+test-runtime/core/
 .DS_Store
 *.log
 .env
@@ -7,3 +8,17 @@ dist/
 !.env.example
 tsconfig.tsbuildinfo
 tsconfig.node.tsbuildinfo
+
+# The global Git ignore on this machine ignores all untracked files. Keep
+# product assets and regression tests explicitly versioned.
+!public/
+!public/icon.svg
+!public/manifest.webmanifest
+!public/robots.txt
+!public/sitemap.xml
+!public/sw.js
+!tests/
+!tests/bazi.test.cjs
+!test-runtime/
+!test-runtime/package.json
+!tsconfig.test.json

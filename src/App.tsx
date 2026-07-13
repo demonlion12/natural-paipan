@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { FormEvent, RefObject } from 'react';
+import type { FormEvent, ReactNode, RefObject } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -17,27 +17,50 @@ import {
   LogIn,
   LogOut,
   MapPin,
+  MessageSquare,
   RefreshCw,
   RotateCcw,
   Search,
+  ShieldCheck,
   Sparkles,
+  Trash2,
   UserRound,
+  X,
 } from 'lucide-react';
-import { Solar } from 'lunar-javascript';
-import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
-import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, knowledgeQuizQuestions, knowledgeTerms, learningPaths, stemQuickReference, tenGodQuickReference } from './knowledge';
-import type { ClassicBook, ClassicChapter } from './knowledge';
+import type { ClassicBook, ClassicChapter, KnowledgeModule } from './knowledge';
+import {
+  POLICY_VERSION,
+  archiveRepository,
+  clearLocalProductData,
+  exportLocalProductData,
+  getPrivacyPreferences,
+  savePrivacyPreferences,
+  submitFeedback,
+  trackEvent,
+} from './operations';
+import type { ArchiveRecord } from './operations';
 
 const initialInput: BirthInput = {
   name: '1232',
   gender: 'male',
   birthDate: '1990-01-01',
   birthTime: '00:00',
-  birthplace: '未知地 北京时间',
+  birthplace: '北京',
+  calendarType: 'solar',
+  lunarLeapMonth: false,
+  timezoneOffset: 8,
+  longitude: 116.4074,
+  timeMode: 'clock',
+  daylightSaving: false,
+  dayBoundary: 'midnight',
+  unknownHour: false,
+  birthTimeSource: 'family',
+  uncertaintyMinutes: 30,
 };
 
 type AppStep = 'login' | 'home' | 'birth' | 'report' | 'yijing' | 'learning';
+type PolicyView = 'privacy' | 'terms' | 'boundary' | 'data';
 type NavTarget = 'paipan' | 'element' | 'useful' | 'professional' | 'luck' | 'detail';
 type ClassicKey = 'qiongtong' | 'ditiansui' | 'sanming' | 'tiyao' | 'ziping' | 'yuanhai' | 'tianyuan' | 'shenfeng' | 'qianli' | 'wuxing' | 'lixu';
 type DiagramTab = 'ganzhi' | 'flow' | 'palace' | 'kinship';
@@ -59,8 +82,9 @@ const classicTabs: Array<{ key: ClassicKey; label: string }> = [
   { key: 'lixu', label: '李虚中命书' },
 ];
 
-function createReadingSafely(input: BirthInput) {
+async function createReadingSafely(input: BirthInput) {
   try {
+    const { readingService } = await import('./adapters/readingService');
     return { reading: readingService.createReading(input), error: '' };
   } catch (error) {
     return {
@@ -1080,7 +1104,7 @@ function TopProfile({
         <span>
           阴历：{reading.lunarText} {reading.pillars[3].branch}时
         </span>
-        <span>阳历：{reading.solarText}</span>
+        <span>排盘时刻：{reading.solarText}</span>
       </div>
       <div className="profile-actions">
         <button className="edit-button" onClick={onEdit} type="button">
@@ -1106,6 +1130,16 @@ function TopProfile({
         <div><span>身宫</span><strong>{reading.structure.shenGong}</strong></div>
         <div><span>起运</span><strong>{reading.daYun.startText} · {reading.daYun.direction}</strong></div>
       </div>
+      <div className="calculation-audit" aria-label="排盘时间校正依据">
+        <div><span>计算版本</span><strong>{reading.calculation.version}</strong></div>
+        <div><span>原始输入</span><strong>{reading.calculation.originalText}</strong></div>
+        <div><span>公历转换</span><strong>{reading.calculation.convertedSolarText}</strong></div>
+        <div><span>排盘采用</span><strong>{reading.calculation.effectiveSolarText}</strong></div>
+        <div><span>校正明细</span><strong>经度 {reading.calculation.longitudeCorrectionMinutes >= 0 ? '+' : ''}{reading.calculation.longitudeCorrectionMinutes}分 · 均时差 {reading.calculation.equationOfTimeMinutes >= 0 ? '+' : ''}{reading.calculation.equationOfTimeMinutes}分 · 夏令时 {reading.calculation.daylightSavingMinutes}分</strong></div>
+        <div><span>换日规则</span><strong>{reading.calculation.dayBoundaryText}</strong></div>
+        <div><span>时间可信度</span><strong>{reading.calculation.reliabilityText}</strong></div>
+      </div>
+      {reading.calculation.warnings.length > 0 && <div className="calculation-warnings">{reading.calculation.warnings.map((warning) => <p key={warning}>{warning}</p>)}</div>}
     </section>
   );
 }
@@ -1512,6 +1546,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(Math.max(0, Math.min(11, new Date().getMonth() - 1)));
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [flowDays, setFlowDays] = useState<Array<{ label: string; dateText: string; ganZhi: string }>>([]);
   const currentLuck =
     reading.daYun.periods.find((period) => selectedYear >= period.startYear && selectedYear <= period.endYear) ??
     reading.daYun.periods.find((period) => period.isCurrent) ??
@@ -1540,20 +1575,25 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
   const selectedTermStart = getTermStart(selectedYear, selectedMonthIndex);
   const nextTermStart = selectedMonthIndex === 11 ? getTermStart(selectedYear + 1, 0) : getTermStart(selectedYear, selectedMonthIndex + 1);
   const flowDayCount = Math.max(28, Math.round((nextTermStart.getTime() - selectedTermStart.getTime()) / dayMs));
-  const flowDays = Array.from({ length: flowDayCount }, (_, index) => {
-    const date = new Date(selectedTermStart);
-    date.setDate(selectedTermStart.getDate() + index);
-    const solar = Solar.fromYmdHms(date.getFullYear(), date.getMonth() + 1, date.getDate(), 12, 0, 0);
-    const lunar = solar.getLunar();
-    const ganZhi = lunar.getEightChar().getDay();
-    return {
-      label: lunar.getDayInChinese(),
-      dateText: `${date.getMonth() + 1}/${date.getDate()}`,
-      ganZhi,
-    };
-  });
+
+  useEffect(() => {
+    let active = true;
+    setFlowDays([]);
+    setSelectedDayIndex(0);
+    import('lunar-javascript').then(({ Solar }) => {
+      const days = Array.from({ length: flowDayCount }, (_, index) => {
+        const date = new Date(selectedTermStart);
+        date.setDate(selectedTermStart.getDate() + index);
+        const lunar = Solar.fromYmdHms(date.getFullYear(), date.getMonth() + 1, date.getDate(), 12, 0, 0).getLunar();
+        return { label: lunar.getDayInChinese(), dateText: `${date.getMonth() + 1}/${date.getDate()}`, ganZhi: lunar.getEightChar().getDay() };
+      });
+      if (active) setFlowDays(days);
+    });
+    return () => { active = false; };
+  }, [flowDayCount, selectedMonthIndex, selectedYear]);
+
   const currentMonth = flowMonths[selectedMonthIndex];
-  const currentDay = flowDays[selectedDayIndex] ?? flowDays[0];
+  const currentDay = flowDays[selectedDayIndex] ?? flowDays[0] ?? { label: '载入中', dateText: '', ganZhi: currentYearGanZhi };
   const detailColumns = [
     createVirtualColumn('流日', currentDay.ganZhi, reading),
     createVirtualColumn('流月', currentMonth.ganZhi, reading),
@@ -2760,7 +2800,7 @@ type ClassicLibraryMode = 'shelf' | 'reader' | 'excerpts';
 type QuizAttempt = { selected: number; correct: boolean };
 type PracticeFilter = '全部' | '未作答' | '错题';
 
-function getClassicRelatedModules(bookId: string, chapterTitle: string) {
+function getClassicRelatedModules(knowledgeModules: KnowledgeModule[], bookId: string, chapterTitle: string) {
   const ids = new Set<string>(['classic-reading']);
   if (bookId === 'qiongtong') {
     ids.add('structure-useful');
@@ -2776,7 +2816,40 @@ function getClassicRelatedModules(bookId: string, chapterTitle: string) {
   return knowledgeModules.filter((module) => ids.has(module.id));
 }
 
-function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGoBazi: () => void; onYijing: () => void }) {
+type KnowledgeData = typeof import('./knowledge');
+type LearningPageProps = { onBack: () => void; onGoBazi: () => void; onYijing: () => void };
+
+function LearningPage(props: LearningPageProps) {
+  const [knowledgeData, setKnowledgeData] = useState<KnowledgeData | null>(null);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    import('./knowledge')
+      .then((data) => { if (active) setKnowledgeData(data); })
+      .catch(() => { if (active) setLoadError('知识库载入失败，请检查网络后重试。'); });
+    return () => { active = false; };
+  }, []);
+
+  if (!knowledgeData) {
+    return <main className="knowledge-shell"><div className="flow-topbar"><button className="icon-text-button" onClick={props.onBack} type="button"><ArrowLeft size={17} />返回</button></div><section className="empty-knowledge knowledge-loading"><LibraryBig size={28} /><strong>{loadError || '正在载入命理学堂…'}</strong>{loadError && <button className="secondary-button" onClick={() => window.location.reload()} type="button"><RefreshCw size={16} />重新载入</button>}</section></main>;
+  }
+
+  return <LearningPageContent {...props} knowledgeData={knowledgeData} />;
+}
+
+function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: LearningPageProps & { knowledgeData: KnowledgeData }) {
+  const {
+    branchQuickReference,
+    classicExcerpts,
+    classicShelf,
+    knowledgeModules,
+    knowledgeQuizQuestions,
+    knowledgeTerms,
+    learningPaths,
+    stemQuickReference,
+    tenGodQuickReference,
+  } = knowledgeData;
   const [view, setView] = useState<LearningView>('paths');
   const [activeModuleId, setActiveModuleId] = useState(knowledgeModules[0].id);
   const [query, setQuery] = useState('');
@@ -2865,7 +2938,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
   const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
   const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
   const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
-  const relatedModules = activeChapter && classicBook ? getClassicRelatedModules(classicBook.id, activeChapter.title) : [];
+  const relatedModules = activeChapter && classicBook ? getClassicRelatedModules(knowledgeModules, classicBook.id, activeChapter.title) : [];
   const activeBookmarkKey = classicBook && activeChapter ? `${classicBook.id}:${activeChapter.id}` : '';
 
   const loadClassicChapter = async (book: ClassicBook, chapterId: string) => {
@@ -3697,15 +3770,21 @@ function YijingPage({ onBack, onGoBazi, onLearning }: { onBack: () => void; onGo
 
 function HomePage({
   profileName,
+  archives,
   onBazi,
+  onDeleteArchive,
   onLearning,
   onLogout,
+  onOpenArchive,
   onYijing,
 }: {
   profileName: string;
+  archives: ArchiveRecord[];
   onBazi: () => void;
+  onDeleteArchive: (id: string) => void;
   onLearning: () => void;
   onLogout: () => void;
+  onOpenArchive: (archive: ArchiveRecord) => void;
   onYijing: () => void;
 }) {
   return (
@@ -3756,6 +3835,20 @@ function HomePage({
             <ArrowRight size={20} />
           </button>
         </div>
+
+        <section className="archive-section">
+          <div className="section-title"><div><span>仅保存在当前浏览器</span><h2>本机命盘档案</h2></div><strong>{archives.length}/30</strong></div>
+          {archives.length ? <div className="archive-grid">{archives.map((archive) => (
+            <article key={archive.id}>
+              <button className="archive-open" onClick={() => onOpenArchive(archive)} type="button">
+                <span>{archive.input.name || '未命名'}</span>
+                <strong>{archive.pillars}</strong>
+                <small>{archive.input.birthDate} · {archive.input.birthTime} · {archive.input.birthplace}</small>
+              </button>
+              <button aria-label={`删除${archive.input.name || '未命名'}档案`} className="archive-delete" onClick={() => onDeleteArchive(archive.id)} title="删除本机档案" type="button"><Trash2 size={16} /></button>
+            </article>
+          ))}</div> : <div className="archive-empty"><strong>还没有保存命盘</strong><p>生成第一份排盘后会自动保存在本机，不会上传出生资料。</p></div>}
+        </section>
       </section>
 
     </main>
@@ -3764,14 +3857,24 @@ function HomePage({
 
 function LoginPage({
   profileName,
+  analyticsEnabled,
+  consentAccepted,
+  onAnalyticsChange,
   onChangeName,
+  onConsentChange,
   onLogin,
   onGuest,
+  onOpenPolicy,
 }: {
   profileName: string;
+  analyticsEnabled: boolean;
+  consentAccepted: boolean;
+  onAnalyticsChange: (value: boolean) => void;
   onChangeName: (value: string) => void;
+  onConsentChange: (value: boolean) => void;
   onLogin: () => void;
   onGuest: () => void;
+  onOpenPolicy: (view: PolicyView) => void;
 }) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -3844,7 +3947,8 @@ function LoginPage({
 
       <section className="auth-card">
         <form onSubmit={handleSubmit}>
-          <h2>登录山易排盘</h2>
+          <div className="local-mode-label"><ShieldCheck size={17} /><span>本机档案模式</span></div>
+          <h2>进入山易排盘</h2>
           <label>
             <span>
               <UserRound size={15} /> 昵称 / 档案名
@@ -3857,28 +3961,112 @@ function LoginPage({
               value={profileName}
             />
           </label>
-          <label>
-            <span>
-              <LogIn size={15} /> 手机号 / 邮箱
-            </span>
-            <input autoComplete="email" name="account" placeholder="演示版可留空" />
-          </label>
-          <button className="primary-button" type="submit">
+          <label className="consent-row"><input checked={consentAccepted} onChange={(event) => onConsentChange(event.target.checked)} type="checkbox" /><span>我已阅读并同意<button onClick={() => onOpenPolicy('terms')} type="button">用户协议</button>与<button onClick={() => onOpenPolicy('privacy')} type="button">隐私说明</button></span></label>
+          <label className="consent-row optional"><input checked={analyticsEnabled} onChange={(event) => onAnalyticsChange(event.target.checked)} type="checkbox" /><span>允许发送不含生辰和联系方式的匿名使用统计</span></label>
+          <button className="primary-button" disabled={!consentAccepted || !profileName.trim()} type="submit">
             <LogIn size={17} />
-            进入录入
+            进入工作台
           </button>
-          <button className="secondary-button" onClick={onGuest} type="button">
+          <button className="secondary-button" disabled={!consentAccepted} onClick={onGuest} type="button">
             <ArrowRight size={16} />
-            游客体验
+            不建名档体验
           </button>
+          <p className="local-mode-note">当前版本不接收手机号，不上传出生资料。清除浏览器数据会同时删除本机档案。</p>
         </form>
       </section>
     </main>
   );
 }
 
+function OperationsFooter({ onFeedback, onOpenPolicy }: { onFeedback: () => void; onOpenPolicy: (view: PolicyView) => void }) {
+  return (
+    <footer className="operations-footer">
+      <strong>山易排盘 · 传统文化学习与历法工具</strong>
+      <nav aria-label="运营与合规">
+        <button onClick={() => onOpenPolicy('terms')} type="button">用户协议</button>
+        <button onClick={() => onOpenPolicy('privacy')} type="button">隐私说明</button>
+        <button onClick={() => onOpenPolicy('boundary')} type="button">内容边界</button>
+        <button onClick={() => onOpenPolicy('data')} type="button">数据管理</button>
+        <button onClick={onFeedback} type="button">问题反馈</button>
+      </nav>
+      <span>版本 {POLICY_VERSION}</span>
+    </footer>
+  );
+}
+
+function PolicyDialog({ archives, onClearData, onClose, onExportData, view }: { archives: ArchiveRecord[]; onClearData: () => void; onClose: () => void; onExportData: () => void; view: PolicyView }) {
+  const content: Record<Exclude<PolicyView, 'data'>, { title: string; intro: string; sections: Array<{ title: string; body: string }> }> = {
+    privacy: {
+      title: '隐私说明',
+      intro: '公开测试版默认采用本机计算与本机保存，不要求手机号，也不会把出生资料发送到服务器。',
+      sections: [
+        { title: '处理的数据', body: '昵称、性别、出生日期、出生时间、地点、经度、时区及排盘结果；学习进度、书签和答题记录。' },
+        { title: '处理目的', body: '仅用于生成命盘、保存本机档案、恢复学习进度和排查页面错误。数据默认存放在当前浏览器 localStorage。' },
+        { title: '可选统计', body: '只有主动勾选后才记录页面功能事件；事件不得包含姓名、生辰、地点、联系方式或完整报告。未配置远程统计接口时仍只保存在本机。' },
+        { title: '保存与删除', body: '本机档案最多30份。你可以随时从“数据管理”导出或删除；清理浏览器数据也会删除这些记录。' },
+      ],
+    },
+    terms: {
+      title: '用户协议',
+      intro: '使用本产品即表示你理解它是传统文化与历法研究工具，不构成对现实结果的承诺。',
+      sections: [
+        { title: '适用范围', body: '排盘、求卦、古籍和现代解读用于学习、记录和自我观察，不替代医学、心理、法律、财务及其他持证专业服务。' },
+        { title: '用户责任', body: '请勿上传他人的真实隐私资料；为他人建档前应取得授权。不得利用结果实施歧视、骚扰、欺诈或对他人作确定性判断。' },
+        { title: '未成年人', body: '未满18周岁应在监护人指导下使用，不提供付费诱导、恐吓性结论或重大人生决策指令。' },
+        { title: '版本与误差', body: '节气边界、出生时间误差、流派规则和资料来源都会影响结果。报告会展示计算版本和校正依据，用户应自行核对。' },
+      ],
+    },
+    boundary: {
+      title: '内容边界',
+      intro: '产品不提供“保证应验”的预测，不以恐惧或灾祸描述诱导付费。',
+      sections: [
+        { title: '健康', body: '五行身心内容只描述传统象意与生活节律，不诊断疾病、不替代就医，也不建议停药或改变治疗。' },
+        { title: '财务与事业', body: '不承诺收益，不推荐具体证券、借贷或投资行为；重大资金决策应咨询持牌人士。' },
+        { title: '关系与人生决定', body: '不以命盘替代沟通、调查和本人意愿，不鼓励仅凭排盘决定婚育、离职、迁居或终止关系。' },
+        { title: '传统文化表述', body: '古籍原文与现代解释分层展示；神煞和术语不得脱离全局被包装成绝对吉凶。' },
+      ],
+    },
+  };
+  const page = view === 'data' ? null : content[view];
+  return (
+    <div className="modal-backdrop" role="presentation">
+      <section aria-modal="true" className="operations-dialog" role="dialog">
+        <header><div><span>{view === 'data' ? '本机自主控制' : `政策版本 ${POLICY_VERSION}`}</span><h2>{view === 'data' ? '数据管理' : page?.title}</h2></div><button aria-label="关闭" onClick={onClose} title="关闭" type="button"><X size={20} /></button></header>
+        {view === 'data' ? <div className="data-control-panel"><p>当前浏览器保存 {archives.length} 份命盘档案。导出文件包括档案、学习进度、书签和本机反馈队列。</p><div><button className="secondary-button" onClick={onExportData} type="button"><Download size={16} />导出我的数据</button><button className="danger-button" onClick={onClearData} type="button"><Trash2 size={16} />删除全部本机数据</button></div></div> : <div className="policy-content"><p className="policy-intro">{page?.intro}</p>{page?.sections.map((section) => <article key={section.title}><h3>{section.title}</h3><p>{section.body}</p></article>)}</div>}
+      </section>
+    </div>
+  );
+}
+
+function FeedbackDialog({ onClose, onSubmitted }: { onClose: () => void; onSubmitted: (remote: boolean) => void }) {
+  const [category, setCategory] = useState('排盘问题');
+  const [message, setMessage] = useState('');
+  const [contact, setContact] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (message.trim().length < 8) return;
+    setError('');
+    setSubmitting(true);
+    try {
+      const result = await submitFeedback({ category, message: message.trim(), contact: contact.trim() || undefined });
+      onSubmitted(result.remote);
+    } catch {
+      setError('提交暂时失败，请稍后重试。你的内容仍保留在当前输入框中。');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  return (
+    <div className="modal-backdrop" role="presentation"><section aria-modal="true" className="operations-dialog feedback-dialog" role="dialog"><header><div><span>帮助我们定位问题</span><h2>问题反馈</h2></div><button aria-label="关闭" onClick={onClose} title="关闭" type="button"><X size={20} /></button></header><form onSubmit={handleSubmit}><label><span>问题类型</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option>排盘问题</option><option>内容校勘</option><option>页面与交互</option><option>隐私与数据</option><option>其他建议</option></select></label><label><span>问题描述</span><textarea minLength={8} onChange={(event) => setMessage(event.target.value)} placeholder="请写明操作步骤、预期结果和实际情况" required value={message} /></label><label><span>联系方式（可选）</span><input onChange={(event) => setContact(event.target.value)} placeholder="当前未配置远程反馈时仅保存在本机" value={contact} /></label>{error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" disabled={submitting || message.trim().length < 8} type="submit"><MessageSquare size={16} />{submitting ? '提交中' : '提交反馈'}</button></form></section></div>
+  );
+}
+
 function BirthSetupPage({
+  error,
   input,
+  loading,
   onBack,
   onChange,
   onLearning,
@@ -3886,7 +4074,9 @@ function BirthSetupPage({
   onReset,
   onSubmit,
 }: {
+  error: string;
   input: BirthInput;
+  loading: boolean;
   onBack: () => void;
   onChange: (input: BirthInput) => void;
   onLearning: () => void;
@@ -3898,6 +4088,7 @@ function BirthSetupPage({
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     onSubmit({
+      ...input,
       name: String(form.get('name') || input.name),
       gender: String(form.get('gender') || input.gender) as BirthInput['gender'],
       birthDate: String(form.get('birthDate') || input.birthDate),
@@ -3930,7 +4121,9 @@ function BirthSetupPage({
         </div>
 
         <form className="birth-form" id="basic-info" onSubmit={handleSubmit}>
-          <div className="form-grid">
+          <section className="precision-form-section">
+            <header><span>01</span><div><h2>基本资料</h2><p>用于建立档案和确定大运顺逆，不需要填写真实姓名。</p></div></header>
+            <div className="form-grid">
             <label>
               <span>
                 <UserRound size={15} /> 昵称
@@ -3951,10 +4144,22 @@ function BirthSetupPage({
                 <option value="male">男</option>
               </select>
             </label>
+            </div>
+          </section>
 
+          <section className="precision-form-section">
+            <header><span>02</span><div><h2>历法与出生时刻</h2><p>农历日期请确认是否闰月；时间不确定时可标记来源和误差。</p></div></header>
+            <div className="form-grid">
+            <label>
+              <span><CalendarDays size={15} /> 历法</span>
+              <select value={input.calendarType} onChange={(event) => onChange({ ...input, calendarType: event.target.value as BirthInput['calendarType'], lunarLeapMonth: false })}>
+                <option value="solar">公历</option>
+                <option value="lunar">农历</option>
+              </select>
+            </label>
             <label>
               <span>
-                <CalendarDays size={15} /> 出生日期
+                <CalendarDays size={15} /> {input.calendarType === 'lunar' ? '农历日期' : '公历日期'}
               </span>
               <input
                 name="birthDate"
@@ -3964,6 +4169,8 @@ function BirthSetupPage({
               />
             </label>
 
+            {input.calendarType === 'lunar' && <label className="binary-control"><input checked={input.lunarLeapMonth} onChange={(event) => onChange({ ...input, lunarLeapMonth: event.target.checked })} type="checkbox" /><span>该月为闰月</span></label>}
+
             <label>
               <span>
                 <Clock3 size={15} /> 出生时间
@@ -3971,11 +4178,35 @@ function BirthSetupPage({
               <input
                 name="birthTime"
                 type="time"
+                disabled={input.unknownHour}
                 value={input.birthTime}
                 onChange={(event) => onChange({ ...input, birthTime: event.target.value })}
               />
             </label>
 
+            <label className="binary-control"><input checked={input.unknownHour} onChange={(event) => onChange({ ...input, unknownHour: event.target.checked, birthTimeSource: event.target.checked ? 'unknown' : input.birthTimeSource })} type="checkbox" /><span>出生时辰未知</span></label>
+
+            <label>
+              <span><Clock3 size={15} /> 时间来源</span>
+              <select disabled={input.unknownHour} value={input.birthTimeSource} onChange={(event) => onChange({ ...input, birthTimeSource: event.target.value as BirthInput['birthTimeSource'] })}>
+                <option value="certificate">证件记录</option>
+                <option value="family">家人记录</option>
+                <option value="memory">本人记忆</option>
+                <option value="estimated">估算时间</option>
+                <option value="unknown">来源未说明</option>
+              </select>
+            </label>
+
+            <label>
+              <span><Clock3 size={15} /> 预计误差（分钟）</span>
+              <input min="0" max="720" step="5" type="number" value={input.uncertaintyMinutes} onChange={(event) => onChange({ ...input, uncertaintyMinutes: Number(event.target.value) })} />
+            </label>
+            </div>
+          </section>
+
+          <section className="precision-form-section">
+            <header><span>03</span><div><h2>地点与时间校正</h2><p>真太阳时按出生地经度、时区中央经线和当日均时差计算。</p></div></header>
+            <div className="form-grid">
             <label className="wide">
               <span>
                 <MapPin size={15} /> 出生地
@@ -3986,12 +4217,42 @@ function BirthSetupPage({
                 onChange={(event) => onChange({ ...input, birthplace: event.target.value })}
               />
             </label>
-          </div>
+
+            <label>
+              <span><MapPin size={15} /> 出生地经度</span>
+              <input max="180" min="-180" step="0.0001" type="number" value={input.longitude} onChange={(event) => onChange({ ...input, longitude: Number(event.target.value) })} />
+            </label>
+
+            <label>
+              <span><Clock3 size={15} /> 当地时区 UTC</span>
+              <input max="14" min="-12" step="0.25" type="number" value={input.timezoneOffset} onChange={(event) => onChange({ ...input, timezoneOffset: Number(event.target.value) })} />
+            </label>
+
+            <label>
+              <span><Clock3 size={15} /> 输入时间性质</span>
+              <select value={input.timeMode} onChange={(event) => onChange({ ...input, timeMode: event.target.value as BirthInput['timeMode'] })}>
+                <option value="clock">当地钟表时间，自动校正</option>
+                <option value="trueSolar">已经是真太阳时，不再校正</option>
+              </select>
+            </label>
+
+            <label>
+              <span><Clock3 size={15} /> 日柱换日规则</span>
+              <select value={input.dayBoundary} onChange={(event) => onChange({ ...input, dayBoundary: event.target.value as BirthInput['dayBoundary'] })}>
+                <option value="midnight">午夜换日（00:00）</option>
+                <option value="lateZi">子初换日（23:00）</option>
+              </select>
+            </label>
+
+            <label className="binary-control"><input checked={input.daylightSaving} disabled={input.timeMode === 'trueSolar'} onChange={(event) => onChange({ ...input, daylightSaving: event.target.checked })} type="checkbox" /><span>出生时实行夏令时</span></label>
+            </div>
+          </section>
 
           <div className="form-actions">
-            <button className="primary-button" type="submit">
-              <RefreshCw size={17} />
-              生成八字排盘分析
+            {error && <p className="form-error" role="alert">{error}</p>}
+            <button className="primary-button" disabled={loading} type="submit">
+              <RefreshCw className={loading ? 'spin-icon' : ''} size={17} />
+              {loading ? '正在校正并排盘…' : '生成八字排盘分析'}
             </button>
             <button className="secondary-button" onClick={onReset} type="button">
               <RotateCcw size={16} />
@@ -4065,7 +4326,16 @@ export default function App() {
   const [learningBackStep, setLearningBackStep] = useState<AppStep>('login');
   const [activeNav, setActiveNav] = useState<NavTarget>('paipan');
   const [toast, setToast] = useState('');
-  const { reading, error } = useMemo(() => createReadingSafely(submitted), [submitted]);
+  const [archives, setArchives] = useState<ArchiveRecord[]>(() => archiveRepository.list());
+  const [currentArchiveId, setCurrentArchiveId] = useState<string>();
+  const [persistArchive, setPersistArchive] = useState(true);
+  const [policyView, setPolicyView] = useState<PolicyView | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [consentAccepted, setConsentAccepted] = useState(() => Boolean(getPrivacyPreferences()));
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(() => Boolean(getPrivacyPreferences()?.analytics));
+  const [reading, setReading] = useState<BaziReading | null>(null);
+  const [readingError, setReadingError] = useState('');
+  const [readingLoading, setReadingLoading] = useState(false);
   const paipanRef = useRef<HTMLDivElement>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const usefulRef = useRef<HTMLDivElement>(null);
@@ -4080,6 +4350,14 @@ export default function App() {
     const timer = window.setTimeout(() => setToast(''), 2200);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    if (step !== 'report' || !reading || !persistArchive) return;
+    const saved = archiveRepository.save(submitted, reading, currentArchiveId);
+    setCurrentArchiveId(saved.id);
+    setArchives(archiveRepository.list());
+    trackEvent('reading_generated', { calendar: submitted.calendarType, trueSolar: submitted.timeMode === 'clock', unknownHour: submitted.unknownHour });
+  }, [currentArchiveId, persistArchive, reading, step, submitted]);
 
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
@@ -4141,34 +4419,109 @@ export default function App() {
   const resetCase = () => {
     setInput(initialInput);
     setSubmitted(initialInput);
+    setReadingError('');
     setToast('已重置为默认案例');
     setActiveNav('paipan');
+    setCurrentArchiveId(undefined);
   };
 
+  const downloadJson = (value: unknown, filename: string) => {
+    const blob = new Blob([JSON.stringify(value, null, 2)], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const generateReading = async (nextInput: BirthInput, archiveId?: string) => {
+    setReadingLoading(true);
+    setReadingError('');
+    const result = await createReadingSafely(nextInput);
+    setReadingLoading(false);
+    if (!result.reading) {
+      setReadingError(result.error);
+      return false;
+    }
+    setInput(nextInput);
+    setSubmitted(nextInput);
+    setReading(result.reading);
+    setCurrentArchiveId(archiveId);
+    setActiveNav('paipan');
+    setStep('report');
+    return true;
+  };
+
+  const openArchive = async (archive: ArchiveRecord) => {
+    setInput(archive.input);
+    setPersistArchive(true);
+    if (await generateReading(archive.input, archive.id)) trackEvent('archive_opened');
+  };
+
+  const wrapPage = (page: ReactNode) => (
+    <>
+      {page}
+      <OperationsFooter onFeedback={() => setFeedbackOpen(true)} onOpenPolicy={setPolicyView} />
+      {policyView && <PolicyDialog archives={archives} onClearData={() => {
+        if (!window.confirm('确定删除当前浏览器中的全部山易排盘数据吗？此操作无法撤销。')) return;
+        clearLocalProductData();
+        setArchives([]);
+        setConsentAccepted(false);
+        setAnalyticsEnabled(false);
+        setCurrentArchiveId(undefined);
+        setPolicyView(null);
+        setStep('login');
+        setToast('本机数据已全部删除');
+      }} onClose={() => setPolicyView(null)} onExportData={() => {
+        downloadJson(exportLocalProductData(), `山易排盘-我的数据-${new Date().toISOString().slice(0, 10)}.json`);
+        setToast('本机数据已导出');
+      }} view={policyView} />}
+      {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} onSubmitted={(remote) => {
+        setFeedbackOpen(false);
+        setToast(remote ? '反馈已提交' : '反馈已保存在本机；接入反馈服务后可自动同步');
+      }} />}
+    </>
+  );
+
   if (step === 'login') {
-    return (
+    return wrapPage(
       <LoginPage
+        analyticsEnabled={analyticsEnabled}
+        consentAccepted={consentAccepted}
+        onAnalyticsChange={setAnalyticsEnabled}
         onChangeName={(name) => setInput((current) => ({ ...current, name }))}
+        onConsentChange={setConsentAccepted}
         onGuest={() => {
-          setToast('已进入游客体验');
+          savePrivacyPreferences(analyticsEnabled);
+          setInput((current) => ({ ...current, name: '游客' }));
+          setPersistArchive(false);
+          setToast('已进入不建名档体验');
           setStep('home');
         }}
         onLogin={() => {
-          setToast('登录成功');
+          savePrivacyPreferences(analyticsEnabled);
+          setPersistArchive(true);
+          trackEvent('workspace_entered');
+          setToast('已进入本机工作台');
           setStep('home');
         }}
+        onOpenPolicy={setPolicyView}
         profileName={input.name}
-      />
+/>
     );
   }
 
   if (step === 'home') {
-    return (
+    return wrapPage(
       <>
         <HomePage
-          onBazi={() => setStep('birth')}
+          archives={archives}
+          onBazi={() => { setCurrentArchiveId(undefined); setStep('birth'); }}
+          onDeleteArchive={(id) => { archiveRepository.remove(id); setArchives(archiveRepository.list()); setToast('本机档案已删除'); }}
           onLearning={openLearning}
           onLogout={() => setStep('login')}
+          onOpenArchive={openArchive}
           onYijing={openYijing}
           profileName={input.name}
         />
@@ -4178,7 +4531,7 @@ export default function App() {
   }
 
   if (step === 'learning') {
-    return (
+    return wrapPage(
       <LearningPage
         onBack={() => setStep(learningBackStep === 'learning' ? 'login' : learningBackStep)}
         onGoBazi={() => setStep('birth')}
@@ -4188,7 +4541,7 @@ export default function App() {
   }
 
   if (step === 'yijing') {
-    return (
+    return wrapPage(
       <>
         <YijingPage
           onBack={() => setStep(yijingBackStep === 'yijing' ? 'login' : yijingBackStep)}
@@ -4201,21 +4554,19 @@ export default function App() {
   }
 
   if (step === 'birth') {
-    return (
+    return wrapPage(
       <>
         <BirthSetupPage
+          error={readingError}
           input={input}
+          loading={readingLoading}
           onBack={() => setStep('home')}
           onChange={setInput}
           onLearning={openLearning}
           onYijing={openYijing}
           onReset={resetCase}
-          onSubmit={(nextInput) => {
-            setInput(nextInput);
-            setSubmitted(nextInput);
-            setActiveNav('paipan');
-            setStep('report');
-            setToast('排盘已生成');
+          onSubmit={async (nextInput) => {
+            if (await generateReading(nextInput)) setToast('排盘已生成');
           }}
         />
         {toast && <div className="toast">{toast}</div>}
@@ -4223,12 +4574,12 @@ export default function App() {
     );
   }
 
-  return (
+  return wrapPage(
     <main className="report-shell">
       <ReportTopNav activeNav={activeNav} onHome={() => setStep('home')} onLearning={openLearning} onNavigate={scrollTo} onYijing={openYijing} />
 
       <div className="report-main">
-        {error && <div className="error-box">{error}</div>}
+        {readingError && <div className="error-box">{readingError}</div>}
         {reading && (
           <>
             <TopProfile

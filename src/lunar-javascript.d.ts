@@ -11,6 +11,17 @@ declare module 'lunar-javascript' {
     fromYmd(year: number, month: number, day: number): SolarDate;
   };
 
+  export const Lunar: {
+    fromYmdHms(
+      year: number | string,
+      month: number | string,
+      day: number | string,
+      hour: number | string,
+      minute: number | string,
+      second: number | string,
+    ): LunarDate;
+  };
+
   export interface SolarDate {
     getYear(): number;
     getMonth(): number;
@@ -40,6 +51,7 @@ declare module 'lunar-javascript' {
   }
 
   export interface EightChar {
+    setSect(sect: 1 | 2): void;
     getYear(): string;
     getMonth(): string;
     getDay(): string;
