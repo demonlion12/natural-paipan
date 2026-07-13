@@ -42,6 +42,18 @@ export type LearningPath = {
   outcome: string;
 };
 
+export type KnowledgeQuizQuestion = {
+  id: string;
+  level: '入门' | '进阶' | '实战';
+  category: '基础' | '强弱' | '关系' | '取用' | '岁运' | '古籍';
+  prompt: string;
+  options: string[];
+  answer: number;
+  explanation: string;
+  moduleId: string;
+  lessonId: string;
+};
+
 export type ClassicExcerpt = {
   id: string;
   book: string;
@@ -500,6 +512,39 @@ export const learningPaths: LearningPath[] = [
   { id: 'climate', title: '调候专项', audience: '想深入寒暖燥湿', duration: '10天', summary: '从十二月令出发，将调候、扶抑和现实改善方案区分开。', moduleIds: ['structure-useful', 'climate-calendar', 'useful-god-method', 'case-workshop'], outcome: '能完成寒暖燥湿诊断，并控制补偏的先后与剂量。' },
   { id: 'timing', title: '岁运实战', audience: '想学习大运流年', duration: '12天', summary: '从原局到大运、流年、流月逐层定位，用过去事件回测。', moduleIds: ['luck-cycle', 'monthly-practice', 'case-validation', 'case-workshop'], outcome: '能建立年度观察表和可验证的趋势判断。' },
   { id: 'classics', title: '古籍研读', audience: '想系统阅读原典', duration: '21天', summary: '先学习版本、正文与旧注层次，再精读调候、格局、岁运专题。', moduleIds: ['classic-reading', 'structure-useful', 'structure-patterns', 'climate-calendar'], outcome: '能区分原文、旧注和现代解释，不再断章套诀。' },
+];
+
+export const knowledgeQuizQuestions: KnowledgeQuizQuestion[] = [
+  { id: 'q01', level: '入门', category: '基础', prompt: '四柱分析中，十神关系以哪一个字为中心建立？', options: ['年干', '月支', '日干', '时干'], answer: 2, explanation: '日干又称日主、日元，是十神生克关系的中心坐标；月支则是判断季节与月令的重要入口。', moduleId: 'foundation', lessonId: 'four-pillars' },
+  { id: 'q02', level: '入门', category: '基础', prompt: '八字月柱通常在哪一类时间节点切换？', options: ['每月初一', '十二个节', '每月十五', '公历每月一日'], answer: 1, explanation: '干支月以节气中的“节”为分界，如立春、惊蛰、清明。农历初一并不是八字月柱的固定边界。', moduleId: 'foundation', lessonId: 'solar-terms' },
+  { id: 'q03', level: '入门', category: '基础', prompt: '下列哪一组完整呈现五行相生次序？', options: ['木火土金水木', '木土水火金木', '木水金土火木', '火木水金土火'], answer: 0, explanation: '木生火、火生土、土生金、金生水、水生木，构成连续的相生循环。', moduleId: 'yin-yang-elements', lessonId: 'generation-control' },
+  { id: 'q04', level: '入门', category: '基础', prompt: '关于阴阳，以下哪项表述更准确？', options: ['阳一定优于阴', '阴阳直接等于男女', '阴阳描述同一五行不同的表达方向', '阴干都没有行动力'], answer: 2, explanation: '阴阳用于描述显隐、动静、刚柔等表达方向，并非价值高低，也不能机械等同于性别。', moduleId: 'yin-yang-elements', lessonId: 'yin-yang' },
+  { id: 'q05', level: '入门', category: '基础', prompt: '“藏干”指的是什么？', options: ['没有写出的出生时间', '地支内部所含的天干', '大运中未出现的天干', '被合住的天干'], answer: 1, explanation: '十二地支各含一至三个天干，分本气、中气、余气；其权重并不完全相同。', moduleId: 'branches', lessonId: 'hidden-stems' },
+  { id: 'q06', level: '入门', category: '基础', prompt: '日主所生者，在十神六类关系中属于哪一组？', options: ['印星', '官杀', '食伤', '财星'], answer: 2, explanation: '我生者为食神、伤官；生我者为印；我克者为财；克我者为官杀。', moduleId: 'ten-gods', lessonId: 'ten-god-logic' },
+  { id: 'q07', level: '进阶', category: '强弱', prompt: '判断日主强弱时，哪一种做法最不可靠？', options: ['观察月令', '检查通根', '比较生扶与克泄耗', '只统计五行个数'], answer: 3, explanation: '同一个字因季节、根气、透藏、位置和组合不同，权重差别很大，不能只做数量加减。', moduleId: 'strength-roots', lessonId: 'four-strength-factors' },
+  { id: 'q08', level: '进阶', category: '强弱', prompt: '“得令”最直接表示什么？', options: ['得到长辈帮助', '符合月令季节旺相', '地支出现同类根', '天干数量最多'], answer: 1, explanation: '得令指某五行符合月令时气。它权重很高，但仍不能代替得地、得助和克泄耗的全局判断。', moduleId: 'strength-roots', lessonId: 'four-strength-factors' },
+  { id: 'q09', level: '进阶', category: '强弱', prompt: '天干“透而无根”通常应怎样理解？', options: ['必然完全无效', '显而不实，作用需看来源与岁运', '一定比藏干强', '自动成为用神'], answer: 1, explanation: '透干使作用可见，但无根无源时持续性和承载力有限；不能简单判为零，也不能视为稳定有力。', moduleId: 'stems', lessonId: 'stem-function' },
+  { id: 'q10', level: '进阶', category: '强弱', prompt: '十二长生在命局判断中的合理位置是什么？', options: ['单独决定吉凶', '替代月令', '作为根气与状态的辅助坐标', '只用于看寿命'], answer: 2, explanation: '十二长生描述阶段状态，应与月令、通根、透藏和组合并看，不宜孤立断事。', moduleId: 'strength-roots', lessonId: 'twelve-stages' },
+  { id: 'q11', level: '进阶', category: '关系', prompt: '看到天干五合时，第一步应先判断什么？', options: ['立即改成化神五行', '先看牵引与合绊，再审合化条件', '直接断婚姻', '忽略双方强弱'], answer: 1, explanation: '合而不化很常见。应先观察双方是否被牵引、是否影响原有功能，再看月令、化神与整体气势是否支持合化。', moduleId: 'relations-deep', lessonId: 'combine-transform' },
+  { id: 'q12', level: '进阶', category: '关系', prompt: '下列哪一项不是地支三合局？', options: ['申子辰水局', '亥卯未木局', '寅午戌火局', '寅卯辰木局'], answer: 3, explanation: '寅卯辰是东方木三会方；三合木局为亥卯未。三合与三会的形成逻辑不同。', moduleId: 'relations-deep', lessonId: 'combine-transform' },
+  { id: 'q13', level: '进阶', category: '关系', prompt: '对“六冲”最稳妥的理解是？', options: ['一见必有灾', '只代表身体疾病', '常提示位移、变化、对立或结构松动', '一定能冲开墓库'], answer: 2, explanation: '冲是作用方式，不是固定吉凶。它可能带来搬迁、调整、分离或激活，结果取决于被冲对象和全局喜忌。', moduleId: 'relations-deep', lessonId: 'clash-punish-harm' },
+  { id: 'q14', level: '进阶', category: '关系', prompt: '处理合、冲、刑、害等多重关系时，优先级通常应首先参考什么？', options: ['神煞数量', '月令、旺衰、位置与是否成局', '口诀字数', '生肖属相'], answer: 1, explanation: '关系是否成立及其权重，首先取决于时令、力量、位置、透干和成局条件，辅助关系不应压过主结构。', moduleId: 'relations-deep', lessonId: 'relation-priority' },
+  { id: 'q15', level: '进阶', category: '取用', prompt: '“用神”最准确的工作定义是？', options: ['命局中数量最少的五行', '固定带来好运的颜色', '解决主要结构矛盾的关键作用', '日主同五行'], answer: 2, explanation: '用神服务于具体问题，可能用于格局、扶抑、调候或通关；不能用“缺什么补什么”替代结构判断。', moduleId: 'structure-useful', lessonId: 'useful-god' },
+  { id: 'q16', level: '进阶', category: '取用', prompt: '格局取用、扶抑取用、调候取用与通关取用之间是什么关系？', options: ['四者永远相同', '只能选择其中一种', '分别解决不同层面的矛盾，需要综合主次', '只需看调候'], answer: 2, explanation: '四层模型的观察对象不同，结论可能重合也可能分开。专业分析应说明每一层解决什么问题，再排先后。', moduleId: 'useful-god-method', lessonId: 'four-useful-layers' },
+  { id: 'q17', level: '进阶', category: '取用', prompt: '冬月命局见火，就能直接判定寒气已解吗？', options: ['能，见火即暖', '不能，还要看火的根、源、位置和受制', '只看火的数量', '只看年干是否为火'], answer: 1, explanation: '调候不能只数五行。无根虚火、受水冲克之火与得根有源之火，实际温暖能力完全不同。', moduleId: 'climate-calendar', lessonId: 'twelve-climates' },
+  { id: 'q18', level: '进阶', category: '取用', prompt: '燥土与湿土在调候中的差异，以下哪项较准确？', options: ['四土完全相同', '燥土偏收燥，湿土偏蓄水转化', '湿土一定是忌神', '燥土一定生金'], answer: 1, explanation: '辰丑多带湿蓄，未戌偏燥；但具体作用仍要结合季节、藏干、透干与刑冲合化。', moduleId: 'climate-calendar', lessonId: 'wet-dry-earth' },
+  { id: 'q19', level: '实战', category: '取用', prompt: '候选用神透出但被合绊、无根且受克，分析时应如何表述？', options: ['用神明确而有力', '用神存在但可用度低，需要根源或岁运扶起', '直接删除这个字', '一定从格'], answer: 1, explanation: '专业表达应区分“出现”和“可用”。根、源、位置、受制决定候选用神能否真正解决命局问题。', moduleId: 'useful-god-method', lessonId: 'useful-real-false' },
+  { id: 'q20', level: '实战', category: '岁运', prompt: '大运、流年、流月的合理分工是？', options: ['三者权重完全一样', '大运定阶段背景，流年触发主题，流月细化落点', '只看流年即可', '流月能推翻原局'], answer: 1, explanation: '原局是底图，大运改变长期环境，流年集中触发，流月用于缩小时间窗口；后层不能脱离前层独立解释。', moduleId: 'monthly-practice', lessonId: 'time-layers' },
+  { id: 'q21', level: '实战', category: '岁运', prompt: '复盘一次已经发生的职业变化，第一步最好做什么？', options: ['先套十神断语', '先记录事件事实与准确时间', '先找神煞', '先判断吉凶等级'], answer: 1, explanation: '先保存事实，才能避免事后挑选解释。之后再标注原局主题、大运背景、流年触发与流月落点。', moduleId: 'case-validation', lessonId: 'case-record' },
+  { id: 'q22', level: '实战', category: '岁运', prompt: '伏吟最稳妥的解释方式是？', options: ['必然发生丧事', '重复的干支主题被加强或反复', '一定升职', '完全没有作用'], answer: 1, explanation: '伏吟强调重复、回响与同类主题加重，具体表现仍由被重复的宫位、十神、喜忌与现实处境决定。', moduleId: 'luck-cycle', lessonId: 'annual-monthly' },
+  { id: 'q23', level: '实战', category: '岁运', prompt: '当两套强弱判断都能解释部分事实时，较专业的做法是？', options: ['选择更吉利的一套', '列出双方证据并用过去岁运比较解释力', '把结论写得更绝对', '只参考五行百分比'], answer: 1, explanation: '边界命局应保留不确定性，通过证据权重和历史事件回测缩小范围，而不是用更强的语气掩盖分歧。', moduleId: 'case-workshop', lessonId: 'strength-dispute' },
+  { id: 'q24', level: '实战', category: '岁运', prompt: '下面哪一种写法最符合“可验证命理分析”？', options: ['你一生必定大富', '此运较好', '若此结构判断成立，相关年份应更容易出现岗位调整，可用实际记录反证', '贵人很多'], answer: 2, explanation: '可验证表达需要条件、观察对象和反证入口，避免不可证伪的宽泛断语。', moduleId: 'case-validation', lessonId: 'claim-evidence' },
+  { id: 'q25', level: '入门', category: '古籍', prompt: '阅读古籍时，为什么要区分正文、旧注与现代导读？', options: ['为了让页面更长', '三者作者、时代和解释层次不同', '旧注一定错误', '现代导读就是原文'], answer: 1, explanation: '正文、历代注释与现代整理者的说明属于不同文本层，混在一起会造成错误引用和时代语境错置。', moduleId: 'classic-reading', lessonId: 'text-layers' },
+  { id: 'q26', level: '进阶', category: '古籍', prompt: '用古籍口诀判断具体命盘前，最重要的校验是什么？', options: ['口诀是否听起来顺口', '版本、上下文与适用前提', '是否能直接断富贵', '字数是否足够短'], answer: 1, explanation: '同一句话在不同版本、篇章语境和论法体系中可能含义不同，脱离前提套诀容易误判。', moduleId: 'classic-reading', lessonId: 'edition-check' },
+  { id: 'q27', level: '进阶', category: '古籍', prompt: '《穷通宝鉴》最适合重点训练哪一类分析？', options: ['六爻纳甲', '月令气候与十干调候', '紫微斗数', '生肖配对'], answer: 1, explanation: '《穷通宝鉴》以月令、十干及寒暖燥湿为重要组织线索，适合训练调候思路，但仍需结合结构判断。', moduleId: 'classic-reading', lessonId: 'context-reading' },
+  { id: 'q28', level: '进阶', category: '古籍', prompt: '古籍中的命例应如何使用？', options: ['见到一字相同就照搬结论', '提取论证路径，并检查自己的命盘是否满足同样条件', '只记结论不看过程', '当作现代统计数据'], answer: 1, explanation: '命例的价值在于展示作者如何从结构走向判断；迁移时必须核对月令、根气、组合和岁运条件。', moduleId: 'classic-reading', lessonId: 'context-reading' },
+  { id: 'q29', level: '实战', category: '取用', prompt: '根据调候提出改善方案时，哪种方法更可靠？', options: ['只推荐固定颜色和饰品', '从作息、空间、活动、节律和风险边界综合设计，并观察反馈', '补得越多越好', '完全忽略现实健康条件'], answer: 1, explanation: '传统取象应转成低风险、可执行、可反馈的生活策略；物品只是弱提示，不能代替环境、行为和专业建议。', moduleId: 'case-workshop', lessonId: 'climate-case' },
+  { id: 'q30', level: '实战', category: '关系', prompt: '神煞在完整命局分析中的合理权重是？', options: ['高于月令和格局', '用于辅助取象，服从五行结构和岁运触发', '数量越多越凶', '可以单独决定婚姻事业'], answer: 1, explanation: '神煞适合补充象意和事件语言，但不能压过月令、旺衰、格局、干支组合及岁运层次。', moduleId: 'special-markers', lessonId: 'shen-sha' },
 ];
 
 export const knowledgeTerms: KnowledgeTerm[] = [

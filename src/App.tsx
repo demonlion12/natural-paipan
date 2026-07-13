@@ -3,6 +3,7 @@ import type { FormEvent, RefObject } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
+  Bookmark,
   BookOpen,
   CalendarDays,
   CheckCircle2,
@@ -25,7 +26,7 @@ import {
 import { Solar } from 'lunar-javascript';
 import { readingService } from './adapters/readingService';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
-import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, knowledgeTerms, learningPaths, stemQuickReference, tenGodQuickReference } from './knowledge';
+import { branchQuickReference, classicExcerpts, classicShelf, knowledgeModules, knowledgeQuizQuestions, knowledgeTerms, learningPaths, stemQuickReference, tenGodQuickReference } from './knowledge';
 import type { ClassicBook, ClassicChapter } from './knowledge';
 
 const initialInput: BirthInput = {
@@ -2604,8 +2605,10 @@ function buildReportText(reading: BaziReading) {
   ].join('\n');
 }
 
-type LearningView = 'paths' | 'curriculum' | 'glossary' | 'classics' | 'reference';
+type LearningView = 'paths' | 'curriculum' | 'practice' | 'glossary' | 'classics' | 'reference';
 type ClassicLibraryMode = 'shelf' | 'reader' | 'excerpts';
+type QuizAttempt = { selected: number; correct: boolean };
+type PracticeFilter = '全部' | '未作答' | '错题';
 
 function getClassicRelatedModules(bookId: string, chapterTitle: string) {
   const ids = new Set<string>(['classic-reading']);
@@ -2637,6 +2640,31 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
   const [activeChapterId, setActiveChapterId] = useState('01');
   const [readerLayer, setReaderLayer] = useState<'all' | 'original' | 'guide'>('all');
   const [termCategory, setTermCategory] = useState('全部');
+  const [practiceCategory, setPracticeCategory] = useState('全部');
+  const [practiceFilter, setPracticeFilter] = useState<PracticeFilter>('全部');
+  const [activeQuizId, setActiveQuizId] = useState(knowledgeQuizQuestions[0].id);
+  const [selectedQuizAnswer, setSelectedQuizAnswer] = useState<number | null>(null);
+  const [quizAttempts, setQuizAttempts] = useState<Record<string, QuizAttempt>>(() => {
+    try {
+      return JSON.parse(window.localStorage.getItem('shanyi-quiz-attempts') || '{}') as Record<string, QuizAttempt>;
+    } catch {
+      return {};
+    }
+  });
+  const [classicBookmarks, setClassicBookmarks] = useState<string[]>(() => {
+    try {
+      return JSON.parse(window.localStorage.getItem('shanyi-classic-bookmarks') || '[]') as string[];
+    } catch {
+      return [];
+    }
+  });
+  const [classicReadingPositions, setClassicReadingPositions] = useState<Record<string, string>>(() => {
+    try {
+      return JSON.parse(window.localStorage.getItem('shanyi-classic-positions') || '{}') as Record<string, string>;
+    } catch {
+      return {};
+    }
+  });
   const chapterLoadRequest = useRef(0);
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
     try {
@@ -2670,10 +2698,25 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
     const matchesQuery = !normalizedQuery || [term.term, ...term.aliases, term.definition, term.caution].join(' ').toLowerCase().includes(normalizedQuery);
     return matchesCategory && matchesQuery;
   });
+  const practiceCategories = ['全部', ...new Set(knowledgeQuizQuestions.map((question) => question.category))];
+  const filteredQuizQuestions = knowledgeQuizQuestions.filter((question) => {
+    const attempt = quizAttempts[question.id];
+    const matchesCategory = practiceCategory === '全部' || question.category === practiceCategory;
+    const matchesFilter = practiceFilter === '全部' || (practiceFilter === '未作答' ? !attempt : Boolean(attempt && !attempt.correct));
+    return matchesCategory && matchesFilter;
+  });
+  const activeQuizQuestion = filteredQuizQuestions.find((question) => question.id === activeQuizId) ?? filteredQuizQuestions[0];
+  const activeQuizAttempt = activeQuizQuestion ? quizAttempts[activeQuizQuestion.id] : undefined;
+  const activeQuizModule = activeQuizQuestion ? knowledgeModules.find((module) => module.id === activeQuizQuestion.moduleId) : undefined;
+  const activeQuizLesson = activeQuizModule?.lessons.find((lesson) => lesson.id === activeQuizQuestion?.lessonId);
+  const answeredQuizCount = Object.keys(quizAttempts).filter((id) => knowledgeQuizQuestions.some((question) => question.id === id)).length;
+  const correctQuizCount = Object.entries(quizAttempts).filter(([id, attempt]) => attempt.correct && knowledgeQuizQuestions.some((question) => question.id === id)).length;
+  const wrongQuizCount = Object.entries(quizAttempts).filter(([id, attempt]) => !attempt.correct && knowledgeQuizQuestions.some((question) => question.id === id)).length;
   const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
   const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
   const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
   const relatedModules = activeChapter && classicBook ? getClassicRelatedModules(classicBook.id, activeChapter.title) : [];
+  const activeBookmarkKey = classicBook && activeChapter ? `${classicBook.id}:${activeChapter.id}` : '';
 
   const loadClassicChapter = async (book: ClassicBook, chapterId: string) => {
     const chapter = book.chapters.find((item) => item.id === chapterId);
@@ -2714,6 +2757,11 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
     if (!book) return;
     setActiveChapterId(chapterId);
     setActiveChapterData(null);
+    setClassicReadingPositions((current) => {
+      const next = { ...current, [book.id]: chapterId };
+      window.localStorage.setItem('shanyi-classic-positions', JSON.stringify(next));
+      return next;
+    });
     void loadClassicChapter(book, chapterId);
   };
 
@@ -2738,9 +2786,16 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
         // The reader works without persistent storage when the browser blocks it.
       }
       setClassicBook(book);
-      const firstChapterId = targetChapterId && book.chapters.some((chapter) => chapter.id === targetChapterId) ? targetChapterId : book.chapters[0]?.id ?? '01';
+      const rememberedChapterId = classicReadingPositions[book.id];
+      const requestedChapterId = targetChapterId ?? rememberedChapterId;
+      const firstChapterId = requestedChapterId && book.chapters.some((chapter) => chapter.id === requestedChapterId) ? requestedChapterId : book.chapters[0]?.id ?? '01';
       setActiveChapterId(firstChapterId);
       setActiveChapterData(null);
+      setClassicReadingPositions((current) => {
+        const next = { ...current, [book.id]: firstChapterId };
+        window.localStorage.setItem('shanyi-classic-positions', JSON.stringify(next));
+        return next;
+      });
       void loadClassicChapter(book, firstChapterId);
     } catch (error) {
       setClassicError(error instanceof Error ? error.message : '古籍载入失败');
@@ -2764,6 +2819,55 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
       window.localStorage.setItem('shanyi-learning-progress', JSON.stringify(next));
       return next;
     });
+  };
+
+  const toggleClassicBookmark = () => {
+    if (!activeBookmarkKey) return;
+    setClassicBookmarks((current) => {
+      const next = current.includes(activeBookmarkKey) ? current.filter((key) => key !== activeBookmarkKey) : [...current, activeBookmarkKey];
+      window.localStorage.setItem('shanyi-classic-bookmarks', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const chooseQuizQuestion = (questionId: string) => {
+    setActiveQuizId(questionId);
+    setSelectedQuizAnswer(null);
+  };
+
+  const submitQuizAnswer = () => {
+    if (!activeQuizQuestion || selectedQuizAnswer === null || activeQuizAttempt) return;
+    const nextAttempt = { selected: selectedQuizAnswer, correct: selectedQuizAnswer === activeQuizQuestion.answer };
+    setQuizAttempts((current) => {
+      const next = { ...current, [activeQuizQuestion.id]: nextAttempt };
+      window.localStorage.setItem('shanyi-quiz-attempts', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const retryQuizQuestion = () => {
+    if (!activeQuizQuestion) return;
+    setQuizAttempts((current) => {
+      const next = { ...current };
+      delete next[activeQuizQuestion.id];
+      window.localStorage.setItem('shanyi-quiz-attempts', JSON.stringify(next));
+      return next;
+    });
+    setSelectedQuizAnswer(null);
+  };
+
+  const moveQuizQuestion = () => {
+    if (!activeQuizQuestion || !filteredQuizQuestions.length) return;
+    const index = filteredQuizQuestions.findIndex((question) => question.id === activeQuizQuestion.id);
+    const next = filteredQuizQuestions[(index + 1) % filteredQuizQuestions.length];
+    chooseQuizQuestion(next.id);
+  };
+
+  const openQuizCourse = () => {
+    if (!activeQuizQuestion) return;
+    setActiveModuleId(activeQuizQuestion.moduleId);
+    setQuery('');
+    setView('curriculum');
   };
 
   const renderLesson = (lesson: (typeof knowledgeModules)[number]['lessons'][number], moduleTitle?: string) => {
@@ -2842,6 +2946,9 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
           <button aria-selected={view === 'curriculum'} className={view === 'curriculum' ? 'active' : ''} onClick={() => setView('curriculum')} role="tab" type="button">
             <BookOpen size={17} /> 课程体系
           </button>
+          <button aria-selected={view === 'practice'} className={view === 'practice' ? 'active' : ''} onClick={() => { setView('practice'); setQuery(''); }} role="tab" type="button">
+            <CheckCircle2 size={17} /> 练习复盘
+          </button>
           <button aria-selected={view === 'glossary'} className={view === 'glossary' ? 'active' : ''} onClick={() => { setView('glossary'); setQuery(''); }} role="tab" type="button">
             <FileText size={17} /> 术语词典
           </button>
@@ -2852,7 +2959,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
             <Search size={17} /> 基础速查
           </button>
         </div>
-        {view !== 'paths' && view !== 'reference' && <label className="knowledge-search">
+        {view !== 'paths' && view !== 'practice' && view !== 'reference' && <label className="knowledge-search">
           <Search size={17} />
           <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、十神、调候或古籍篇名" value={query} />
         </label>}
@@ -2864,6 +2971,7 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
             <div><strong>{knowledgeModules.length}</strong><span>课程章节</span></div>
             <div><strong>{totalLessons}</strong><span>核心课节</span></div>
             <div><strong>{knowledgeTerms.length}</strong><span>术语词条</span></div>
+            <div><strong>{knowledgeQuizQuestions.length}</strong><span>分层练习</span></div>
             <div><strong>{classicShelf.filter((book) => 'path' in book).length}</strong><span>全文古籍</span></div>
           </div>
           <div className="knowledge-section-head">
@@ -2933,6 +3041,66 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
         </section>
       )}
 
+      {view === 'practice' && (
+        <section className="practice-library">
+          <div className="practice-summary">
+            <div><span>题库</span><strong>{knowledgeQuizQuestions.length}</strong><small>道结构化练习</small></div>
+            <div><span>已作答</span><strong>{answeredQuizCount}</strong><small>{Math.round((answeredQuizCount / knowledgeQuizQuestions.length) * 100)}% 完成</small></div>
+            <div><span>正确</span><strong>{correctQuizCount}</strong><small>{answeredQuizCount ? Math.round((correctQuizCount / answeredQuizCount) * 100) : 0}% 正确率</small></div>
+            <div><span>待复盘</span><strong>{wrongQuizCount}</strong><small>错题可反复重做</small></div>
+          </div>
+          <div className="practice-controls">
+            <div className="practice-categories" aria-label="练习分类">
+              {practiceCategories.map((category) => <button className={practiceCategory === category ? 'active' : ''} key={category} onClick={() => { setPracticeCategory(category); setActiveQuizId(''); setSelectedQuizAnswer(null); }} type="button">{category}</button>)}
+            </div>
+            <div className="practice-filter" aria-label="作答状态">
+              {(['全部', '未作答', '错题'] as PracticeFilter[]).map((filter) => <button className={practiceFilter === filter ? 'active' : ''} key={filter} onClick={() => { setPracticeFilter(filter); setActiveQuizId(''); setSelectedQuizAnswer(null); }} type="button">{filter}{filter === '错题' ? ` ${wrongQuizCount}` : ''}</button>)}
+            </div>
+          </div>
+          <div className="practice-layout">
+            <aside className="question-index">
+              <header><strong>题目目录</strong><span>{filteredQuizQuestions.length} 题</span></header>
+              <div>
+                {filteredQuizQuestions.map((question, index) => {
+                  const attempt = quizAttempts[question.id];
+                  return <button className={[activeQuizQuestion?.id === question.id ? 'active' : '', attempt ? (attempt.correct ? 'correct' : 'wrong') : ''].filter(Boolean).join(' ')} key={question.id} onClick={() => chooseQuizQuestion(question.id)} type="button"><span>{String(index + 1).padStart(2, '0')}</span><div><strong>{question.category} · {question.level}</strong><small>{attempt ? (attempt.correct ? '已掌握' : '待复盘') : '未作答'}</small></div></button>;
+                })}
+              </div>
+            </aside>
+            {activeQuizQuestion ? (
+              <article className="quiz-panel">
+                <header>
+                  <div><span>{activeQuizQuestion.category} · {activeQuizQuestion.level}</span><small>{knowledgeQuizQuestions.findIndex((question) => question.id === activeQuizQuestion.id) + 1} / {knowledgeQuizQuestions.length}</small></div>
+                  <h2>{activeQuizQuestion.prompt}</h2>
+                </header>
+                <div className="quiz-options">
+                  {activeQuizQuestion.options.map((option, index) => {
+                    const shownSelection = activeQuizAttempt?.selected ?? selectedQuizAnswer;
+                    const isCorrect = Boolean(activeQuizAttempt && index === activeQuizQuestion.answer);
+                    const isWrong = Boolean(activeQuizAttempt && index === activeQuizAttempt.selected && !activeQuizAttempt.correct);
+                    return <button className={[shownSelection === index ? 'selected' : '', isCorrect ? 'correct' : '', isWrong ? 'wrong' : ''].filter(Boolean).join(' ')} disabled={Boolean(activeQuizAttempt)} key={option} onClick={() => setSelectedQuizAnswer(index)} type="button"><span>{String.fromCharCode(65 + index)}</span><p>{option}</p>{isCorrect && <CheckCircle2 size={18} />}</button>;
+                  })}
+                </div>
+                {activeQuizAttempt && (
+                  <div className={activeQuizAttempt.correct ? 'quiz-feedback correct' : 'quiz-feedback wrong'}>
+                    <strong>{activeQuizAttempt.correct ? '回答正确' : `正确答案：${String.fromCharCode(65 + activeQuizQuestion.answer)}`}</strong>
+                    <p>{activeQuizQuestion.explanation}</p>
+                  </div>
+                )}
+                <div className="quiz-actions">
+                  {!activeQuizAttempt ? <button className="primary-button" disabled={selectedQuizAnswer === null} onClick={submitQuizAnswer} type="button">确认答案</button> : <button className="secondary-button" onClick={retryQuizQuestion} type="button"><RotateCcw size={15} /> 重做此题</button>}
+                  <button className="secondary-button" onClick={moveQuizQuestion} type="button">下一题 <ArrowRight size={15} /></button>
+                </div>
+                <footer className="quiz-course-link">
+                  <div><span>对应知识点</span><strong>{activeQuizModule?.title} · {activeQuizLesson?.title}</strong></div>
+                  <button onClick={openQuizCourse} type="button">回到课程复习 <ArrowRight size={14} /></button>
+                </footer>
+              </article>
+            ) : <div className="empty-knowledge">当前筛选下没有题目。完成答题后，错题会自动进入复盘列表。</div>}
+          </div>
+        </section>
+      )}
+
       {view === 'classics' && (
         <section className="classics-library">
           <div className="classic-library-nav" role="tablist" aria-label="古籍阅读方式">
@@ -2956,9 +3124,10 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                       <span>{book.dynasty} · {book.chapterCount} {book.id === 'lixu' ? '卷' : '篇'}</span>
                       <h2>{book.title}</h2>
                       <p>{book.summary}</p>
+                      {ready && classicReadingPositions[book.id] && <small className="classic-book-resume">上次读至第 {Number(classicReadingPositions[book.id])} 篇</small>}
                     </div>
                     <button disabled={!ready} onClick={() => openClassicBook(book.id)} type="button">
-                      {ready ? <>阅读全文 <ArrowRight size={15} /></> : '全文校勘中'}
+                      {ready ? <>{classicReadingPositions[book.id] ? '继续阅读' : '阅读全文'} <ArrowRight size={15} /></> : '全文校勘中'}
                     </button>
                   </article>
                 );
@@ -2987,10 +3156,13 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                       <article className="classic-chapter">
                         <div className="classic-chapter-title">
                           <div><span>第 {Number(activeChapter.id)} 篇</span><h1>{activeChapter.title}</h1></div>
-                          <div className="reader-layer-switch" aria-label="阅读层次">
-                            <button className={readerLayer === 'all' ? 'active' : ''} onClick={() => setReaderLayer('all')} type="button">对照</button>
-                            <button className={readerLayer === 'original' ? 'active' : ''} onClick={() => setReaderLayer('original')} type="button">原文</button>
-                            <button className={readerLayer === 'guide' ? 'active' : ''} onClick={() => setReaderLayer('guide')} type="button">导读</button>
+                          <div className="reader-actions">
+                            <button aria-label={classicBookmarks.includes(activeBookmarkKey) ? '取消书签' : '添加书签'} className={classicBookmarks.includes(activeBookmarkKey) ? 'reader-bookmark active' : 'reader-bookmark'} onClick={toggleClassicBookmark} title={classicBookmarks.includes(activeBookmarkKey) ? '取消书签' : '添加书签'} type="button"><Bookmark fill={classicBookmarks.includes(activeBookmarkKey) ? 'currentColor' : 'none'} size={17} /></button>
+                            <div className="reader-layer-switch" aria-label="阅读层次">
+                              <button className={readerLayer === 'all' ? 'active' : ''} onClick={() => setReaderLayer('all')} type="button">对照</button>
+                              <button className={readerLayer === 'original' ? 'active' : ''} onClick={() => setReaderLayer('original')} type="button">原文</button>
+                              <button className={readerLayer === 'guide' ? 'active' : ''} onClick={() => setReaderLayer('guide')} type="button">导读</button>
+                            </div>
                           </div>
                         </div>
                         {readerLayer !== 'original' && <section className="chapter-guide"><strong>白话导读</strong><p>{activeChapter.guide}</p></section>}
@@ -3025,6 +3197,8 @@ function LearningPage({ onBack, onGoBazi, onYijing }: { onBack: () => void; onGo
                       <div className="classic-related-modules">
                         {relatedModules.map((module) => <button key={module.id} onClick={() => { setActiveModuleId(module.id); setQuery(''); setView('curriculum'); }} type="button">{module.title}<ArrowRight size={13} /></button>)}
                       </div>
+                      <strong>阅读记录</strong>
+                      <p>{classicBookmarks.filter((key) => key.startsWith(`${classicBook.id}:`)).length} 个书签 · 自动记住本书上次篇章</p>
                     </aside>
                   </div>
                 </>
