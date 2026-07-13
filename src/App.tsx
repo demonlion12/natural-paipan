@@ -289,6 +289,8 @@ const branchHiddenStems: Record<string, string[]> = {
 
 const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
 const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const changShengOrder = ['长生', '沐浴', '冠带', '临官', '帝旺', '衰', '病', '死', '墓', '绝', '胎', '养'];
+const changShengStart: Record<string, string> = { 甲: '亥', 乙: '午', 丙: '寅', 丁: '酉', 戊: '寅', 己: '酉', 庚: '巳', 辛: '子', 壬: '申', 癸: '卯' };
 const monthBranches = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
 const monthTerms = ['立春', '惊蛰', '清明', '立夏', '芒种', '小暑', '立秋', '白露', '寒露', '立冬', '大雪', '小寒'];
 const monthTermDates = [
@@ -722,6 +724,26 @@ function getElementRelation(fromElement: string, toElement: string) {
   return '制化';
 }
 
+function getStemBranchRelation(stem: string, branch: string) {
+  const stemWuXing = stemElement[stem];
+  const branchWuXing = branchElement[branch];
+  if (!stemWuXing || !branchWuXing) return '干支关系待定';
+  if (stemWuXing === branchWuXing) return '干支同气';
+  if (elementGenerates[branchWuXing as ElementName] === stemWuXing) return '坐下生身';
+  if (elementGenerates[stemWuXing as ElementName] === branchWuXing) return '天干泄秀';
+  if (elementControls[branchWuXing as ElementName] === stemWuXing) return '坐下受克';
+  if (elementControls[stemWuXing as ElementName] === branchWuXing) return '天干制支';
+  return '干支制化';
+}
+
+function getSelfDiShi(stem: string, branch: string) {
+  const startIndex = branches.indexOf(changShengStart[stem]);
+  const branchIndex = branches.indexOf(branch);
+  if (startIndex < 0 || branchIndex < 0) return '-';
+  const direction = stemPolarity[stem] === '阳' ? 1 : -1;
+  return changShengOrder[(direction * (branchIndex - startIndex) + 24) % 12];
+}
+
 function getPairRelations(a: string, b: string, rules: string[][]) {
   return rules.filter(([left, right]) => (left === a && right === b) || (left === b && right === a)).map(([, , label]) => label);
 }
@@ -924,6 +946,7 @@ function createVirtualColumn(label: string, ganZhi: string, reading: BaziReading
     branchTenGods: hiddenStems.map((hiddenStem) => getTenGod(reading.dayMaster.stem, hiddenStem)),
     shenSha: getShenShaForBranch(reading, stem, branch),
     diShi: '-',
+    selfDiShi: getSelfDiShi(stem, branch),
     xunKong: '-',
     naYin: '-',
   };
@@ -1072,6 +1095,16 @@ function TopProfile({
           <Download size={16} />
           导出
         </button>
+      </div>
+      <div className="profile-facts" aria-label="命盘基础坐标">
+        <div><span>性别</span><strong>{reading.input.gender === 'male' ? '男' : '女'}</strong></div>
+        <div><span>生肖</span><strong>{reading.zodiac}</strong></div>
+        <div><span>出生地</span><strong>{reading.input.birthplace || '未填写'}</strong></div>
+        <div><span>日主</span><strong>{reading.dayMaster.stem} · {reading.dayMaster.polarity}{reading.dayMaster.element}</strong></div>
+        <div><span>胎元</span><strong>{reading.structure.taiYuan}</strong></div>
+        <div><span>命宫</span><strong>{reading.structure.mingGong}</strong></div>
+        <div><span>身宫</span><strong>{reading.structure.shenGong}</strong></div>
+        <div><span>起运</span><strong>{reading.daYun.startText} · {reading.daYun.direction}</strong></div>
       </div>
     </section>
   );
@@ -1285,9 +1318,61 @@ function AncientReference({ reading }: { reading: BaziReading }) {
   );
 }
 
+function getStrengthEvidence(reading: BaziReading) {
+  const dayElement = reading.dayMaster.element;
+  const motherElement = (Object.keys(elementGenerates) as ElementName[]).find((element) => elementGenerates[element] === dayElement) ?? dayElement;
+  const outputElement = elementGenerates[dayElement];
+  const wealthElement = elementControls[dayElement];
+  const officerElement = elementControlledBy[dayElement];
+  const monthPillar = reading.pillars[1];
+  const monthMainStem = monthPillar.hiddenStems[0];
+  const monthMainElement = stemElement[monthMainStem] as ElementName;
+  const ratioOf = (elements: ElementName[]) => Math.round(reading.elementScores.filter((score) => elements.includes(score.element)).reduce((sum, score) => sum + score.ratio, 0) * 100);
+  const locationsFor = (elements: ElementName[]) => reading.pillars.flatMap((pillar) => [
+    ...(elements.includes(stemElement[pillar.stem] as ElementName) ? [`${pillar.label}${pillar.stem}透`] : []),
+    ...pillar.hiddenStems.flatMap((stem, index) => elements.includes(stemElement[stem] as ElementName) ? [`${pillar.label}${pillar.branch}藏${stem}${index === 0 ? '本气' : index === 1 ? '中气' : '余气'}`] : []),
+  ]);
+  const roots = reading.pillars.flatMap((pillar) => pillar.hiddenStems.flatMap((stem, index) => stemElement[stem] === dayElement ? [`${pillar.label}${pillar.branch}藏${stem}${index === 0 ? '本根' : index === 1 ? '中根' : '余根'}`] : []));
+  const supportLocations = locationsFor([dayElement, motherElement]);
+  const pressureLocations = locationsFor([outputElement, wealthElement, officerElement]);
+  return {
+    month: {
+      title: '月令司气',
+      value: `${monthPillar.branch}${branchElement[monthPillar.branch]} · ${seasonProfileByBranch[monthPillar.branch].season}`,
+      detail: `月令本气${monthMainStem}${monthMainElement}，对${dayElement}日主形成“${getElementRelation(monthMainElement, dayElement)}”的季节作用。${seasonProfileByBranch[monthPillar.branch].climate}。`,
+    },
+    roots: {
+      title: '得地通根',
+      value: roots.length ? `${roots.length} 处根气` : '原局无同类根',
+      detail: roots.length ? roots.join('；') : `四支藏干未见${dayElement}同类，日主承载更依赖${motherElement}印星与岁运补助。`,
+    },
+    support: {
+      title: '生扶力量',
+      value: `${ratioOf([dayElement, motherElement])}% 结构占比`,
+      detail: supportLocations.length ? supportLocations.join('；') : `原局未见明显${dayElement}比劫与${motherElement}印星来源。`,
+    },
+    pressure: {
+      title: '克泄耗力量',
+      value: `${ratioOf([outputElement, wealthElement, officerElement])}% 结构占比`,
+      detail: pressureLocations.length ? pressureLocations.join('；') : '食伤、财星、官杀在原局显性与根气均不突出。',
+    },
+    supportRatio: ratioOf([dayElement, motherElement]),
+  };
+}
+
+function getPillarRelationNotes(reading: BaziReading, pillar: Pillar) {
+  return reading.pillars.filter((other) => other.key !== pillar.key).flatMap((other) => {
+    const stemLinks = getPairRelations(pillar.stem, other.stem, combinePairs).map((relation) => `${pillar.label}与${other.label}天干：${relation}`);
+    const branchLinks = getPairRelations(pillar.branch, other.branch, branchRelations).map((relation) => `${pillar.label}与${other.label}地支：${relation}`);
+    const repeated = pillar.branch === other.branch ? [`${pillar.label}与${other.label}地支同见${pillar.branch}，主题有伏吟与重复倾向`] : [];
+    return [...stemLinks, ...branchLinks, ...repeated];
+  });
+}
+
 function PaipanSection({ reading, elementRef }: { reading: BaziReading; elementRef: RefObject<HTMLDivElement | null> }) {
   const stemNotes = collectPairNotes(reading.pillars.map((pillar) => pillar.stem), combinePairs, '无合冲关系');
   const branchNotes = collectPairNotes(reading.pillars.map((pillar) => pillar.branch), branchRelations, '未见明显冲合刑害');
+  const strengthEvidence = getStrengthEvidence(reading);
   const rows = [
     { label: '主星', render: (pillar: BaziReading['pillars'][number]) => <strong>{pillar.stemTenGod}</strong> },
     { label: '天干', render: (pillar: BaziReading['pillars'][number]) => <GanZhiGlyph value={pillar.stem} type="stem" /> },
@@ -1305,7 +1390,7 @@ function PaipanSection({ reading, elementRef }: { reading: BaziReading; elementR
       ),
     },
     { label: '星运', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.diShi}</span> },
-    { label: '自坐', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.diShi}</span> },
+    { label: '自坐', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.selfDiShi}</span> },
     { label: '空亡', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.xunKong}</span> },
     { label: '纳音', render: (pillar: BaziReading['pillars'][number]) => <span>{pillar.naYin}</span> },
     {
@@ -1318,6 +1403,12 @@ function PaipanSection({ reading, elementRef }: { reading: BaziReading; elementR
 
   return (
     <section className="paipan-section">
+      <div className="paipan-core-strip">
+        <div><span>日主</span><strong>{reading.dayMaster.stem} · {reading.dayMaster.polarity}{reading.dayMaster.element}</strong><small>{reading.dayMaster.strength}</small></div>
+        <div><span>月令</span><strong>{reading.pillars[1].branch} · {seasonProfileByBranch[reading.pillars[1].branch].season}</strong><small>{seasonProfileByBranch[reading.pillars[1].branch].climate}</small></div>
+        <div><span>结构</span><strong>{reading.deepDive.structureName}</strong><small>显神：{reading.structure.highlightedTenGods.join('、') || '分布较散'}</small></div>
+        <div><span>喜用</span><strong>{reading.usefulElements.join('、')}</strong><small>调候：{seasonProfileByBranch[reading.pillars[1].branch].adjustment.join('、')}</small></div>
+      </div>
       <div className="paipan-grid">
         <article className="paipan-table-card">
           <div className="paipan-table">
@@ -1353,6 +1444,64 @@ function PaipanSection({ reading, elementRef }: { reading: BaziReading; elementR
           {branchNotes}
         </p>
       </div>
+      <section className="strength-evidence-section">
+        <div className="paipan-subhead">
+          <div><span>强弱不是数个数</span><h2>旺衰判定依据</h2></div>
+          <p>结论：{reading.dayMaster.strength}。依次检查月令、通根、生扶与克泄耗，再用岁运和现实经历复核。</p>
+        </div>
+        <div className="strength-balance">
+          <div><span>生扶侧 {strengthEvidence.supportRatio}%</span><span>克泄耗侧 {100 - strengthEvidence.supportRatio}%</span></div>
+          <div className="strength-track"><span style={{ width: `${strengthEvidence.supportRatio}%` }} /></div>
+        </div>
+        <div className="strength-evidence-grid">
+          {[strengthEvidence.month, strengthEvidence.roots, strengthEvidence.support, strengthEvidence.pressure].map((evidence, index) => (
+            <article key={evidence.title}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <h3>{evidence.title}</h3>
+              <strong>{evidence.value}</strong>
+              <p>{evidence.detail}</p>
+            </article>
+          ))}
+        </div>
+        <p className="method-disclaimer">结构占比来自天干、藏干层级与月令加权，用于展示证据方向，不等同于传统典籍中的唯一旺衰标准；边界命局仍需结合格局、合化和岁运回测。</p>
+      </section>
+      <section className="pillar-detail-section">
+        <div className="paipan-subhead">
+          <div><span>从一柱看一层人生坐标</span><h2>四柱逐柱信息</h2></div>
+          <p>每柱同时看天干外显、地支根基、宫位时间，以及它与其余三柱形成的关系。</p>
+        </div>
+        <div className="pillar-detail-grid">
+          {reading.pillars.map((pillar, pillarIndex) => {
+            const palace = palaceMeanings[pillar.key];
+            const relations = getPillarRelationNotes(reading, pillar);
+            const stars = getShenShaForBranch(reading, pillar.stem, pillar.branch);
+            return (
+              <article className="pillar-detail-card" key={pillar.key}>
+                <header>
+                  <span>{String(pillarIndex + 1).padStart(2, '0')}</span>
+                  <div><h3>{pillar.label} · {palace.title}</h3><small>{palace.time} · {palace.space}</small></div>
+                  <strong>{pillar.ganZhi}</strong>
+                </header>
+                <div className="pillar-detail-glyphs">
+                  <div><small>{pillar.stemTenGod}</small><GanZhiGlyph value={pillar.stem} type="stem" /><span>{stemPolarity[pillar.stem]}{stemElement[pillar.stem]}</span></div>
+                  <div><small>地支根基</small><GanZhiGlyph value={pillar.branch} type="branch" /><span>{branchElement[pillar.branch]} · {getStemBranchRelation(pillar.stem, pillar.branch)}</span></div>
+                </div>
+                <div className="hidden-stem-list">
+                  {pillar.hiddenStems.map((stem, index) => <div key={stem}><span>{index === 0 ? '本气' : index === 1 ? '中气' : '余气'}</span><strong>{stem}{stemElement[stem]}</strong><small>{pillar.branchTenGods[index]}</small></div>)}
+                </div>
+                <dl>
+                  <div><dt>星运</dt><dd>{pillar.diShi}</dd></div>
+                  <div><dt>自坐</dt><dd>{pillar.selfDiShi}</dd></div>
+                  <div><dt>纳音</dt><dd>{pillar.naYin}</dd></div>
+                  <div><dt>空亡</dt><dd>{pillar.xunKong}</dd></div>
+                </dl>
+                <div className="pillar-star-list"><strong>神煞</strong><div>{stars.length ? stars.map((star) => <span key={star}>{star}</span>) : <span>未见主要神煞</span>}</div></div>
+                <div className="pillar-relation-list"><strong>柱间关系</strong>{relations.length ? relations.map((relation) => <p key={relation}>{relation}</p>) : <p>与其余三柱未见主要天干五合、地支冲合刑害。</p>}</div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
     </section>
   );
 }
@@ -1432,6 +1581,7 @@ function ProfessionalChartPanel({ reading }: { reading: BaziReading }) {
       render: (column: typeof detailColumns[number]) => <span className="stacked-text">{column.branchTenGods.join('\n') || '-'}</span>,
     },
     { label: '星运', render: (column: typeof detailColumns[number]) => <span>{column.diShi}</span> },
+    { label: '自坐', render: (column: typeof detailColumns[number]) => <span>{column.selfDiShi}</span> },
     { label: '空亡', render: (column: typeof detailColumns[number]) => <span>{column.xunKong}</span> },
     { label: '纳音', render: (column: typeof detailColumns[number]) => <span>{column.naYin}</span> },
     { label: '神煞', render: (column: typeof detailColumns[number]) => <span className="stacked-text shensha-text">{column.shenSha.join('\n') || '-'}</span> },

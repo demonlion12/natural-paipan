@@ -30,6 +30,7 @@ declare module 'lunar-javascript' {
     getDay(): number;
     getHour(): number;
     getAnimal(): string;
+    getYearShengXiao(): string;
     getYearInChinese(): string;
     getMonthInChinese(): string;
     getDayInChinese(): string;

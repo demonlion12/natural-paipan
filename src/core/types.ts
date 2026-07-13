@@ -23,6 +23,7 @@ export interface Pillar {
   wuXing: string;
   naYin: string;
   diShi: string;
+  selfDiShi: string;
   xunKong: string;
 }
 

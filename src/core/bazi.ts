@@ -61,6 +61,11 @@ const BRANCH_COMBINES = [['子', '丑'], ['寅', '亥'], ['卯', '戌'], ['辰',
 const BRANCH_CLASHES = [['子', '午'], ['丑', '未'], ['寅', '申'], ['卯', '酉'], ['辰', '戌'], ['巳', '亥']];
 
 const BRANCH_HIDDEN_WEIGHTS = [8, 4, 2];
+const BRANCH_ORDER = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const CHANG_SHENG_ORDER = ['长生', '沐浴', '冠带', '临官', '帝旺', '衰', '病', '死', '墓', '绝', '胎', '养'];
+const CHANG_SHENG_START: Record<string, string> = {
+  甲: '亥', 乙: '午', 丙: '寅', 丁: '酉', 戊: '寅', 己: '酉', 庚: '巳', 辛: '子', 壬: '申', 癸: '卯',
+};
 const ELEMENTS: ElementName[] = ['木', '火', '土', '金', '水'];
 const GENERATES: Record<ElementName, ElementName> = {
   木: '火',
@@ -238,6 +243,15 @@ function normalizeArray(value: string[] | string): string[] {
     .filter(Boolean);
 }
 
+function getSelfDiShi(stem: string, branch: string) {
+  const startIndex = BRANCH_ORDER.indexOf(CHANG_SHENG_START[stem]);
+  const branchIndex = BRANCH_ORDER.indexOf(branch);
+  if (startIndex < 0 || branchIndex < 0) return '-';
+  const direction = STEM_POLARITY[stem] === '阳' ? 1 : -1;
+  const stageIndex = (direction * (branchIndex - startIndex) + 24) % 12;
+  return CHANG_SHENG_ORDER[stageIndex];
+}
+
 function getMotherElement(element: ElementName) {
   return (Object.keys(GENERATES) as ElementName[]).find((key) => GENERATES[key] === element)!;
 }
@@ -309,6 +323,7 @@ function createPillar(key: PillarKey, eightChar: EightChar): Pillar {
     wuXing: get('WuXing') as string,
     naYin: get('NaYin') as string,
     diShi: get('DiShi') as string,
+    selfDiShi: getSelfDiShi(get('Gan') as string, get('Zhi') as string),
     xunKong: get('XunKong') as string,
   };
 }
@@ -873,7 +888,7 @@ export function createBaziReading(input: BirthInput): BaziReading {
     generatedAt: new Date().toISOString(),
     solarText: solar.toYmdHms(),
     lunarText: `${lunar.getYearInChinese()}年${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`,
-    zodiac: lunar.getAnimal(),
+    zodiac: lunar.getYearShengXiao(),
     pillars,
     dayMaster: {
       stem: dayStem,
