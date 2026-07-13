@@ -22,3 +22,5 @@ tsconfig.node.tsbuildinfo
 !test-runtime/
 !test-runtime/package.json
 !tsconfig.test.json
+!src/ErrorBoundary.tsx
+!src/operations.ts
