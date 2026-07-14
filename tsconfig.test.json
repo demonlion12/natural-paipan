@@ -12,6 +12,7 @@
     "noEmit": false
   },
   "include": [
+    "src/auth.ts",
     "src/core/bazi.ts",
     "src/core/types.ts",
     "src/lunar-javascript.d.ts"

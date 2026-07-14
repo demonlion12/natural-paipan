@@ -14,6 +14,7 @@ import {
   FileText,
   GraduationCap,
   LibraryBig,
+  LockKeyhole,
   LogIn,
   LogOut,
   MapPin,
@@ -24,10 +25,20 @@ import {
   ShieldCheck,
   Sparkles,
   Trash2,
+  UserPlus,
   UserRound,
   X,
 } from 'lucide-react';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
+import {
+  deleteActiveAccount,
+  loginLocalAccount,
+  logoutLocalAccount,
+  readProfileValue,
+  registerLocalAccount,
+  writeProfileValue,
+} from './auth';
+import type { AccountProfile } from './auth';
 import type { ClassicBook, ClassicChapter, KnowledgeModule } from './knowledge';
 import {
   POLICY_VERSION,
@@ -42,7 +53,7 @@ import {
 import type { ArchiveRecord } from './operations';
 
 const initialInput: BirthInput = {
-  name: '1232',
+  name: '未命名',
   gender: 'male',
   birthDate: '1990-01-01',
   birthTime: '00:00',
@@ -2867,35 +2878,11 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
   const [practiceFilter, setPracticeFilter] = useState<PracticeFilter>('全部');
   const [activeQuizId, setActiveQuizId] = useState(knowledgeQuizQuestions[0].id);
   const [selectedQuizAnswer, setSelectedQuizAnswer] = useState<number | null>(null);
-  const [quizAttempts, setQuizAttempts] = useState<Record<string, QuizAttempt>>(() => {
-    try {
-      return JSON.parse(window.localStorage.getItem('shanyi-quiz-attempts') || '{}') as Record<string, QuizAttempt>;
-    } catch {
-      return {};
-    }
-  });
-  const [classicBookmarks, setClassicBookmarks] = useState<string[]>(() => {
-    try {
-      return JSON.parse(window.localStorage.getItem('shanyi-classic-bookmarks') || '[]') as string[];
-    } catch {
-      return [];
-    }
-  });
-  const [classicReadingPositions, setClassicReadingPositions] = useState<Record<string, string>>(() => {
-    try {
-      return JSON.parse(window.localStorage.getItem('shanyi-classic-positions') || '{}') as Record<string, string>;
-    } catch {
-      return {};
-    }
-  });
+  const [quizAttempts, setQuizAttempts] = useState<Record<string, QuizAttempt>>(() => readProfileValue('shanyi-quiz-attempts', {}));
+  const [classicBookmarks, setClassicBookmarks] = useState<string[]>(() => readProfileValue('shanyi-classic-bookmarks', []));
+  const [classicReadingPositions, setClassicReadingPositions] = useState<Record<string, string>>(() => readProfileValue('shanyi-classic-positions', {}));
   const chapterLoadRequest = useRef(0);
-  const [completedLessons, setCompletedLessons] = useState<string[]>(() => {
-    try {
-      return JSON.parse(window.localStorage.getItem('shanyi-learning-progress') || '[]') as string[];
-    } catch {
-      return [];
-    }
-  });
+  const [completedLessons, setCompletedLessons] = useState<string[]>(() => readProfileValue('shanyi-learning-progress', []));
   const totalLessons = knowledgeModules.reduce((sum, module) => sum + module.lessons.length, 0);
   const completedCount = completedLessons.filter((id) => knowledgeModules.some((module) => module.lessons.some((lesson) => lesson.id === id))).length;
   const progress = Math.round((completedCount / totalLessons) * 100);
@@ -2982,7 +2969,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     setActiveChapterData(null);
     setClassicReadingPositions((current) => {
       const next = { ...current, [book.id]: chapterId };
-      window.localStorage.setItem('shanyi-classic-positions', JSON.stringify(next));
+      void writeProfileValue('shanyi-classic-positions', next);
       return next;
     });
     void loadClassicChapter(book, chapterId);
@@ -3016,7 +3003,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
       setActiveChapterData(null);
       setClassicReadingPositions((current) => {
         const next = { ...current, [book.id]: firstChapterId };
-        window.localStorage.setItem('shanyi-classic-positions', JSON.stringify(next));
+        void writeProfileValue('shanyi-classic-positions', next);
         return next;
       });
       void loadClassicChapter(book, firstChapterId);
@@ -3039,7 +3026,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
   const toggleLesson = (lessonId: string) => {
     setCompletedLessons((current) => {
       const next = current.includes(lessonId) ? current.filter((id) => id !== lessonId) : [...current, lessonId];
-      window.localStorage.setItem('shanyi-learning-progress', JSON.stringify(next));
+      void writeProfileValue('shanyi-learning-progress', next);
       return next;
     });
   };
@@ -3048,7 +3035,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     if (!activeBookmarkKey) return;
     setClassicBookmarks((current) => {
       const next = current.includes(activeBookmarkKey) ? current.filter((key) => key !== activeBookmarkKey) : [...current, activeBookmarkKey];
-      window.localStorage.setItem('shanyi-classic-bookmarks', JSON.stringify(next));
+      void writeProfileValue('shanyi-classic-bookmarks', next);
       return next;
     });
   };
@@ -3063,7 +3050,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     const nextAttempt = { selected: selectedQuizAnswer, correct: selectedQuizAnswer === activeQuizQuestion.answer };
     setQuizAttempts((current) => {
       const next = { ...current, [activeQuizQuestion.id]: nextAttempt };
-      window.localStorage.setItem('shanyi-quiz-attempts', JSON.stringify(next));
+      void writeProfileValue('shanyi-quiz-attempts', next);
       return next;
     });
   };
@@ -3073,7 +3060,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     setQuizAttempts((current) => {
       const next = { ...current };
       delete next[activeQuizQuestion.id];
-      window.localStorage.setItem('shanyi-quiz-attempts', JSON.stringify(next));
+      void writeProfileValue('shanyi-quiz-attempts', next);
       return next;
     });
     setSelectedQuizAnswer(null);
@@ -3769,7 +3756,7 @@ function YijingPage({ onBack, onGoBazi, onLearning }: { onBack: () => void; onGo
 }
 
 function HomePage({
-  profileName,
+  account,
   archives,
   onBazi,
   onDeleteArchive,
@@ -3778,7 +3765,7 @@ function HomePage({
   onOpenArchive,
   onYijing,
 }: {
-  profileName: string;
+  account: AccountProfile | null;
   archives: ArchiveRecord[];
   onBazi: () => void;
   onDeleteArchive: (id: string) => void;
@@ -3798,8 +3785,8 @@ function HomePage({
           </div>
         </div>
         <div className="home-profile">
-          <span>当前档案</span>
-          <strong>{profileName || '游客'}</strong>
+          <span>{account ? `本机加密账号 · @${account.username}` : '游客模式 · 不保存数据'}</span>
+          <strong>{account?.displayName || '游客'}</strong>
           <button aria-label="退出登录" onClick={onLogout} title="退出登录" type="button">
             <LogOut size={18} />
           </button>
@@ -3837,7 +3824,7 @@ function HomePage({
         </div>
 
         <section className="archive-section">
-          <div className="section-title"><div><span>仅保存在当前浏览器</span><h2>本机命盘档案</h2></div><strong>{archives.length}/30</strong></div>
+          <div className="section-title"><div><span>{account ? '当前账号加密保存' : '游客模式不保存'}</span><h2>本机命盘档案</h2></div><strong>{archives.length}/30</strong></div>
           {archives.length ? <div className="archive-grid">{archives.map((archive) => (
             <article key={archive.id}>
               <button className="archive-open" onClick={() => onOpenArchive(archive)} type="button">
@@ -3847,7 +3834,7 @@ function HomePage({
               </button>
               <button aria-label={`删除${archive.input.name || '未命名'}档案`} className="archive-delete" onClick={() => onDeleteArchive(archive.id)} title="删除本机档案" type="button"><Trash2 size={16} /></button>
             </article>
-          ))}</div> : <div className="archive-empty"><strong>还没有保存命盘</strong><p>生成第一份排盘后会自动保存在本机，不会上传出生资料。</p></div>}
+          ))}</div> : <div className="archive-empty"><strong>{account ? '还没有保存命盘' : '游客数据不会落盘'}</strong><p>{account ? '生成第一份排盘后会加密保存在当前账号，不会上传出生资料。' : '可以完整体验排盘、学堂和起卦；注册或登录后才会保存个人记录。'}</p></div>}
         </section>
       </section>
 
@@ -3856,29 +3843,48 @@ function HomePage({
 }
 
 function LoginPage({
-  profileName,
   analyticsEnabled,
   consentAccepted,
   onAnalyticsChange,
-  onChangeName,
   onConsentChange,
   onLogin,
+  onRegister,
   onGuest,
   onOpenPolicy,
 }: {
-  profileName: string;
   analyticsEnabled: boolean;
   consentAccepted: boolean;
   onAnalyticsChange: (value: boolean) => void;
-  onChangeName: (value: string) => void;
   onConsentChange: (value: boolean) => void;
-  onLogin: () => void;
+  onLogin: (username: string, password: string) => Promise<void>;
+  onRegister: (input: { username: string; displayName: string; password: string }) => Promise<void>;
   onGuest: () => void;
   onOpenPolicy: (view: PolicyView) => void;
 }) {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [username, setUsername] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onLogin();
+    setError('');
+    if (mode === 'register' && password !== confirmPassword) {
+      setError('两次输入的密码不一致。');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      if (mode === 'login') await onLogin(username, password);
+      else await onRegister({ username, displayName, password });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : '操作失败，请稍后重试。');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -3947,31 +3953,54 @@ function LoginPage({
 
       <section className="auth-card">
         <form onSubmit={handleSubmit}>
-          <div className="local-mode-label"><ShieldCheck size={17} /><span>本机档案模式</span></div>
-          <h2>进入山易排盘</h2>
+          <div className="local-mode-label"><ShieldCheck size={17} /><span>本机加密账号</span></div>
+          <div className="auth-heading">
+            <h2>{mode === 'login' ? '登录山易排盘' : '注册本机账号'}</h2>
+            <p>{mode === 'login' ? '解锁你的命盘档案和学习记录。' : '建立独立加密空间，与同一浏览器内的其他账号隔离。'}</p>
+          </div>
+          <div className="auth-mode-switch" aria-label="账号操作">
+            <button aria-pressed={mode === 'login'} className={mode === 'login' ? 'active' : ''} onClick={() => { setMode('login'); setError(''); }} type="button"><LogIn size={16} />登录</button>
+            <button aria-pressed={mode === 'register'} className={mode === 'register' ? 'active' : ''} onClick={() => { setMode('register'); setError(''); }} type="button"><UserPlus size={16} />注册</button>
+          </div>
           <label>
             <span>
-              <UserRound size={15} /> 昵称 / 档案名
+              <UserRound size={15} /> 账号
             </span>
             <input
-              autoComplete="name"
-              name="profileName"
-              onChange={(event) => onChangeName(event.target.value)}
-              placeholder="请输入昵称"
-              value={profileName}
+              autoCapitalize="none"
+              autoComplete="username"
+              maxLength={24}
+              name="username"
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="3–24 位中文、字母或数字"
+              required
+              value={username}
             />
           </label>
+          {mode === 'register' && <label>
+            <span><UserRound size={15} /> 显示名称</span>
+            <input autoComplete="nickname" maxLength={24} name="displayName" onChange={(event) => setDisplayName(event.target.value)} placeholder="用于工作台显示" required value={displayName} />
+          </label>}
+          <label>
+            <span><LockKeyhole size={15} /> 密码</span>
+            <input autoComplete={mode === 'login' ? 'current-password' : 'new-password'} maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} placeholder="至少 8 个字符" required type="password" value={password} />
+          </label>
+          {mode === 'register' && <label>
+            <span><LockKeyhole size={15} /> 确认密码</span>
+            <input autoComplete="new-password" maxLength={72} minLength={8} name="confirmPassword" onChange={(event) => setConfirmPassword(event.target.value)} placeholder="再次输入密码" required type="password" value={confirmPassword} />
+          </label>}
+          {error && <p className="form-error" role="alert">{error}</p>}
           <label className="consent-row"><input checked={consentAccepted} onChange={(event) => onConsentChange(event.target.checked)} type="checkbox" /><span>我已阅读并同意<button onClick={() => onOpenPolicy('terms')} type="button">用户协议</button>与<button onClick={() => onOpenPolicy('privacy')} type="button">隐私说明</button></span></label>
           <label className="consent-row optional"><input checked={analyticsEnabled} onChange={(event) => onAnalyticsChange(event.target.checked)} type="checkbox" /><span>允许发送不含生辰和联系方式的匿名使用统计</span></label>
-          <button className="primary-button" disabled={!consentAccepted || !profileName.trim()} type="submit">
-            <LogIn size={17} />
-            进入工作台
+          <button className="primary-button" disabled={!consentAccepted || !username.trim() || password.length < 8 || (mode === 'register' && !displayName.trim()) || submitting} type="submit">
+            {mode === 'login' ? <LogIn size={17} /> : <UserPlus size={17} />}
+            {submitting ? '正在加密验证' : mode === 'login' ? '登录并解锁' : '注册并进入'}
           </button>
           <button className="secondary-button" disabled={!consentAccepted} onClick={onGuest} type="button">
             <ArrowRight size={16} />
             不建名档体验
           </button>
-          <p className="local-mode-note">当前版本不接收手机号，不上传出生资料。清除浏览器数据会同时删除本机档案。</p>
+          <p className="local-mode-note"><ShieldCheck size={14} />密码只用于在本机派生加密密钥，不会明文保存或上传。当前版本暂不支持跨设备同步，忘记密码后无法恢复加密数据。</p>
         </form>
       </section>
     </main>
@@ -3994,16 +4023,17 @@ function OperationsFooter({ onFeedback, onOpenPolicy }: { onFeedback: () => void
   );
 }
 
-function PolicyDialog({ archives, onClearData, onClose, onExportData, view }: { archives: ArchiveRecord[]; onClearData: () => void; onClose: () => void; onExportData: () => void; view: PolicyView }) {
+function PolicyDialog({ account, archives, onClearData, onClose, onDeleteAccount, onExportData, view }: { account: AccountProfile | null; archives: ArchiveRecord[]; onClearData: () => void | Promise<void>; onClose: () => void; onDeleteAccount: () => void | Promise<void>; onExportData: () => void; view: PolicyView }) {
   const content: Record<Exclude<PolicyView, 'data'>, { title: string; intro: string; sections: Array<{ title: string; body: string }> }> = {
     privacy: {
       title: '隐私说明',
-      intro: '公开测试版默认采用本机计算与本机保存，不要求手机号，也不会把出生资料发送到服务器。',
+      intro: '公开测试版采用本机计算与加密保存，不要求手机号，也不会把出生资料发送到服务器。',
       sections: [
-        { title: '处理的数据', body: '昵称、性别、出生日期、出生时间、地点、经度、时区及排盘结果；学习进度、书签和答题记录。' },
-        { title: '处理目的', body: '仅用于生成命盘、保存本机档案、恢复学习进度和排查页面错误。数据默认存放在当前浏览器 localStorage。' },
+        { title: '处理的数据', body: '账号、显示名称、性别、出生日期、出生时间、地点、经度、时区及排盘结果；学习进度、书签、答题记录和本机反馈。' },
+        { title: '账号与加密', body: '密码经 PBKDF2-SHA-256 派生验证信息与 AES-GCM 密钥，密码本身不保存。命盘、学习记录和反馈加密后存放于当前浏览器；退出后必须重新输入密码才能解锁。' },
+        { title: '本机账号限制', body: '当前是纯静态部署，账号只存在于当前浏览器，不支持跨设备同步或找回密码。清理浏览器数据、忘记密码或设备损坏都可能导致记录无法恢复，请按需导出备份。' },
         { title: '可选统计', body: '只有主动勾选后才记录页面功能事件；事件不得包含姓名、生辰、地点、联系方式或完整报告。未配置远程统计接口时仍只保存在本机。' },
-        { title: '保存与删除', body: '本机档案最多30份。你可以随时从“数据管理”导出或删除；清理浏览器数据也会删除这些记录。' },
+        { title: '保存与删除', body: '每个本机账号最多保存30份命盘。你可以从“数据管理”导出、清空账号内容或永久删除本机账号。游客模式不保存命盘和学习记录。' },
       ],
     },
     terms: {
@@ -4032,13 +4062,20 @@ function PolicyDialog({ archives, onClearData, onClose, onExportData, view }: { 
     <div className="modal-backdrop" role="presentation">
       <section aria-modal="true" className="operations-dialog" role="dialog">
         <header><div><span>{view === 'data' ? '本机自主控制' : `政策版本 ${POLICY_VERSION}`}</span><h2>{view === 'data' ? '数据管理' : page?.title}</h2></div><button aria-label="关闭" onClick={onClose} title="关闭" type="button"><X size={20} /></button></header>
-        {view === 'data' ? <div className="data-control-panel"><p>当前浏览器保存 {archives.length} 份命盘档案。导出文件包括档案、学习进度、书签和本机反馈队列。</p><div><button className="secondary-button" onClick={onExportData} type="button"><Download size={16} />导出我的数据</button><button className="danger-button" onClick={onClearData} type="button"><Trash2 size={16} />删除全部本机数据</button></div></div> : <div className="policy-content"><p className="policy-intro">{page?.intro}</p>{page?.sections.map((section) => <article key={section.title}><h3>{section.title}</h3><p>{section.body}</p></article>)}</div>}
+        {view === 'data' ? <div className="data-control-panel">
+          <p>{account ? <>当前为本机加密账号 <strong>@{account.username}</strong>，保存 {archives.length} 份命盘档案。导出文件包括档案、学习进度、书签和本机反馈。</> : '当前处于游客模式，没有可导出的账号数据。登录后可管理独立的加密档案。'}</p>
+          <div>
+            <button className="secondary-button" disabled={!account} onClick={onExportData} type="button"><Download size={16} />导出账号数据</button>
+            <button className="danger-button" disabled={!account} onClick={onClearData} type="button"><Trash2 size={16} />清空账号内容</button>
+            <button className="danger-button account-delete-button" disabled={!account} onClick={onDeleteAccount} type="button"><UserRound size={16} />删除本机账号</button>
+          </div>
+        </div> : <div className="policy-content"><p className="policy-intro">{page?.intro}</p>{page?.sections.map((section) => <article key={section.title}><h3>{section.title}</h3><p>{section.body}</p></article>)}</div>}
       </section>
     </div>
   );
 }
 
-function FeedbackDialog({ onClose, onSubmitted }: { onClose: () => void; onSubmitted: (remote: boolean) => void }) {
+function FeedbackDialog({ onClose, onSubmitted }: { onClose: () => void; onSubmitted: (result: { remote: boolean; stored: boolean }) => void }) {
   const [category, setCategory] = useState('排盘问题');
   const [message, setMessage] = useState('');
   const [contact, setContact] = useState('');
@@ -4051,7 +4088,7 @@ function FeedbackDialog({ onClose, onSubmitted }: { onClose: () => void; onSubmi
     setSubmitting(true);
     try {
       const result = await submitFeedback({ category, message: message.trim(), contact: contact.trim() || undefined });
-      onSubmitted(result.remote);
+      onSubmitted(result);
     } catch {
       setError('提交暂时失败，请稍后重试。你的内容仍保留在当前输入框中。');
     } finally {
@@ -4321,14 +4358,15 @@ function ReportTopNav({
 export default function App() {
   const [input, setInput] = useState(initialInput);
   const [submitted, setSubmitted] = useState(initialInput);
+  const [account, setAccount] = useState<AccountProfile | null>(null);
   const [step, setStep] = useState<AppStep>('login');
   const [yijingBackStep, setYijingBackStep] = useState<AppStep>('login');
   const [learningBackStep, setLearningBackStep] = useState<AppStep>('login');
   const [activeNav, setActiveNav] = useState<NavTarget>('paipan');
   const [toast, setToast] = useState('');
-  const [archives, setArchives] = useState<ArchiveRecord[]>(() => archiveRepository.list());
+  const [archives, setArchives] = useState<ArchiveRecord[]>([]);
   const [currentArchiveId, setCurrentArchiveId] = useState<string>();
-  const [persistArchive, setPersistArchive] = useState(true);
+  const [persistArchive, setPersistArchive] = useState(false);
   const [policyView, setPolicyView] = useState<PolicyView | null>(null);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [consentAccepted, setConsentAccepted] = useState(() => Boolean(getPrivacyPreferences()));
@@ -4352,12 +4390,16 @@ export default function App() {
   }, [toast]);
 
   useEffect(() => {
-    if (step !== 'report' || !reading || !persistArchive) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [step]);
+
+  useEffect(() => {
+    if (step !== 'report' || !reading || !persistArchive || !account) return;
     const saved = archiveRepository.save(submitted, reading, currentArchiveId);
     setCurrentArchiveId(saved.id);
     setArchives(archiveRepository.list());
     trackEvent('reading_generated', { calendar: submitted.calendarType, trueSolar: submitted.timeMode === 'clock', unknownHour: submitted.unknownHour });
-  }, [currentArchiveId, persistArchive, reading, step, submitted]);
+  }, [account, currentArchiveId, persistArchive, reading, step, submitted]);
 
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
@@ -4463,52 +4505,83 @@ export default function App() {
     <>
       {page}
       <OperationsFooter onFeedback={() => setFeedbackOpen(true)} onOpenPolicy={setPolicyView} />
-      {policyView && <PolicyDialog archives={archives} onClearData={() => {
-        if (!window.confirm('确定删除当前浏览器中的全部山易排盘数据吗？此操作无法撤销。')) return;
-        clearLocalProductData();
+      {policyView && <PolicyDialog account={account} archives={archives} onClearData={async () => {
+        if (!window.confirm('确定清空当前账号中的命盘、学习记录、书签与本机反馈吗？此操作无法撤销。')) return;
+        await clearLocalProductData();
         setArchives([]);
-        setConsentAccepted(false);
-        setAnalyticsEnabled(false);
         setCurrentArchiveId(undefined);
         setPolicyView(null);
-        setStep('login');
-        setToast('本机数据已全部删除');
+        setReading(null);
+        setStep('home');
+        setToast('当前账号内容已清空');
       }} onClose={() => setPolicyView(null)} onExportData={() => {
         downloadJson(exportLocalProductData(), `山易排盘-我的数据-${new Date().toISOString().slice(0, 10)}.json`);
-        setToast('本机数据已导出');
+        setToast('账号数据已导出');
+      }} onDeleteAccount={async () => {
+        if (!account || !window.confirm(`确定永久删除本机账号 @${account.username} 及其全部加密数据吗？此操作无法撤销。`)) return;
+        await deleteActiveAccount();
+        setAccount(null);
+        setArchives([]);
+        setReading(null);
+        setCurrentArchiveId(undefined);
+        setInput(initialInput);
+        setSubmitted(initialInput);
+        setPersistArchive(false);
+        setPolicyView(null);
+        setStep('login');
+        setToast('本机账号及其数据已删除');
       }} view={policyView} />}
-      {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} onSubmitted={(remote) => {
+      {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} onSubmitted={({ remote, stored }) => {
         setFeedbackOpen(false);
-        setToast(remote ? '反馈已提交' : '反馈已保存在本机；接入反馈服务后可自动同步');
+        setToast(remote ? '反馈已提交' : stored ? '反馈已加密保存在当前账号' : '游客反馈未保存，请登录后再提交');
       }} />}
     </>
   );
 
   if (step === 'login') {
     return wrapPage(
-      <LoginPage
+      <>
+        <LoginPage
         analyticsEnabled={analyticsEnabled}
         consentAccepted={consentAccepted}
         onAnalyticsChange={setAnalyticsEnabled}
-        onChangeName={(name) => setInput((current) => ({ ...current, name }))}
         onConsentChange={setConsentAccepted}
         onGuest={() => {
           savePrivacyPreferences(analyticsEnabled);
+          void logoutLocalAccount();
+          setAccount(null);
+          setArchives([]);
           setInput((current) => ({ ...current, name: '游客' }));
           setPersistArchive(false);
           setToast('已进入不建名档体验');
           setStep('home');
         }}
-        onLogin={() => {
+        onLogin={async (username, password) => {
+          const result = await loginLocalAccount(username, password);
           savePrivacyPreferences(analyticsEnabled);
+          setAccount(result.account);
+          setArchives(archiveRepository.list());
+          setInput((current) => ({ ...current, name: result.account.displayName }));
           setPersistArchive(true);
           trackEvent('workspace_entered');
-          setToast('已进入本机工作台');
+          setToast(result.migratedArchives ? `已登录，并迁移 ${result.migratedArchives} 份旧档案` : '账号已解锁');
           setStep('home');
         }}
-        onOpenPolicy={setPolicyView}
-        profileName={input.name}
-/>
+        onRegister={async (credentials) => {
+          const result = await registerLocalAccount(credentials);
+          savePrivacyPreferences(analyticsEnabled);
+          setAccount(result.account);
+          setArchives(archiveRepository.list());
+          setInput((current) => ({ ...current, name: result.account.displayName }));
+          setPersistArchive(true);
+          trackEvent('account_registered');
+          setToast(result.migratedArchives ? `注册成功，并迁移 ${result.migratedArchives} 份旧档案` : '本机加密账号已建立');
+          setStep('home');
+        }}
+          onOpenPolicy={setPolicyView}
+        />
+        {toast && <div className="toast">{toast}</div>}
+      </>
     );
   }
 
@@ -4516,14 +4589,26 @@ export default function App() {
     return wrapPage(
       <>
         <HomePage
+          account={account}
           archives={archives}
           onBazi={() => { setCurrentArchiveId(undefined); setStep('birth'); }}
           onDeleteArchive={(id) => { archiveRepository.remove(id); setArchives(archiveRepository.list()); setToast('本机档案已删除'); }}
           onLearning={openLearning}
-          onLogout={() => setStep('login')}
+          onLogout={() => {
+            void logoutLocalAccount().then(() => {
+              setAccount(null);
+              setArchives([]);
+              setReading(null);
+              setCurrentArchiveId(undefined);
+              setInput(initialInput);
+              setSubmitted(initialInput);
+              setPersistArchive(false);
+              setStep('login');
+              setToast('已退出账号');
+            });
+          }}
           onOpenArchive={openArchive}
           onYijing={openYijing}
-          profileName={input.name}
         />
         {toast && <div className="toast">{toast}</div>}
       </>

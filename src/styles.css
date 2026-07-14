@@ -51,6 +51,7 @@ p {
 }
 
 .login-screen {
+  align-items: stretch;
   grid-template-columns: minmax(0, 1fr) 390px;
 }
 
@@ -383,6 +384,47 @@ p {
   line-height: 1.15;
 }
 
+.auth-heading {
+  display: grid;
+  gap: 7px;
+}
+
+.auth-heading p {
+  color: #61736b;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.auth-mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: #eef3f0;
+  padding: 4px;
+}
+
+.auth-mode-switch button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #61736b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.auth-mode-switch button.active {
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(31, 63, 52, 0.1);
+  color: #17695f;
+}
+
 .local-mode-label {
   display: inline-flex;
   width: fit-content;
@@ -429,8 +471,17 @@ p {
 }
 
 .auth-card .local-mode-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
   font-size: 11px;
   line-height: 1.7;
+}
+
+.auth-card .local-mode-note svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #2b7a78;
 }
 
 button:disabled,
@@ -3618,8 +3669,15 @@ button.flow-cell.current:focus-visible {
 
 .data-control-panel > div {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.data-control-panel .account-delete-button {
+  grid-column: 1 / -1;
+  border-color: rgba(130, 44, 34, 0.42);
+  background: rgba(130, 44, 34, 0.09);
+  color: #7e3228;
 }
 
 .danger-button {
@@ -5270,6 +5328,10 @@ button.flow-cell.current:focus-visible {
 
   .login-hero {
     min-height: 500px;
+  }
+
+  .login-screen .auth-card {
+    order: -1;
   }
 
   .birth-aside {

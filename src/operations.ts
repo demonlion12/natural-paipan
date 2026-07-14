@@ -1,6 +1,15 @@
 import type { BaziReading, BirthInput } from './core/types';
+import {
+  clearActiveVault,
+  exportActiveVault,
+  getActiveAccount,
+  getVaultArchives,
+  readProfileValue,
+  setVaultArchives,
+  writeProfileValue,
+} from './auth';
 
-export const POLICY_VERSION = '2026-07-13';
+export const POLICY_VERSION = '2026-07-14';
 
 export type ArchiveRecord = {
   id: string;
@@ -23,7 +32,6 @@ export type FeedbackPayload = {
   contact?: string;
 };
 
-const ARCHIVE_KEY = 'shanyi-archives-v1';
 const PRIVACY_KEY = 'shanyi-privacy-v1';
 const FEEDBACK_KEY = 'shanyi-feedback-queue-v1';
 const EVENTS_KEY = 'shanyi-analytics-events-v1';
@@ -51,7 +59,7 @@ function createId() {
 
 export const archiveRepository = {
   list(): ArchiveRecord[] {
-    return readJson<ArchiveRecord[]>(ARCHIVE_KEY, []).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return getVaultArchives<ArchiveRecord>().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   },
   save(input: BirthInput, reading: BaziReading, existingId?: string) {
     const records = this.list();
@@ -65,14 +73,14 @@ export const archiveRepository = {
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
-    writeJson(ARCHIVE_KEY, [record, ...records.filter((item) => item.id !== record.id)].slice(0, 30));
+    void setVaultArchives([record, ...records.filter((item) => item.id !== record.id)].slice(0, 30));
     return record;
   },
   remove(id: string) {
-    writeJson(ARCHIVE_KEY, this.list().filter((record) => record.id !== id));
+    void setVaultArchives(this.list().filter((record) => record.id !== id));
   },
   clear() {
-    writeJson(ARCHIVE_KEY, []);
+    void setVaultArchives([]);
   },
 };
 
@@ -86,8 +94,9 @@ export function savePrivacyPreferences(analytics: boolean) {
   return preferences;
 }
 
-export function clearLocalProductData() {
-  [ARCHIVE_KEY, PRIVACY_KEY, FEEDBACK_KEY, EVENTS_KEY, ERRORS_KEY, 'shanyi-quiz-attempts', 'shanyi-classic-bookmarks', 'shanyi-classic-positions', 'shanyi-learning-progress'].forEach((key) => {
+export async function clearLocalProductData() {
+  await clearActiveVault();
+  [EVENTS_KEY, ERRORS_KEY].forEach((key) => {
     try {
       window.localStorage.removeItem(key);
     } catch {
@@ -97,16 +106,25 @@ export function clearLocalProductData() {
 }
 
 export function exportLocalProductData() {
+  const vault = exportActiveVault();
+  const parseProfileValue = <T>(key: string, fallback: T): T => {
+    try {
+      return JSON.parse(vault.profileStorage[key] || '') as T;
+    } catch {
+      return fallback;
+    }
+  };
   return {
     exportedAt: new Date().toISOString(),
-    archives: archiveRepository.list(),
+    account: getActiveAccount(),
+    archives: vault.archives,
     preferences: getPrivacyPreferences(),
-    feedback: readJson<unknown[]>(FEEDBACK_KEY, []),
+    feedback: parseProfileValue<unknown[]>(FEEDBACK_KEY, []),
     learning: {
-      attempts: readJson('shanyi-quiz-attempts', {}),
-      bookmarks: readJson('shanyi-classic-bookmarks', []),
-      positions: readJson('shanyi-classic-positions', {}),
-      progress: readJson('shanyi-learning-progress', []),
+      attempts: parseProfileValue('shanyi-quiz-attempts', {}),
+      bookmarks: parseProfileValue('shanyi-classic-bookmarks', []),
+      positions: parseProfileValue('shanyi-classic-positions', {}),
+      progress: parseProfileValue('shanyi-learning-progress', []),
     },
   };
 }
@@ -126,10 +144,11 @@ export async function submitFeedback(payload: FeedbackPayload) {
   if (endpoint) {
     const response = await fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(item) });
     if (!response.ok) throw new Error(`反馈提交失败（${response.status}）`);
-    return { remote: true };
+    return { remote: true, stored: true };
   }
-  writeJson(FEEDBACK_KEY, [...readJson<unknown[]>(FEEDBACK_KEY, []), item].slice(-30));
-  return { remote: false };
+  const account = getActiveAccount();
+  if (account) void writeProfileValue(FEEDBACK_KEY, [...readProfileValue<unknown[]>(FEEDBACK_KEY, []), item].slice(-30));
+  return { remote: false, stored: Boolean(account) };
 }
 
 export function recordClientError(error: Error, componentStack?: string) {
