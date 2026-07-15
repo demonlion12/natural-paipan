@@ -40,6 +40,7 @@ import {
 } from './auth';
 import type { AccountProfile } from './auth';
 import type { ClassicBook, ClassicChapter, KnowledgeModule } from './knowledge';
+import { birthLocations, findBirthLocation } from './locationData';
 import {
   POLICY_VERSION,
   archiveRepository,
@@ -58,6 +59,7 @@ const initialInput: BirthInput = {
   birthDate: '1990-01-01',
   birthTime: '00:00',
   birthplace: '北京',
+  latitude: 39.9042,
   calendarType: 'solar',
   lunarLeapMonth: false,
   timezoneOffset: 8,
@@ -4121,6 +4123,31 @@ function BirthSetupPage({
   onReset: () => void;
   onSubmit: (input: BirthInput) => void;
 }) {
+  const birthDateInputRef = useRef<HTMLInputElement>(null);
+  const birthTimeInputRef = useRef<HTMLInputElement>(null);
+  const matchedBirthLocation = findBirthLocation(input.birthplace);
+
+  const openNativePicker = (ref: RefObject<HTMLInputElement | null>) => {
+    try {
+      ref.current?.showPicker();
+    } catch {
+      ref.current?.focus();
+    }
+  };
+
+  const changeBirthplace = (value: string) => {
+    const location = findBirthLocation(value);
+    onChange({
+      ...input,
+      birthplace: value,
+      ...(location ? {
+        longitude: location.longitude,
+        latitude: location.latitude,
+        timezoneOffset: location.timezoneOffset,
+      } : {}),
+    });
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -4198,12 +4225,19 @@ function BirthSetupPage({
               <span>
                 <CalendarDays size={15} /> {input.calendarType === 'lunar' ? '农历日期' : '公历日期'}
               </span>
-              <input
-                name="birthDate"
-                type="date"
-                value={input.birthDate}
-                onChange={(event) => onChange({ ...input, birthDate: event.target.value })}
-              />
+              <div className="native-picker-field">
+                <input
+                  max="2100-12-31"
+                  min="1900-01-01"
+                  name="birthDate"
+                  ref={birthDateInputRef}
+                  required
+                  type="date"
+                  value={input.birthDate}
+                  onChange={(event) => onChange({ ...input, birthDate: event.target.value })}
+                />
+                <button aria-label="打开日期选择器" onClick={() => openNativePicker(birthDateInputRef)} title="选择日期" type="button"><CalendarDays size={18} /></button>
+              </div>
             </label>
 
             {input.calendarType === 'lunar' && <label className="binary-control"><input checked={input.lunarLeapMonth} onChange={(event) => onChange({ ...input, lunarLeapMonth: event.target.checked })} type="checkbox" /><span>该月为闰月</span></label>}
@@ -4212,13 +4246,19 @@ function BirthSetupPage({
               <span>
                 <Clock3 size={15} /> 出生时间
               </span>
-              <input
-                name="birthTime"
-                type="time"
-                disabled={input.unknownHour}
-                value={input.birthTime}
-                onChange={(event) => onChange({ ...input, birthTime: event.target.value })}
-              />
+              <div className="native-picker-field">
+                <input
+                  name="birthTime"
+                  ref={birthTimeInputRef}
+                  required={!input.unknownHour}
+                  step="60"
+                  type="time"
+                  disabled={input.unknownHour}
+                  value={input.birthTime}
+                  onChange={(event) => onChange({ ...input, birthTime: event.target.value })}
+                />
+                <button aria-label="打开时间选择器" disabled={input.unknownHour} onClick={() => openNativePicker(birthTimeInputRef)} title="选择时间" type="button"><Clock3 size={18} /></button>
+              </div>
             </label>
 
             <label className="binary-control"><input checked={input.unknownHour} onChange={(event) => onChange({ ...input, unknownHour: event.target.checked, birthTimeSource: event.target.checked ? 'unknown' : input.birthTimeSource })} type="checkbox" /><span>出生时辰未知</span></label>
@@ -4246,13 +4286,21 @@ function BirthSetupPage({
             <div className="form-grid">
             <label className="wide">
               <span>
-                <MapPin size={15} /> 出生地
+                <MapPin size={15} /> 出生地 <small className="field-badge">搜索选择</small>
               </span>
               <input
+                autoComplete="off"
+                list="birthplace-options"
                 name="birthplace"
+                placeholder="输入城市或区县，例如：浙江湖州德清"
+                required
                 value={input.birthplace}
-                onChange={(event) => onChange({ ...input, birthplace: event.target.value })}
+                onChange={(event) => changeBirthplace(event.target.value)}
               />
+              <datalist id="birthplace-options">
+                {birthLocations.map((location) => <option key={location.id} value={location.label}>{`东经 ${location.longitude}° · UTC${location.timezoneOffset >= 0 ? '+' : ''}${location.timezoneOffset}`}</option>)}
+              </datalist>
+              {matchedBirthLocation ? <small className="location-match-status matched"><CheckCircle2 size={14} />已匹配地点库：东经 {matchedBirthLocation.longitude}° · 北纬 {matchedBirthLocation.latitude}° · UTC{matchedBirthLocation.timezoneOffset >= 0 ? '+' : ''}{matchedBirthLocation.timezoneOffset}</small> : <small className="location-match-status"><MapPin size={14} />未匹配本地地点库，请继续手动核对下方经度与时区。</small>}
             </label>
 
             <label>

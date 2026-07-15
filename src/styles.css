@@ -541,6 +541,63 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(43, 122, 120, 0.12);
 }
 
+.native-picker-field {
+  position: relative;
+}
+
+.native-picker-field input {
+  padding-right: 50px;
+}
+
+.native-picker-field input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+.native-picker-field button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(43, 122, 120, 0.08);
+  color: #2b6863;
+}
+
+.native-picker-field button:hover {
+  background: rgba(43, 122, 120, 0.14);
+}
+
+.field-badge {
+  border-radius: 999px;
+  background: rgba(200, 164, 93, 0.14);
+  color: #9b6a2f;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 7px;
+}
+
+.location-match-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9b6a2f;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.location-match-status.matched {
+  color: #247264;
+}
+
+.location-match-status svg {
+  flex: 0 0 auto;
+}
+
 .primary-button,
 .secondary-button,
 .icon-text-button,

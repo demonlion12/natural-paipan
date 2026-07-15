@@ -13,6 +13,7 @@ export interface BirthInput {
   birthDate: string;
   birthTime: string;
   birthplace: string;
+  latitude?: number;
   calendarType: CalendarType;
   lunarLeapMonth: boolean;
   timezoneOffset: number;

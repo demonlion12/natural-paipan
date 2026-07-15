@@ -13,6 +13,7 @@
   },
   "include": [
     "src/auth.ts",
+    "src/locationData.ts",
     "src/core/bazi.ts",
     "src/core/types.ts",
     "src/lunar-javascript.d.ts"
