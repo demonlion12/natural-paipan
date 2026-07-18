@@ -13,7 +13,8 @@
 - 易经三枚铜钱起卦、逐爻动画、本卦/变卦/动爻详解
 - 本地全文古籍、现代译解、课程、术语、练习与学习进度
 - 本机账号注册/登录、加密档案、数据导出/删除、隐私协议、内容边界和反馈队列
-- PWA 安装与离线回访、错误边界、可选匿名事件接口
+- PWA 安装与离线回访、联网状态提示、错误边界、可选匿名事件接口
+- 键盘焦点、减少动态效果、弹窗焦点回收、档案删除确认等上线交互保护
 
 ## 数据边界
 
@@ -32,6 +33,7 @@ npm run dev
 
 ```bash
 npm run check
+npm run audit:release
 ```
 
 其中包含 TypeScript 检查、排盘回归样例、账号加密与隔离测试和生产构建。测试不依赖额外测试框架，使用 Node 内置测试运行器。
@@ -52,6 +54,8 @@ VITE_FEEDBACK_ENDPOINT=
 ## 发布
 
 推送 `main` 后，GitHub Actions 会执行类型检查、回归测试和 GitHub Pages 构建，再发布 `gh-pages` 分支。
+
+正式发布前逐项执行 [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md)，至少确认账号边界、数据导出/删除、移动端关键路径、反馈接收端和回滚提交。
 
 ```bash
 git push origin main

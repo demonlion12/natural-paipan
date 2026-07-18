@@ -31,6 +31,9 @@ jobs:
       - name: Typecheck and regression tests
         run: npm run typecheck && npm test
 
+      - name: Production dependency audit
+        run: npm run audit:release
+
       - name: Build
         run: DEPLOY_TARGET=github-pages npm run build
 

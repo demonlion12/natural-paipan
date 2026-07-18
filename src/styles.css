@@ -484,6 +484,40 @@ p {
   color: #2b7a78;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 50px;
+}
+
+.password-field button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(43, 122, 120, 0.08);
+  color: #2b6863;
+}
+
+.password-field button:hover {
+  background: rgba(43, 122, 120, 0.14);
+}
+
+.caps-lock-note {
+  border-left: 3px solid #b58a43;
+  background: rgba(181, 138, 67, 0.09);
+  color: #7d5b24 !important;
+  font-size: 12px;
+  padding: 8px 10px;
+}
+
 button:disabled,
 input:disabled,
 select:disabled {
@@ -652,11 +686,91 @@ textarea:focus {
   margin-top: 28px;
 }
 
+.form-step-nav {
+  position: sticky;
+  z-index: 8;
+  top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin-top: 24px;
+  border: 1px solid rgba(23, 33, 29, 0.1);
+  border-radius: 8px;
+  background: rgba(249, 252, 250, 0.94);
+  box-shadow: 0 10px 30px rgba(31, 63, 52, 0.08);
+  padding: 4px;
+  backdrop-filter: blur(14px);
+}
+
+.form-step-nav button {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #61736b;
+}
+
+.form-step-nav button span {
+  color: #a68a57;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.form-step-nav button strong {
+  font-size: 13px;
+}
+
+.form-step-nav button.active {
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(31, 63, 52, 0.1);
+  color: #17695f;
+}
+
 .precision-form-section {
   display: grid;
   gap: 16px;
   border-top: 1px solid rgba(23, 33, 29, 0.1);
   padding-top: 18px;
+  scroll-margin-top: 84px;
+}
+
+.birth-submit-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid rgba(43, 122, 120, 0.13);
+  border-radius: 8px;
+  background: rgba(43, 122, 120, 0.05);
+}
+
+.birth-submit-summary > div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  border-right: 1px solid rgba(43, 122, 120, 0.11);
+  padding: 12px 14px;
+}
+
+.birth-submit-summary > div:last-child {
+  border-right: 0;
+}
+
+.birth-submit-summary span {
+  color: #71837b;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.birth-submit-summary strong {
+  overflow: hidden;
+  color: #25463d;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .precision-form-section > header {
@@ -2962,13 +3076,44 @@ button.flow-cell.current:focus-visible {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 20;
-  border-radius: 999px;
+  z-index: 120;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 28px;
+  min-width: min(360px, calc(100vw - 32px));
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
   background: #17211d;
   color: #f7fbf8;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-  padding: 10px 16px;
+  padding: 10px 10px 10px 14px;
   font-weight: 900;
+  animation: toast-in 180ms ease-out;
+}
+
+.toast > svg {
+  color: #8ec8b4;
+}
+
+.toast span {
+  line-height: 1.5;
+}
+
+.toast button {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f7fbf8;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .secondary-button.slim {
@@ -3586,6 +3731,53 @@ button.flow-cell.current:focus-visible {
   color: #a94f3c;
 }
 
+.archive-delete-confirm {
+  position: absolute;
+  z-index: 2;
+  inset: 6px;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  border: 1px solid rgba(169, 79, 60, 0.24);
+  border-radius: 6px;
+  background: rgba(255, 253, 251, 0.98);
+  box-shadow: 0 12px 30px rgba(72, 36, 27, 0.12);
+  padding: 12px;
+}
+
+.archive-delete-confirm strong {
+  color: #7e3228;
+  font-size: 13px;
+}
+
+.archive-delete-confirm > span {
+  color: #7c716a;
+  font-size: 11px;
+}
+
+.archive-delete-confirm > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.archive-delete-confirm button {
+  min-height: 32px;
+  border: 1px solid rgba(23, 33, 29, 0.12);
+  border-radius: 6px;
+  background: #fff;
+  color: #40544b;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.archive-delete-confirm button.confirm {
+  border-color: #a94f3c;
+  background: #a94f3c;
+  color: #fff;
+}
+
 .archive-empty {
   border: 1px dashed rgba(43, 122, 120, 0.24);
   border-radius: 8px;
@@ -3612,6 +3804,30 @@ button.flow-cell.current:focus-visible {
   margin: 24px auto 0;
   color: #71837b;
   padding: 20px 2px 28px;
+  font-size: 11px;
+}
+
+.offline-banner {
+  display: flex;
+  width: min(1380px, calc(100vw - 32px));
+  align-items: center;
+  justify-content: center;
+  gap: 8px 14px;
+  border: 1px solid rgba(181, 138, 67, 0.2);
+  border-radius: 8px;
+  margin: 16px auto 0;
+  background: rgba(181, 138, 67, 0.09);
+  color: #6f5527;
+  padding: 10px 14px;
+}
+
+.offline-banner span {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.offline-banner small {
+  color: #7d7057;
   font-size: 11px;
 }
 
@@ -5374,6 +5590,27 @@ button.flow-cell.current:focus-visible {
   }
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid rgba(43, 122, 120, 0.34);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @media (max-width: 1080px) {
   .login-screen,
   .birth-screen,
@@ -5593,6 +5830,30 @@ button.flow-cell.current:focus-visible {
     margin-top: 28px;
   }
 
+  .form-step-nav {
+    top: 6px;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .form-step-nav button {
+    min-height: 42px;
+    gap: 5px;
+  }
+
+  .birth-submit-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .birth-submit-summary > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .birth-submit-summary > div:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(43, 122, 120, 0.11);
+  }
+
   .login-hero,
   .auth-card,
   .birth-panel,
@@ -5648,6 +5909,19 @@ button.flow-cell.current:focus-visible {
 
   .operations-footer nav {
     justify-content: center;
+  }
+
+  .offline-banner {
+    width: calc(100vw - 24px);
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toast {
+    right: 12px;
+    bottom: 12px;
+    min-width: 0;
+    width: calc(100vw - 24px);
   }
 
   .modal-backdrop {

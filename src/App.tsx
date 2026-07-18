@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { FormEvent, ReactNode, RefObject } from 'react';
+import type { FormEvent, MouseEvent as ReactMouseEvent, ReactNode, RefObject } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,6 +11,8 @@ import {
   Copy,
   Download,
   Edit3,
+  Eye,
+  EyeOff,
   FileText,
   GraduationCap,
   LibraryBig,
@@ -28,7 +30,7 @@ import {
   UserPlus,
   UserRound,
   X,
-} from 'lucide-react';
+} from './icons';
 import type { BaziReading, BirthInput, DeepDomainKey, ElementName, Pillar } from './core/types';
 import {
   deleteActiveAccount,
@@ -3757,6 +3759,46 @@ function YijingPage({ onBack, onGoBazi, onLearning }: { onBack: () => void; onGo
   );
 }
 
+function Toast({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  if (!message) return null;
+  return (
+    <div aria-atomic="true" aria-live="polite" className="toast" role="status">
+      <CheckCircle2 size={17} />
+      <span>{message}</span>
+      <button aria-label="关闭提示" onClick={onDismiss} title="关闭提示" type="button"><X size={15} /></button>
+    </div>
+  );
+}
+
+function useDialogLifecycle(onClose: () => void) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onCloseRef.current();
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+    const frame = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
+    return () => {
+      window.cancelAnimationFrame(frame);
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, []);
+
+  const closeFromBackdrop = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) onCloseRef.current();
+  };
+
+  return { closeButtonRef, closeFromBackdrop };
+}
+
 function HomePage({
   account,
   archives,
@@ -3776,6 +3818,7 @@ function HomePage({
   onOpenArchive: (archive: ArchiveRecord) => void;
   onYijing: () => void;
 }) {
+  const [pendingDeleteId, setPendingDeleteId] = useState<string>();
   return (
     <main className="app-home-shell">
       <header className="app-home-topbar">
@@ -3789,7 +3832,7 @@ function HomePage({
         <div className="home-profile">
           <span>{account ? `本机加密账号 · @${account.username}` : '游客模式 · 不保存数据'}</span>
           <strong>{account?.displayName || '游客'}</strong>
-          <button aria-label="退出登录" onClick={onLogout} title="退出登录" type="button">
+          <button aria-label={account ? '退出登录' : '返回登录页'} onClick={onLogout} title={account ? '退出登录' : '返回登录页'} type="button">
             <LogOut size={18} />
           </button>
         </div>
@@ -3834,7 +3877,15 @@ function HomePage({
                 <strong>{archive.pillars}</strong>
                 <small>{archive.input.birthDate} · {archive.input.birthTime} · {archive.input.birthplace}</small>
               </button>
-              <button aria-label={`删除${archive.input.name || '未命名'}档案`} className="archive-delete" onClick={() => onDeleteArchive(archive.id)} title="删除本机档案" type="button"><Trash2 size={16} /></button>
+              <button aria-label={`删除${archive.input.name || '未命名'}档案`} className="archive-delete" onClick={() => setPendingDeleteId(archive.id)} title="删除本机档案" type="button"><Trash2 size={16} /></button>
+              {pendingDeleteId === archive.id && <div aria-label={`确认删除${archive.input.name || '未命名'}档案`} className="archive-delete-confirm" role="alertdialog">
+                <strong>删除这份档案？</strong>
+                <span>删除后无法恢复。</span>
+                <div>
+                  <button onClick={() => setPendingDeleteId(undefined)} type="button">取消</button>
+                  <button className="confirm" onClick={() => { onDeleteArchive(archive.id); setPendingDeleteId(undefined); }} type="button">确认删除</button>
+                </div>
+              </div>}
             </article>
           ))}</div> : <div className="archive-empty"><strong>{account ? '还没有保存命盘' : '游客数据不会落盘'}</strong><p>{account ? '生成第一份排盘后会加密保存在当前账号，不会上传出生资料。' : '可以完整体验排盘、学堂和起卦；注册或登录后才会保存个人记录。'}</p></div>}
         </section>
@@ -3868,6 +3919,8 @@ function LoginPage({
   const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [capsLockOn, setCapsLockOn] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -3969,6 +4022,7 @@ function LoginPage({
               <UserRound size={15} /> 账号
             </span>
             <input
+              autoFocus
               autoCapitalize="none"
               autoComplete="username"
               maxLength={24}
@@ -3985,12 +4039,19 @@ function LoginPage({
           </label>}
           <label>
             <span><LockKeyhole size={15} /> 密码</span>
-            <input autoComplete={mode === 'login' ? 'current-password' : 'new-password'} maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} placeholder="至少 8 个字符" required type="password" value={password} />
+            <div className="password-field">
+              <input autoComplete={mode === 'login' ? 'current-password' : 'new-password'} maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} onKeyDown={(event) => setCapsLockOn(event.getModifierState('CapsLock'))} onKeyUp={(event) => setCapsLockOn(event.getModifierState('CapsLock'))} placeholder="至少 8 个字符" required type={passwordVisible ? 'text' : 'password'} value={password} />
+              <button aria-label={passwordVisible ? '隐藏密码' : '显示密码'} onClick={() => setPasswordVisible((value) => !value)} title={passwordVisible ? '隐藏密码' : '显示密码'} type="button">{passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+            </div>
           </label>
           {mode === 'register' && <label>
             <span><LockKeyhole size={15} /> 确认密码</span>
-            <input autoComplete="new-password" maxLength={72} minLength={8} name="confirmPassword" onChange={(event) => setConfirmPassword(event.target.value)} placeholder="再次输入密码" required type="password" value={confirmPassword} />
+            <div className="password-field">
+              <input autoComplete="new-password" maxLength={72} minLength={8} name="confirmPassword" onChange={(event) => setConfirmPassword(event.target.value)} onKeyDown={(event) => setCapsLockOn(event.getModifierState('CapsLock'))} onKeyUp={(event) => setCapsLockOn(event.getModifierState('CapsLock'))} placeholder="再次输入密码" required type={passwordVisible ? 'text' : 'password'} value={confirmPassword} />
+              <button aria-label={passwordVisible ? '隐藏密码' : '显示密码'} onClick={() => setPasswordVisible((value) => !value)} title={passwordVisible ? '隐藏密码' : '显示密码'} type="button">{passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}</button>
+            </div>
           </label>}
+          {capsLockOn && <p className="caps-lock-note" role="status">大写锁定已开启，请留意密码大小写。</p>}
           {error && <p className="form-error" role="alert">{error}</p>}
           <label className="consent-row"><input checked={consentAccepted} onChange={(event) => onConsentChange(event.target.checked)} type="checkbox" /><span>我已阅读并同意<button onClick={() => onOpenPolicy('terms')} type="button">用户协议</button>与<button onClick={() => onOpenPolicy('privacy')} type="button">隐私说明</button></span></label>
           <label className="consent-row optional"><input checked={analyticsEnabled} onChange={(event) => onAnalyticsChange(event.target.checked)} type="checkbox" /><span>允许发送不含生辰和联系方式的匿名使用统计</span></label>
@@ -4026,6 +4087,7 @@ function OperationsFooter({ onFeedback, onOpenPolicy }: { onFeedback: () => void
 }
 
 function PolicyDialog({ account, archives, onClearData, onClose, onDeleteAccount, onExportData, view }: { account: AccountProfile | null; archives: ArchiveRecord[]; onClearData: () => void | Promise<void>; onClose: () => void; onDeleteAccount: () => void | Promise<void>; onExportData: () => void; view: PolicyView }) {
+  const { closeButtonRef, closeFromBackdrop } = useDialogLifecycle(onClose);
   const content: Record<Exclude<PolicyView, 'data'>, { title: string; intro: string; sections: Array<{ title: string; body: string }> }> = {
     privacy: {
       title: '隐私说明',
@@ -4060,10 +4122,11 @@ function PolicyDialog({ account, archives, onClearData, onClose, onDeleteAccount
     },
   };
   const page = view === 'data' ? null : content[view];
+  const titleId = `policy-dialog-title-${view}`;
   return (
-    <div className="modal-backdrop" role="presentation">
-      <section aria-modal="true" className="operations-dialog" role="dialog">
-        <header><div><span>{view === 'data' ? '本机自主控制' : `政策版本 ${POLICY_VERSION}`}</span><h2>{view === 'data' ? '数据管理' : page?.title}</h2></div><button aria-label="关闭" onClick={onClose} title="关闭" type="button"><X size={20} /></button></header>
+    <div className="modal-backdrop" onMouseDown={closeFromBackdrop} role="presentation">
+      <section aria-labelledby={titleId} aria-modal="true" className="operations-dialog" role="dialog">
+        <header><div><span>{view === 'data' ? '本机自主控制' : `政策版本 ${POLICY_VERSION}`}</span><h2 id={titleId}>{view === 'data' ? '数据管理' : page?.title}</h2></div><button aria-label="关闭" onClick={onClose} ref={closeButtonRef} title="关闭" type="button"><X size={20} /></button></header>
         {view === 'data' ? <div className="data-control-panel">
           <p>{account ? <>当前为本机加密账号 <strong>@{account.username}</strong>，保存 {archives.length} 份命盘档案。导出文件包括档案、学习进度、书签和本机反馈。</> : '当前处于游客模式，没有可导出的账号数据。登录后可管理独立的加密档案。'}</p>
           <div>
@@ -4083,6 +4146,7 @@ function FeedbackDialog({ onClose, onSubmitted }: { onClose: () => void; onSubmi
   const [contact, setContact] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const { closeButtonRef, closeFromBackdrop } = useDialogLifecycle(onClose);
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (message.trim().length < 8) return;
@@ -4098,7 +4162,7 @@ function FeedbackDialog({ onClose, onSubmitted }: { onClose: () => void; onSubmi
     }
   };
   return (
-    <div className="modal-backdrop" role="presentation"><section aria-modal="true" className="operations-dialog feedback-dialog" role="dialog"><header><div><span>帮助我们定位问题</span><h2>问题反馈</h2></div><button aria-label="关闭" onClick={onClose} title="关闭" type="button"><X size={20} /></button></header><form onSubmit={handleSubmit}><label><span>问题类型</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option>排盘问题</option><option>内容校勘</option><option>页面与交互</option><option>隐私与数据</option><option>其他建议</option></select></label><label><span>问题描述</span><textarea minLength={8} onChange={(event) => setMessage(event.target.value)} placeholder="请写明操作步骤、预期结果和实际情况" required value={message} /></label><label><span>联系方式（可选）</span><input onChange={(event) => setContact(event.target.value)} placeholder="当前未配置远程反馈时仅保存在本机" value={contact} /></label>{error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" disabled={submitting || message.trim().length < 8} type="submit"><MessageSquare size={16} />{submitting ? '提交中' : '提交反馈'}</button></form></section></div>
+    <div className="modal-backdrop" onMouseDown={closeFromBackdrop} role="presentation"><section aria-labelledby="feedback-dialog-title" aria-modal="true" className="operations-dialog feedback-dialog" role="dialog"><header><div><span>帮助我们定位问题</span><h2 id="feedback-dialog-title">问题反馈</h2></div><button aria-label="关闭" onClick={onClose} ref={closeButtonRef} title="关闭" type="button"><X size={20} /></button></header><form onSubmit={handleSubmit}><label><span>问题类型</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option>排盘问题</option><option>内容校勘</option><option>页面与交互</option><option>隐私与数据</option><option>其他建议</option></select></label><label><span>问题描述</span><textarea minLength={8} onChange={(event) => setMessage(event.target.value)} placeholder="请写明操作步骤、预期结果和实际情况" required value={message} /></label><label><span>联系方式（可选）</span><input onChange={(event) => setContact(event.target.value)} placeholder="当前未配置远程反馈时仅保存在本机" value={contact} /></label>{error && <p className="form-error" role="alert">{error}</p>}<button aria-busy={submitting} className="primary-button" disabled={submitting || message.trim().length < 8} type="submit"><MessageSquare size={16} />{submitting ? '提交中' : '提交反馈'}</button></form></section></div>
   );
 }
 
@@ -4125,7 +4189,32 @@ function BirthSetupPage({
 }) {
   const birthDateInputRef = useRef<HTMLInputElement>(null);
   const birthTimeInputRef = useRef<HTMLInputElement>(null);
+  const basicSectionRef = useRef<HTMLElement>(null);
+  const timeSectionRef = useRef<HTMLElement>(null);
+  const locationSectionRef = useRef<HTMLElement>(null);
+  const [activeFormSection, setActiveFormSection] = useState<'basic' | 'time' | 'location'>('basic');
   const matchedBirthLocation = findBirthLocation(input.birthplace);
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) return undefined;
+    const sections = [
+      ['basic', basicSectionRef.current],
+      ['time', timeSectionRef.current],
+      ['location', locationSectionRef.current],
+    ] as const;
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target.id) setActiveFormSection(visible.target.id as 'basic' | 'time' | 'location');
+    }, { rootMargin: '-18% 0px -62%', threshold: [0, 0.2, 0.6] });
+    sections.forEach(([, section]) => { if (section) observer.observe(section); });
+    return () => observer.disconnect();
+  }, []);
+
+  const goToFormSection = (section: 'basic' | 'time' | 'location') => {
+    const refs = { basic: basicSectionRef, time: timeSectionRef, location: locationSectionRef };
+    setActiveFormSection(section);
+    refs[section].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const openNativePicker = (ref: RefObject<HTMLInputElement | null>) => {
     try {
@@ -4184,8 +4273,16 @@ function BirthSetupPage({
           <h1>输入出生日期，生成四柱与完整详批。</h1>
         </div>
 
+        <nav aria-label="生辰资料步骤" className="form-step-nav">
+          {([
+            ['basic', '01', '基本资料'],
+            ['time', '02', '出生时刻'],
+            ['location', '03', '地点校正'],
+          ] as const).map(([key, number, label]) => <button aria-current={activeFormSection === key ? 'step' : undefined} className={activeFormSection === key ? 'active' : ''} key={key} onClick={() => goToFormSection(key)} type="button"><span>{number}</span><strong>{label}</strong></button>)}
+        </nav>
+
         <form className="birth-form" id="basic-info" onSubmit={handleSubmit}>
-          <section className="precision-form-section">
+          <section className="precision-form-section" id="basic" ref={basicSectionRef}>
             <header><span>01</span><div><h2>基本资料</h2><p>用于建立档案和确定大运顺逆，不需要填写真实姓名。</p></div></header>
             <div className="form-grid">
             <label>
@@ -4211,7 +4308,7 @@ function BirthSetupPage({
             </div>
           </section>
 
-          <section className="precision-form-section">
+          <section className="precision-form-section" id="time" ref={timeSectionRef}>
             <header><span>02</span><div><h2>历法与出生时刻</h2><p>农历日期请确认是否闰月；时间不确定时可标记来源和误差。</p></div></header>
             <div className="form-grid">
             <label>
@@ -4281,7 +4378,7 @@ function BirthSetupPage({
             </div>
           </section>
 
-          <section className="precision-form-section">
+          <section className="precision-form-section" id="location" ref={locationSectionRef}>
             <header><span>03</span><div><h2>地点与时间校正</h2><p>真太阳时按出生地经度、时区中央经线和当日均时差计算。</p></div></header>
             <div className="form-grid">
             <label className="wide">
@@ -4333,9 +4430,16 @@ function BirthSetupPage({
             </div>
           </section>
 
+          <div aria-label="本次排盘摘要" className="birth-submit-summary">
+            <div><span>日期</span><strong>{input.calendarType === 'lunar' ? '农历' : '公历'} {input.birthDate}</strong></div>
+            <div><span>时刻</span><strong>{input.unknownHour ? '时辰未知' : input.birthTime}</strong></div>
+            <div><span>地点</span><strong>{input.birthplace || '待填写'}</strong></div>
+            <div><span>校正</span><strong>{input.timeMode === 'clock' ? '自动真太阳时校正' : '已是真太阳时'}</strong></div>
+          </div>
+
           <div className="form-actions">
             {error && <p className="form-error" role="alert">{error}</p>}
-            <button className="primary-button" disabled={loading} type="submit">
+            <button aria-busy={loading} className="primary-button" disabled={loading} type="submit">
               <RefreshCw className={loading ? 'spin-icon' : ''} size={17} />
               {loading ? '正在校正并排盘…' : '生成八字排盘分析'}
             </button>
@@ -4422,6 +4526,8 @@ export default function App() {
   const [reading, setReading] = useState<BaziReading | null>(null);
   const [readingError, setReadingError] = useState('');
   const [readingLoading, setReadingLoading] = useState(false);
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine);
+  const lastSavedReadingRef = useRef<BaziReading | null>(null);
   const paipanRef = useRef<HTMLDivElement>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const usefulRef = useRef<HTMLDivElement>(null);
@@ -4442,12 +4548,33 @@ export default function App() {
   }, [step]);
 
   useEffect(() => {
+    const updateConnection = () => setIsOnline(navigator.onLine);
+    window.addEventListener('online', updateConnection);
+    window.addEventListener('offline', updateConnection);
+    return () => {
+      window.removeEventListener('online', updateConnection);
+      window.removeEventListener('offline', updateConnection);
+    };
+  }, []);
+
+  useEffect(() => {
     if (step !== 'report' || !reading || !persistArchive || !account) return;
-    const saved = archiveRepository.save(submitted, reading, currentArchiveId);
-    setCurrentArchiveId(saved.id);
-    setArchives(archiveRepository.list());
-    trackEvent('reading_generated', { calendar: submitted.calendarType, trueSolar: submitted.timeMode === 'clock', unknownHour: submitted.unknownHour });
-  }, [account, currentArchiveId, persistArchive, reading, step, submitted]);
+    if (lastSavedReadingRef.current === reading) return;
+    lastSavedReadingRef.current = reading;
+    let cancelled = false;
+    void archiveRepository.save(submitted, reading, currentArchiveId).then((saved) => {
+      if (cancelled) return;
+      setCurrentArchiveId(saved.id);
+      setArchives(archiveRepository.list());
+      trackEvent('reading_generated', { calendar: submitted.calendarType, trueSolar: submitted.timeMode === 'clock', unknownHour: submitted.unknownHour });
+    }).catch(() => {
+      if (!cancelled) {
+        lastSavedReadingRef.current = null;
+        setToast('命盘已生成，但本机档案保存失败');
+      }
+    });
+    return () => { cancelled = true; };
+  }, [account, persistArchive, reading, step, submitted]);
 
   const scrollTo = (target: NavTarget) => {
     const refs: Record<NavTarget, RefObject<HTMLDivElement | null>> = {
@@ -4552,6 +4679,7 @@ export default function App() {
   const wrapPage = (page: ReactNode) => (
     <>
       {page}
+      {!isOnline && <div className="offline-banner" role="status"><span>当前处于离线状态</span><small>排盘与已缓存内容仍可使用，远程反馈需联网后提交。</small></div>}
       <OperationsFooter onFeedback={() => setFeedbackOpen(true)} onOpenPolicy={setPolicyView} />
       {policyView && <PolicyDialog account={account} archives={archives} onClearData={async () => {
         if (!window.confirm('确定清空当前账号中的命盘、学习记录、书签与本机反馈吗？此操作无法撤销。')) return;
@@ -4583,6 +4711,7 @@ export default function App() {
         setFeedbackOpen(false);
         setToast(remote ? '反馈已提交' : stored ? '反馈已加密保存在当前账号' : '游客反馈未保存，请登录后再提交');
       }} />}
+      <Toast message={toast} onDismiss={() => setToast('')} />
     </>
   );
 
@@ -4594,9 +4723,9 @@ export default function App() {
         consentAccepted={consentAccepted}
         onAnalyticsChange={setAnalyticsEnabled}
         onConsentChange={setConsentAccepted}
-        onGuest={() => {
+        onGuest={async () => {
           savePrivacyPreferences(analyticsEnabled);
-          void logoutLocalAccount();
+          await logoutLocalAccount();
           setAccount(null);
           setArchives([]);
           setInput((current) => ({ ...current, name: '游客' }));
@@ -4628,7 +4757,6 @@ export default function App() {
         }}
           onOpenPolicy={setPolicyView}
         />
-        {toast && <div className="toast">{toast}</div>}
       </>
     );
   }
@@ -4640,7 +4768,12 @@ export default function App() {
           account={account}
           archives={archives}
           onBazi={() => { setCurrentArchiveId(undefined); setStep('birth'); }}
-          onDeleteArchive={(id) => { archiveRepository.remove(id); setArchives(archiveRepository.list()); setToast('本机档案已删除'); }}
+          onDeleteArchive={(id) => {
+            void archiveRepository.remove(id).then(() => {
+              setArchives(archiveRepository.list());
+              setToast('本机档案已删除');
+            }).catch(() => setToast('档案删除失败，请检查浏览器存储空间'));
+          }}
           onLearning={openLearning}
           onLogout={() => {
             void logoutLocalAccount().then(() => {
@@ -4652,13 +4785,12 @@ export default function App() {
               setSubmitted(initialInput);
               setPersistArchive(false);
               setStep('login');
-              setToast('已退出账号');
+              setToast(account ? '已退出账号' : '已返回登录页');
             });
           }}
           onOpenArchive={openArchive}
           onYijing={openYijing}
         />
-        {toast && <div className="toast">{toast}</div>}
       </>
     );
   }
@@ -4681,7 +4813,6 @@ export default function App() {
           onGoBazi={() => setStep('birth')}
           onLearning={openLearning}
         />
-        {toast && <div className="toast">{toast}</div>}
       </>
     );
   }
@@ -4702,7 +4833,6 @@ export default function App() {
             if (await generateReading(nextInput)) setToast('排盘已生成');
           }}
         />
-        {toast && <div className="toast">{toast}</div>}
       </>
     );
   }
@@ -4743,7 +4873,6 @@ export default function App() {
             <p className="disclaimer">以上为基于传统干支模型的结构化参考，不替代医学、法律、财务或人生重大决策建议。</p>
           </>
         )}
-        {toast && <div className="toast">{toast}</div>}
       </div>
     </main>
   );

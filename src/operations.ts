@@ -9,7 +9,7 @@ import {
   writeProfileValue,
 } from './auth';
 
-export const POLICY_VERSION = '2026-07-14';
+export const POLICY_VERSION = '2026-07-18';
 
 export type ArchiveRecord = {
   id: string;
@@ -61,7 +61,7 @@ export const archiveRepository = {
   list(): ArchiveRecord[] {
     return getVaultArchives<ArchiveRecord>().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   },
-  save(input: BirthInput, reading: BaziReading, existingId?: string) {
+  async save(input: BirthInput, reading: BaziReading, existingId?: string) {
     const records = this.list();
     const existing = records.find((record) => record.id === existingId) ?? records.find((record) => record.input.name === input.name && record.input.birthDate === input.birthDate && record.input.birthTime === input.birthTime);
     const now = new Date().toISOString();
@@ -73,19 +73,20 @@ export const archiveRepository = {
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
-    void setVaultArchives([record, ...records.filter((item) => item.id !== record.id)].slice(0, 30));
+    await setVaultArchives([record, ...records.filter((item) => item.id !== record.id)].slice(0, 30));
     return record;
   },
-  remove(id: string) {
-    void setVaultArchives(this.list().filter((record) => record.id !== id));
+  async remove(id: string) {
+    await setVaultArchives(this.list().filter((record) => record.id !== id));
   },
-  clear() {
-    void setVaultArchives([]);
+  async clear() {
+    await setVaultArchives([]);
   },
 };
 
 export function getPrivacyPreferences(): PrivacyPreferences | null {
-  return readJson<PrivacyPreferences | null>(PRIVACY_KEY, null);
+  const preferences = readJson<PrivacyPreferences | null>(PRIVACY_KEY, null);
+  return preferences?.version === POLICY_VERSION ? preferences : null;
 }
 
 export function savePrivacyPreferences(analytics: boolean) {
