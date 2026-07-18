@@ -2810,7 +2810,7 @@ function buildReportText(reading: BaziReading) {
   ].join('\n');
 }
 
-type LearningView = 'paths' | 'curriculum' | 'practice' | 'glossary' | 'classics' | 'reference';
+type LearningView = 'paths' | 'review' | 'curriculum' | 'cases' | 'practice' | 'glossary' | 'classics' | 'reference';
 type ClassicLibraryMode = 'shelf' | 'reader' | 'excerpts';
 type QuizAttempt = { selected: number; correct: boolean };
 type PracticeFilter = '全部' | '未作答' | '错题';
@@ -2858,10 +2858,13 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     branchQuickReference,
     classicExcerpts,
     classicShelf,
+    knowledgeCases,
     knowledgeModules,
     knowledgeQuizQuestions,
     knowledgeTerms,
     learningPaths,
+    relationQuickReference,
+    seasonQuickReference,
     stemQuickReference,
     tenGodQuickReference,
   } = knowledgeData;
@@ -2880,6 +2883,8 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
   const [termCategory, setTermCategory] = useState('全部');
   const [practiceCategory, setPracticeCategory] = useState('全部');
   const [practiceFilter, setPracticeFilter] = useState<PracticeFilter>('全部');
+  const [caseTheme, setCaseTheme] = useState('全部');
+  const [activeCaseId, setActiveCaseId] = useState(knowledgeCases[0].id);
   const [activeQuizId, setActiveQuizId] = useState(knowledgeQuizQuestions[0].id);
   const [selectedQuizAnswer, setSelectedQuizAnswer] = useState<number | null>(null);
   const [quizAttempts, setQuizAttempts] = useState<Record<string, QuizAttempt>>(() => readProfileValue('shanyi-quiz-attempts', {}));
@@ -2912,6 +2917,16 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     const matchesQuery = !normalizedQuery || [term.term, ...term.aliases, term.definition, term.caution].join(' ').toLowerCase().includes(normalizedQuery);
     return matchesCategory && matchesQuery;
   });
+  const caseThemes = ['全部', ...new Set(knowledgeCases.map((item) => item.theme))];
+  const filteredCases = knowledgeCases.filter((item) => {
+    const matchesTheme = caseTheme === '全部' || item.theme === caseTheme;
+    const matchesQuery = !normalizedQuery || [item.title, item.theme, item.pillars, item.brief, item.task, item.conclusion, item.commonMistake, ...item.steps.flatMap((step) => [step.title, step.analysis, ...step.evidence])]
+      .join(' ')
+      .toLowerCase()
+      .includes(normalizedQuery);
+    return matchesTheme && matchesQuery;
+  });
+  const activeCase = filteredCases.find((item) => item.id === activeCaseId) ?? filteredCases[0];
   const practiceCategories = ['全部', ...new Set(knowledgeQuizQuestions.map((question) => question.category))];
   const filteredQuizQuestions = knowledgeQuizQuestions.filter((question) => {
     const attempt = quizAttempts[question.id];
@@ -2926,6 +2941,17 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
   const answeredQuizCount = Object.keys(quizAttempts).filter((id) => knowledgeQuizQuestions.some((question) => question.id === id)).length;
   const correctQuizCount = Object.entries(quizAttempts).filter(([id, attempt]) => attempt.correct && knowledgeQuizQuestions.some((question) => question.id === id)).length;
   const wrongQuizCount = Object.entries(quizAttempts).filter(([id, attempt]) => !attempt.correct && knowledgeQuizQuestions.some((question) => question.id === id)).length;
+  const reviewLessons = knowledgeModules.flatMap((module) => module.lessons.map((lesson) => ({ module, lesson })))
+    .filter(({ lesson }) => !completedLessons.includes(lesson.id))
+    .slice(0, 4);
+  const reviewQuestions = knowledgeQuizQuestions
+    .filter((question) => quizAttempts[question.id] && !quizAttempts[question.id].correct)
+    .slice(0, 4);
+  const reviewBookmarks = classicBookmarks.slice(-4).reverse().map((key) => {
+    const [bookId, chapterId] = key.split(':');
+    const book = classicShelf.find((item) => item.id === bookId);
+    return book ? { book, chapterId } : null;
+  }).filter((item): item is NonNullable<typeof item> => Boolean(item));
   const activeChapter = classicBook?.chapters.find((chapter) => chapter.id === activeChapterId) ?? classicBook?.chapters[0];
   const chapterIndex = activeChapter ? classicBook?.chapters.findIndex((chapter) => chapter.id === activeChapter.id) ?? 0 : 0;
   const filteredChapters = classicBook?.chapters.filter((chapter) => !normalizedQuery || [chapter.title, chapter.guide].join(' ').toLowerCase().includes(normalizedQuery)) ?? [];
@@ -3157,8 +3183,14 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
           <button aria-selected={view === 'paths'} className={view === 'paths' ? 'active' : ''} onClick={() => { setView('paths'); setQuery(''); }} role="tab" type="button">
             <GraduationCap size={17} /> 学习路线
           </button>
+          <button aria-selected={view === 'review'} className={view === 'review' ? 'active' : ''} onClick={() => { setView('review'); setQuery(''); }} role="tab" type="button">
+            <RotateCcw size={17} /> 今日复习
+          </button>
           <button aria-selected={view === 'curriculum'} className={view === 'curriculum' ? 'active' : ''} onClick={() => setView('curriculum')} role="tab" type="button">
             <BookOpen size={17} /> 课程体系
+          </button>
+          <button aria-selected={view === 'cases'} className={view === 'cases' ? 'active' : ''} onClick={() => setView('cases')} role="tab" type="button">
+            <MessageSquare size={17} /> 案例研习
           </button>
           <button aria-selected={view === 'practice'} className={view === 'practice' ? 'active' : ''} onClick={() => { setView('practice'); setQuery(''); }} role="tab" type="button">
             <CheckCircle2 size={17} /> 练习复盘
@@ -3173,9 +3205,9 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
             <Search size={17} /> 基础速查
           </button>
         </div>
-        {view !== 'paths' && view !== 'practice' && view !== 'reference' && <label className="knowledge-search">
+        {view !== 'paths' && view !== 'review' && view !== 'practice' && view !== 'reference' && <label className="knowledge-search">
           <Search size={17} />
-          <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、十神、调候或古籍篇名" value={query} />
+          <input aria-label="搜索知识库" onChange={(event) => setQuery(event.target.value)} placeholder="搜索天干、调候、案例或古籍篇名" value={query} />
         </label>}
       </section>
 
@@ -3186,6 +3218,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
             <div><strong>{totalLessons}</strong><span>核心课节</span></div>
             <div><strong>{knowledgeTerms.length}</strong><span>术语词条</span></div>
             <div><strong>{knowledgeQuizQuestions.length}</strong><span>分层练习</span></div>
+            <div><strong>{knowledgeCases.length}</strong><span>实盘案例</span></div>
             <div><strong>{classicShelf.filter((book) => 'path' in book).length}</strong><span>全文古籍</span></div>
           </div>
           <div className="knowledge-section-head">
@@ -3213,6 +3246,65 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
                 </article>
               );
             })}
+          </div>
+        </section>
+      )}
+
+      {view === 'review' && (
+        <section className="review-library">
+          <div className="review-summary">
+            <div><span>未学课程</span><strong>{totalLessons - completedCount}</strong><small>按课程顺序补齐</small></div>
+            <div><span>错题待复盘</span><strong>{wrongQuizCount}</strong><small>先回知识点再重做</small></div>
+            <div><span>古籍书签</span><strong>{classicBookmarks.length}</strong><small>继续上次精读</small></div>
+          </div>
+          <div className="review-method">
+            <div><span>建议节奏</span><h2>一次复习只解决一个判断问题</h2></div>
+            <ol>
+              <li><strong>回忆</strong><span>先不看答案，用一句话写出规则。</span></li>
+              <li><strong>核对</strong><span>回到课程或原典，找出遗漏的成立条件。</span></li>
+              <li><strong>迁移</strong><span>换一个盘例，说明规则何时不成立。</span></li>
+            </ol>
+          </div>
+          <div className="review-columns">
+            <article className="review-queue">
+              <header><div><span>继续课程</span><h2>下一组知识点</h2></div><small>{reviewLessons.length} 项</small></header>
+              <div>
+                {reviewLessons.map(({ module, lesson }) => (
+                  <button key={lesson.id} onClick={() => { setActiveModuleId(module.id); setQuery(''); setView('curriculum'); }} type="button">
+                    <span>{String(module.order).padStart(2, '0')}</span>
+                    <div><strong>{lesson.title}</strong><small>{module.title} · {module.level}</small></div>
+                    <ArrowRight size={15} />
+                  </button>
+                ))}
+                {!reviewLessons.length && <p className="review-empty">全部课程已标记完成，可以进入案例研习检验掌握程度。</p>}
+              </div>
+            </article>
+            <article className="review-queue">
+              <header><div><span>错题回炉</span><h2>需要重新判断</h2></div><small>{reviewQuestions.length} 项</small></header>
+              <div>
+                {reviewQuestions.map((question) => (
+                  <button key={question.id} onClick={() => { setPracticeCategory('全部'); setPracticeFilter('错题'); chooseQuizQuestion(question.id); setView('practice'); }} type="button">
+                    <span>{question.category.slice(0, 1)}</span>
+                    <div><strong>{question.prompt}</strong><small>{question.level} · 回到对应课程后再答</small></div>
+                    <RotateCcw size={15} />
+                  </button>
+                ))}
+                {!reviewQuestions.length && <p className="review-empty">目前没有错题。继续完成练习，系统会自动把答错的题放到这里。</p>}
+              </div>
+            </article>
+            <article className="review-queue">
+              <header><div><span>原典书签</span><h2>继续精读</h2></div><small>{reviewBookmarks.length} 项</small></header>
+              <div>
+                {reviewBookmarks.map(({ book, chapterId }) => (
+                  <button key={`${book.id}:${chapterId}`} onClick={() => { setView('classics'); void openClassicBook(book.id, chapterId); }} type="button">
+                    <span>{book.title.slice(0, 1)}</span>
+                    <div><strong>{book.title} · 第 {Number(chapterId)} 篇</strong><small>从书签位置继续阅读</small></div>
+                    <Bookmark size={15} />
+                  </button>
+                ))}
+                {!reviewBookmarks.length && <p className="review-empty">精读古籍时点击书签，重点篇章会出现在这里。</p>}
+              </div>
+            </article>
           </div>
         </section>
       )}
@@ -3252,6 +3344,60 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
               </>
             )}
           </div>
+        </section>
+      )}
+
+      {view === 'cases' && (
+        <section className="case-library">
+          <div className="glossary-filter" aria-label="案例主题">
+            {caseThemes.map((theme) => <button className={caseTheme === theme ? 'active' : ''} key={theme} onClick={() => { setCaseTheme(theme); setActiveCaseId(''); }} type="button">{theme}</button>)}
+          </div>
+          <div className="knowledge-section-head">
+            <div><span>教学盘例</span><h2>{normalizedQuery ? `找到 ${filteredCases.length} 个案例` : `${caseTheme} · ${filteredCases.length} 个案例`}</h2></div>
+            <p>每个案例都保留证据、暂定结论和反证条件，训练推理过程，不背成固定断语。</p>
+          </div>
+          {activeCase ? (
+            <div className="case-layout">
+              <aside className="case-index">
+                {filteredCases.map((item, index) => (
+                  <button className={activeCase.id === item.id ? 'active' : ''} key={item.id} onClick={() => setActiveCaseId(item.id)} type="button">
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <div><strong>{item.title}</strong><small>{item.theme} · {item.level}</small></div>
+                  </button>
+                ))}
+              </aside>
+              <article className="case-study">
+                <header>
+                  <div><span>{activeCase.theme} · {activeCase.level}</span><small>案例仅供方法训练</small></div>
+                  <h2>{activeCase.title}</h2>
+                  <p className="case-pillars">{activeCase.pillars}</p>
+                  <p>{activeCase.brief}</p>
+                </header>
+                <div className="case-task"><strong>先做再看</strong><p>{activeCase.task}</p></div>
+                <div className="case-steps">
+                  {activeCase.steps.map((step) => (
+                    <section key={step.label}>
+                      <span>{step.label}</span>
+                      <div><h3>{step.title}</h3><p>{step.analysis}</p><ul>{step.evidence.map((item) => <li key={item}>{item}</li>)}</ul></div>
+                    </section>
+                  ))}
+                </div>
+                <div className="case-conclusion-grid">
+                  <div><span>暂定结论</span><p>{activeCase.conclusion}</p></div>
+                  <div><span>反证条件</span><p>{activeCase.counterEvidence}</p></div>
+                  <div><span>常见误判</span><p>{activeCase.commonMistake}</p></div>
+                </div>
+                <footer>
+                  <strong>关联学习</strong>
+                  <div>{activeCase.moduleIds.map((moduleId) => {
+                    const module = knowledgeModules.find((item) => item.id === moduleId);
+                    return module ? <button key={module.id} onClick={() => { setActiveModuleId(module.id); setQuery(''); setView('curriculum'); }} type="button">{module.title}<ArrowRight size={13} /></button> : null;
+                  })}</div>
+                  {activeCase.classicRef && <button onClick={() => { setQuery(''); setView('classics'); void openClassicBook(activeCase.classicRef!.bookId, activeCase.classicRef!.chapterId); }} type="button">原典关联 · {activeCase.classicRef.label}<BookOpen size={14} /></button>}
+                </footer>
+              </article>
+            </div>
+          ) : <div className="empty-knowledge">没有匹配的案例，请更换关键词或主题。</div>}
         </section>
       )}
 
@@ -3497,6 +3643,14 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
           <article>
             <div className="knowledge-section-head"><div><span>以日主为中心</span><h2>十神速查</h2></div></div>
             <div className="reference-table-wrap"><table><thead><tr><th>十神</th><th>生成关系</th><th>现实主题</th></tr></thead><tbody>{tenGodQuickReference.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div>
+          </article>
+          <article>
+            <div className="knowledge-section-head"><div><span>以节气为界</span><h2>十二月令气候速查</h2></div><p>气候判断只是第一层，仍须用全局火水、湿燥土与根源修正。</p></div>
+            <div className="reference-table-wrap"><table><thead><tr><th>月令</th><th>节气范围</th><th>气候底色</th><th>判断重点</th></tr></thead><tbody>{seasonQuickReference.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div>
+          </article>
+          <article>
+            <div className="knowledge-section-head"><div><span>先定成立，再论结果</span><h2>干支关系速查</h2></div><p>合冲刑害是作用方式，不是固定吉凶；必须结合月令、强弱、宫位和岁运。</p></div>
+            <div className="reference-table-wrap"><table><thead><tr><th>关系</th><th>组合</th><th>使用提醒</th></tr></thead><tbody>{relationQuickReference.map((row) => <tr key={row[0]}>{row.map((cell) => <td key={cell}>{cell}</td>)}</tr>)}</tbody></table></div>
           </article>
         </section>
       )}
