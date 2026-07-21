@@ -1,0 +1,37 @@
+{
+  "id": "lixu",
+  "title": "李虚中命书",
+  "dynasty": "唐宋文献系统",
+  "attribution": "题唐李虚中撰；现存本经后世整理，本站沿用《四库全书》本题名",
+  "status": "全文",
+  "chapterCount": 3,
+  "description": "早期禄命法重要文献，包含纳音、贵人、三元、六亲与行运等内容。",
+  "editionNote": "全文据维基文库《李虚中命书（四库全书本）》卷上、卷中、卷下整理，保留底本原字与原注；“□”表示来源页未能直接显示的缺字或异体字。白话导读为本站撰写。",
+  "sourceLabel": "维基文库《李虚中命书（四库全书本）》",
+  "sourceUrl": "https://zh.wikisource.org/wiki/李虛中命書_(四庫全書本)",
+  "updatedAt": "2026-07-12",
+  "chapters": [
+    {
+      "id": "01",
+      "title": "卷上",
+      "guide": "卷上集中讨论六十甲子纳音、天乙贵人和多种早期禄命格法。阅读时应注意：这套体系与后世以日主为中心的子平法并不完全相同。",
+      "path": "knowledge/classics/lixu/chapters/01.json",
+      "blockCount": 56
+    },
+    {
+      "id": "02",
+      "title": "卷中",
+      "guide": "卷中从阴阳、五行、三元和干支配合展开，保存了大量早期命理概念与旧说，可用于观察禄命法向子平法发展的思想脉络。",
+      "path": "knowledge/classics/lixu/chapters/02.json",
+      "blockCount": 28
+    },
+    {
+      "id": "03",
+      "title": "卷下",
+      "guide": "卷下进一步讨论六亲、贵贱、三元九限、行运与多类格法。现代学习宜将其视作文献史材料，与后世旺衰、格局理论相互参照。",
+      "path": "knowledge/classics/lixu/chapters/03.json",
+      "blockCount": 18
+    }
+  ],
+  "version": "2026-07-12-102"
+}

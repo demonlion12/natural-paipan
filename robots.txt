@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://demonlion12.github.io/natural-paipan/sitemap.xml
