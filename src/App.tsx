@@ -1163,15 +1163,21 @@ function TopProfile({
 }
 
 function AncientReference({ reading }: { reading: BaziReading }) {
-  const [activeClassic, setActiveClassic] = useState<ClassicKey>('qiongtong');
-  const [showReasoning, setShowReasoning] = useState(true);
   const dayStem = reading.dayMaster.stem;
   const monthBranch = reading.pillars[1].branch;
+  const recommendedClassic: ClassicKey = dayStem === '丙' && monthBranch === '子' ? 'qiongtong' : 'ditiansui';
+  const [activeClassic, setActiveClassic] = useState<ClassicKey>(recommendedClassic);
+  const [showReasoning, setShowReasoning] = useState(true);
   const visibleStems = reading.pillars.map((pillar) => pillar.stem).join('、');
   const hiddenStems = [...new Set(reading.pillars.flatMap((pillar) => pillar.hiddenStems))].join('、');
   const useful = reading.usefulElements.join('、');
   const dominant = reading.structure.dominantElement;
   const missing = reading.structure.missingElements.join('、') || '五行不见明显缺口';
+
+  useEffect(() => {
+    setActiveClassic(recommendedClassic);
+    setShowReasoning(true);
+  }, [dayStem, monthBranch, recommendedClassic]);
 
   const classicContent: Record<
     ClassicKey,
@@ -1342,7 +1348,7 @@ function AncientReference({ reading }: { reading: BaziReading }) {
             <span>古籍原文</span>
             <strong>{currentClassic.source}</strong>
             <em>{currentClassic.chapter}</em>
-            <small>{currentClassic.status}</small>
+            <small>{currentClassic.status}{activeClassic === recommendedClassic ? ' · 本盘优先' : ''}</small>
           </div>
           <blockquote>{currentClassic.quote}</blockquote>
           {currentClassic.sourceUrl && (
@@ -4662,6 +4668,7 @@ function ReportTopNav({
   onLearning: () => void;
   onYijing: () => void;
 }) {
+  const tabsRef = useRef<HTMLElement>(null);
   const navItems: Array<{ key: NavTarget; label: string }> = [
     { key: 'paipan', label: '基本排盘' },
     { key: 'element', label: '五行气势' },
@@ -4670,6 +4677,16 @@ function ReportTopNav({
     { key: 'professional', label: '专业细盘' },
     { key: 'luck', label: '大运合参' },
   ];
+
+  useEffect(() => {
+    const tabs = tabsRef.current;
+    const activeButton = tabs?.querySelector<HTMLButtonElement>(`[data-nav-target="${activeNav}"]`);
+    if (!tabs || !activeButton || tabs.scrollWidth <= tabs.clientWidth) return;
+    tabs.scrollTo({
+      behavior: 'smooth',
+      left: activeButton.offsetLeft - (tabs.clientWidth - activeButton.clientWidth) / 2,
+    });
+  }, [activeNav]);
 
   return (
     <header className="report-topnav">
@@ -4681,12 +4698,12 @@ function ReportTopNav({
         </div>
       </div>
 
-      <nav className="topnav-tabs" aria-label="报告导航">
+      <nav className="topnav-tabs" aria-label="报告导航" ref={tabsRef}>
         <button onClick={onHome} type="button">
           功能首页
         </button>
         {navItems.map((item) => (
-          <button className={activeNav === item.key ? 'active' : ''} key={item.key} onClick={() => onNavigate(item.key)} type="button">
+          <button className={activeNav === item.key ? 'active' : ''} data-nav-target={item.key} key={item.key} onClick={() => onNavigate(item.key)} type="button">
             {item.label}
           </button>
         ))}
@@ -4780,8 +4797,46 @@ export default function App() {
       detail: detailRef,
     };
     setActiveNav(target);
-    refs[target].current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const section = refs[target].current;
+    if (!section) return;
+    const navHeight = document.querySelector<HTMLElement>('.report-topnav')?.getBoundingClientRect().height ?? 0;
+    const top = window.scrollY + section.getBoundingClientRect().top - navHeight - 16;
+    window.scrollTo({ top: Math.max(0, top), left: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    if (step !== 'report' || !reading) return undefined;
+    const sections: Array<[NavTarget, RefObject<HTMLDivElement | null>]> = [
+      ['paipan', paipanRef],
+      ['element', elementRef],
+      ['useful', usefulRef],
+      ['detail', detailRef],
+      ['professional', professionalRef],
+      ['luck', luckRef],
+    ];
+    let frame = 0;
+    const updateActiveSection = () => {
+      frame = 0;
+      const navHeight = document.querySelector<HTMLElement>('.report-topnav')?.getBoundingClientRect().height ?? 0;
+      const threshold = navHeight + 32;
+      let next: NavTarget = 'paipan';
+      for (const [target, ref] of sections) {
+        if (ref.current && ref.current.getBoundingClientRect().top <= threshold) next = target;
+      }
+      setActiveNav((current) => current === next ? current : next);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateActiveSection);
+    };
+    updateActiveSection();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [reading, step]);
 
   const openYijing = () => {
     setYijingBackStep(step);

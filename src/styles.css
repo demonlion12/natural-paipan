@@ -869,6 +869,8 @@ textarea:focus {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  min-width: 0;
+  width: 100%;
   border: 1px solid rgba(23, 33, 29, 0.1);
   border-radius: 8px;
   background: rgba(247, 250, 248, 0.94);
@@ -900,6 +902,7 @@ textarea:focus {
 
 .topnav-tabs {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
@@ -6796,11 +6799,23 @@ textarea:focus-visible,
   }
 
   .topnav-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    overflow-x: auto;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    flex-wrap: nowrap;
+    scrollbar-width: thin;
   }
 
-  .topnav-tabs button,
+  .topnav-tabs button {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 42px;
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+
   .edit-button {
     width: 100%;
   }
