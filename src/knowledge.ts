@@ -25,7 +25,7 @@ export type KnowledgeTerm = {
   id: string;
   term: string;
   aliases: string[];
-  category: '基础坐标' | '力量判断' | '干支关系' | '格局取用' | '调候气象' | '岁运应用';
+  category: '基础坐标' | '力量判断' | '干支关系' | '格局取用' | '调候气象' | '岁运应用' | '分析方法';
   definition: string;
   caution: string;
   moduleId: string;
@@ -527,6 +527,42 @@ export const knowledgeModules: KnowledgeModule[] = [
       { id: 'luck-case', title: '大运流年复盘案例', summary: '把一件已发生事件放回原局、大运、流年、流月四层，检查重复触发。', points: ['先记录事件事实，不先写命理解释', '标出被触发的宫位、十神和干支关系', '区分背景条件、直接触发和个人选择', '写出若模型正确，下一次类似触发应出现什么'], practice: '选择一次工作或迁居变化，完成四层时间轴并写反证条件。' },
     ],
   },
+  {
+    id: 'calendar-calculation', title: '干支历法计算', level: '进阶', order: 21,
+    summary: '理解排盘软件怎样从出生资料得到年、月、日、时四柱，并能发现临界日期和算法设置造成的差异。',
+    lessons: [
+      { id: 'sexagenary-cycle', title: '六十甲子与干支配对', summary: '十干与十二支按阴阳相配，最小公倍数为六十，形成连续的六十甲子周期。', points: ['阳干配阳支、阴干配阴支', '干支各自循环，不是任意两字都能组成一柱', '旬空来自每十组干支中缺少的两个地支', '六十甲子是时间编码，不直接等于吉凶等级'], practice: '从甲子顺推到癸酉，再说明甲戌旬为什么空申酉。' },
+      { id: 'year-month-hour-rules', title: '年柱、月柱与时柱推法', summary: '年柱看立春边界，月干用五虎遁，时干用五鼠遁；三者都依赖已确认的时间坐标。', points: ['立春前后可能属于不同干支年', '月支固定按寅至丑随十二节切换', '甲己年丙作首等五虎遁口诀用于定寅月月干', '甲己日甲子时等五鼠遁口诀用于定子时时干', '未知日干时不能独立推出时干'], practice: '任选一个年干，列出寅月至丑月的十二个月干支；再任选日干列十二时辰。' },
+      { id: 'calculation-audit', title: '排盘结果怎么校验', summary: '可信排盘应能展示输入历法、时区、经度、节气、换日规则和最终有效时刻。', points: ['先核对公历与农历转换结果', '再核对交节时刻和月柱边界', '检查当地时区、夏令时与真太阳时修正', '确认子时换日口径和时辰误差', '临界盘保留两个候选结果，不用假精确掩盖不确定性'], practice: '找一张出生在节气或时辰边界的命盘，制作逐项校验清单。' },
+    ],
+  },
+  {
+    id: 'qi-flow', title: '五行流通与阻滞', level: '实战', order: 22,
+    summary: '把命局看成有源头、传递、承接和出口的作用网络，判断力量能否真正到达目标。',
+    lessons: [
+      { id: 'source-flow-outlet', title: '源头、路径与出口', summary: '流通不是五行齐全，而是旺气能沿相生或制化路径被承接、转化并形成结果。', points: ['先找月令或成局所形成的主要源头', '再看中间五行是否有根、有透、有位置', '出口可以是食伤输出、财星结果、官杀秩序或印星承接', '某五行存在但无根无路，不能视为有效环节', '流通也要控制剂量，泄过头会让源头失去承载'], practice: '把一个命盘写成“源头→中介→出口”，并标注每一环的根与制约。' },
+      { id: 'blockage-mediation', title: '阻滞、相战与通关', summary: '两股强气直接相战时，观察是否有中介五行把克战改造成连续作用。', points: ['木土相战可观察火的承接', '火金相战可观察土的转化', '金木相战可观察水的引通', '水火相战可观察木的转化', '土水相战可观察金的疏导', '通关五行必须真实有力，不能只凭理论补字'], practice: '任选一组相战五行，写出通关成立和不成立各需要哪些证据。' },
+      { id: 'flow-priority', title: '流通、调候与格局的优先级', summary: '气候决定能否生化，格局决定主线，流通决定力量怎样到达；三者要分层再合并。', points: ['极寒极燥时先处理生化条件', '格局主线不能被为了“凑循环”而随意改写', '流通路径可能服务用神，也可能把忌神送到结果端', '岁运补齐缺环时，阶段主题会更明显', '最终结论要说明主矛盾和次矛盾'], practice: '为同一命盘分别画调候层、格局层和流通层，再写一段综合排序。' },
+    ],
+  },
+  {
+    id: 'ten-god-practice', title: '十神组合实战', level: '实战', order: 23,
+    summary: '从单颗十神转向角色链条，学习事业、资源、关系与学习主题怎样由多颗十神共同形成。',
+    lessons: [
+      { id: 'career-role-chains', title: '事业中的十神链条', summary: '职业判断先看能力如何输出、怎样进入规则系统、最后由什么方式形成职位或成果。', points: ['食伤生财偏向用产品、技术和表达换取结果', '官印相生偏向用资质、流程和系统承接权责', '杀印相生强调高压任务需要专业支持转化', '伤官配印强调创新表达需要方法与边界', '组合名称必须检查每一环是否有根有力'], practice: '选择一段真实职业经历，用“投入—转化—结果”标注其中的十神角色。' },
+      { id: 'wealth-resource-chains', title: '财星与资源经营', summary: '财星是日主所克之物，重点在经营、交换和责任，不等同账户余额或投机运气。', points: ['身能任财先看日主是否具备承载和管理能力', '食伤生财重持续产出，不是见食伤就必赚钱', '比劫与财并见要看合作分配、竞争和边界', '财生官可能把资源转成责任、规则和位置', '现实财务仍受行业、技能、风险控制和周期影响'], practice: '把一项收入来源拆成能力、渠道、合作、成本、责任五栏，再对应十神。' },
+      { id: 'relationship-learning-chains', title: '关系与学习中的十神', summary: '印比食伤财官在关系里都可能发挥作用，不能只用男女财官星概括全部互动。', points: ['印星可表现为支持，也可能因过多而替代自主', '比劫可表现为伙伴，也可能形成竞争和分配问题', '食伤负责表达体验，过强时可能挑战规则', '官杀提供边界与承诺，过重时可能形成压力', '六亲判断必须与宫位、根气和岁运交叉验证'], practice: '选择一段合作或亲密关系，写出支持、表达、边界和资源四种互动。' },
+    ],
+  },
+  {
+    id: 'analysis-writing', title: '专业分析与表达', level: '实战', order: 24,
+    summary: '把推盘结果写成有层级、有依据、有不确定性和行动边界的报告，避免制造恐惧或绝对化承诺。',
+    lessons: [
+      { id: 'question-framing', title: '先定义问题再分析', summary: '同一命盘面对事业选择、关系沟通或学习规划时，证据排序和时间尺度并不相同。', points: ['把宽泛问题改写成可观察主题', '明确观察期限和现实约束', '区分趋势判断、事件假设和行动建议', '先问用户已经掌握的事实，避免用模糊话套反馈', '高风险问题应转介医学、法律或财务专业人士'], practice: '把“我以后好不好”改写成三个有期限、可验证、可行动的问题。' },
+      { id: 'confidence-language', title: '证据等级与置信表达', summary: '结论强度应与证据数量、独立性和资料可靠度相匹配。', points: ['月令、根气和重复触发共同支持时可提高置信度', '单个神煞或孤立关系只宜作低权重提示', '出生时间不确定时主动缩小结论范围', '使用“更容易、倾向、若条件成立”而非“必然”', '同时说明哪些事实会推翻当前判断'], practice: '把三条绝对断语改写成“结论—依据—置信度—反证”格式。' },
+      { id: 'action-boundary', title: '建议、复盘与伦理边界', summary: '建议应低风险、可执行、可逆并能观察反馈，不能用命理替代专业决策。', points: ['把五行取象转成节律、环境、技能和关系管理建议', '饰品颜色只作弱提示，不承担治疗或改命承诺', '重大医疗、投资和法律事项必须依据专业意见', '公开案例需去标识化并取得授权', '保留不应验记录，用复盘修正模型'], practice: '为一条调候结论设计三项低风险行动，并写出两周后的反馈指标。' },
+    ],
+  },
 ];
 
 export const learningPaths: LearningPath[] = [
@@ -535,6 +571,8 @@ export const learningPaths: LearningPath[] = [
   { id: 'climate', title: '调候专项', audience: '想深入寒暖燥湿', duration: '10天', summary: '从十二月令出发，将调候、扶抑和现实改善方案区分开。', moduleIds: ['structure-useful', 'climate-calendar', 'useful-god-method', 'case-workshop'], outcome: '能完成寒暖燥湿诊断，并控制补偏的先后与剂量。' },
   { id: 'timing', title: '岁运实战', audience: '想学习大运流年', duration: '12天', summary: '从原局到大运、流年、流月逐层定位，用过去事件回测。', moduleIds: ['luck-cycle', 'monthly-practice', 'case-validation', 'case-workshop'], outcome: '能建立年度观察表和可验证的趋势判断。' },
   { id: 'classics', title: '古籍研读', audience: '想系统阅读原典', duration: '21天', summary: '先学习版本、正文与旧注层次，再精读调候、格局、岁运专题。', moduleIds: ['classic-reading', 'structure-useful', 'structure-patterns', 'climate-calendar'], outcome: '能区分原文、旧注和现代解释，不再断章套诀。' },
+  { id: 'calculation', title: '排盘校验专项', audience: '想理解软件怎么算', duration: '8天', summary: '从六十甲子、节气边界、五虎遁与五鼠遁进入排盘算法，并训练临界盘校验。', moduleIds: ['foundation', 'time-correction', 'calendar-calculation'], outcome: '能读懂计算审计信息，发现历法、时区与时辰边界风险。' },
+  { id: 'professional', title: '专业分析训练', audience: '想独立写完整报告', duration: '18天', summary: '从五行流通和十神链条进入综合判断，再用证据等级、反证和伦理边界完成报告。', moduleIds: ['qi-flow', 'ten-god-practice', 'case-validation', 'analysis-writing'], outcome: '能完成有结构、有依据、可验证且不过度承诺的分析报告。' },
 ];
 
 export const knowledgeCases: KnowledgeCase[] = [
@@ -687,6 +725,18 @@ export const knowledgeQuizQuestions: KnowledgeQuizQuestion[] = [
   { id: 'q28', level: '进阶', category: '古籍', prompt: '古籍中的命例应如何使用？', options: ['见到一字相同就照搬结论', '提取论证路径，并检查自己的命盘是否满足同样条件', '只记结论不看过程', '当作现代统计数据'], answer: 1, explanation: '命例的价值在于展示作者如何从结构走向判断；迁移时必须核对月令、根气、组合和岁运条件。', moduleId: 'classic-reading', lessonId: 'context-reading' },
   { id: 'q29', level: '实战', category: '取用', prompt: '根据调候提出改善方案时，哪种方法更可靠？', options: ['只推荐固定颜色和饰品', '从作息、空间、活动、节律和风险边界综合设计，并观察反馈', '补得越多越好', '完全忽略现实健康条件'], answer: 1, explanation: '传统取象应转成低风险、可执行、可反馈的生活策略；物品只是弱提示，不能代替环境、行为和专业建议。', moduleId: 'case-workshop', lessonId: 'climate-case' },
   { id: 'q30', level: '实战', category: '关系', prompt: '神煞在完整命局分析中的合理权重是？', options: ['高于月令和格局', '用于辅助取象，服从五行结构和岁运触发', '数量越多越凶', '可以单独决定婚姻事业'], answer: 1, explanation: '神煞适合补充象意和事件语言，但不能压过月令、旺衰、格局、干支组合及岁运层次。', moduleId: 'special-markers', lessonId: 'shen-sha' },
+  { id: 'q31', level: '进阶', category: '基础', prompt: '为什么六十甲子只有六十组，而不是十干乘十二支的一百二十组？', options: ['古人任意删去一半', '阴干只配阴支、阳干只配阳支', '地支只用六个', '天干每两年才变化'], answer: 1, explanation: '干支按阴阳同性相配，十与十二同步循环的最小公倍数为六十，因此形成六十甲子。', moduleId: 'calendar-calculation', lessonId: 'sexagenary-cycle' },
+  { id: 'q32', level: '进阶', category: '基础', prompt: '确定八字月柱时，下列哪项最关键？', options: ['农历初一', '公历每月一日', '十二个节的精确交接时刻', '生肖'], answer: 2, explanation: '月支随十二个节切换，月干再依年干用五虎遁推出；临界出生必须核对交节时刻。', moduleId: 'calendar-calculation', lessonId: 'year-month-hour-rules' },
+  { id: 'q33', level: '实战', category: '基础', prompt: '出生时间经真太阳时修正后刚好跨越时辰边界，最稳妥的处理是？', options: ['永远采用修正前时柱', '任选更符合性格的一盘', '保留两个候选盘并用客观事件回测', '忽略地点'], answer: 2, explanation: '临界资料不能制造假精确，应说明算法、误差与两个候选结果，再用能区分两盘的客观事件回测。', moduleId: 'calendar-calculation', lessonId: 'calculation-audit' },
+  { id: 'q34', level: '实战', category: '关系', prompt: '判断命局“流通”时，哪项表述最准确？', options: ['五行齐全就是流通', '五行按数量一样多就是流通', '主要力量有源头、中介和可承接的出口', '相生越多越好'], answer: 2, explanation: '流通重在作用路径是否真实存在并能被承接，不要求五行齐全，也不意味着无限相生。', moduleId: 'qi-flow', lessonId: 'source-flow-outlet' },
+  { id: 'q35', level: '实战', category: '关系', prompt: '金木两旺直接相战时，传统通关思路会优先观察哪一行？', options: ['火', '土', '水', '继续加金'], answer: 2, explanation: '金可生水、水可生木，水有机会把直接克战改为连续相生；但水必须有根、有位置并能真实参与。', moduleId: 'qi-flow', lessonId: 'blockage-mediation' },
+  { id: 'q36', level: '实战', category: '取用', prompt: '某条流通路径顺畅，但最终把忌神不断送旺，应怎样判断？', options: ['只要流通就一定吉', '仍要看路径是否服务命局主要用神', '立即判断从格', '只看神煞'], answer: 1, explanation: '流通是作用效率，不是价值结论；路径若服务忌神，顺畅反而可能加重主要矛盾。', moduleId: 'qi-flow', lessonId: 'flow-priority' },
+  { id: 'q37', level: '实战', category: '取用', prompt: '判断“官印相生”能否成立，哪种做法最可靠？', options: ['官和印各出现一个字即可', '检查官、印、日主三环是否有根、有路且少受阻', '只看月支', '只看职位名称'], answer: 1, explanation: '组合名称必须还原为作用链，逐环检查根源、位置、季节与阻断因素。', moduleId: 'ten-god-practice', lessonId: 'career-role-chains' },
+  { id: 'q38', level: '实战', category: '取用', prompt: '关于财星，下列哪项更专业？', options: ['财星数量等于存款数量', '见财星必然适合投资', '财星反映经营交换与责任，还要看日主承载和现实能力', '没有财星就没有收入'], answer: 2, explanation: '财星是结构角色，不是财务账户。收入和经营结果仍受技能、行业、风险控制与现实周期影响。', moduleId: 'ten-god-practice', lessonId: 'wealth-resource-chains' },
+  { id: 'q39', level: '实战', category: '关系', prompt: '分析亲密关系时，为什么不能只看财星或官杀？', options: ['财官完全无用', '互动还涉及宫位、印比食伤、根气与岁运', '只看桃花更准确', '生肖已经足够'], answer: 1, explanation: '关系是支持、表达、边界、资源和宫位等多层互动，单颗六亲星不能概括全部。', moduleId: 'ten-god-practice', lessonId: 'relationship-learning-chains' },
+  { id: 'q40', level: '实战', category: '岁运', prompt: '面对“我以后好不好”这类问题，第一步应该做什么？', options: ['直接断终身吉凶', '改写为有主题、有期限、可验证的问题', '先看神煞', '承诺一定改善'], answer: 1, explanation: '先定义观察主题、期限和现实约束，才能选择相关证据并形成可复盘的结论。', moduleId: 'analysis-writing', lessonId: 'question-framing' },
+  { id: 'q41', level: '实战', category: '岁运', prompt: '出生时辰不确定且结论只由一个神煞支持时，报告应如何表达？', options: ['提高语气显得专业', '标为低置信提示并说明资料限制', '写成必然事件', '省略资料误差'], answer: 1, explanation: '结论强度应匹配证据和资料可靠度；弱证据与不确定时辰必须主动降低置信度。', moduleId: 'analysis-writing', lessonId: 'confidence-language' },
+  { id: 'q42', level: '实战', category: '取用', prompt: '把调候结论转成现实建议时，哪项原则最重要？', options: ['饰品越贵越有效', '建议低风险、可执行、可逆并能观察反馈', '替代医生或财务顾问', '一次把同类五行补到最多'], answer: 1, explanation: '命理取象只能转成低风险生活策略，并保留反馈和停止条件，不能替代持证专业建议。', moduleId: 'analysis-writing', lessonId: 'action-boundary' },
 ];
 
 export const knowledgeTerms: KnowledgeTerm[] = [
@@ -732,6 +782,14 @@ export const knowledgeTerms: KnowledgeTerm[] = [
   { id: 'opposition', term: '反吟', aliases: ['天克地冲'], category: '岁运应用', definition: '岁运与原局某柱形成强烈对冲或相反结构。', caution: '常见变化幅度增大，但结果仍取决于冲到喜神还是忌神及现实条件。', moduleId: 'monthly-practice' },
   { id: 'luck-transition', term: '交运', aliases: ['起运', '换运'], category: '岁运应用', definition: '从一柱大运切换到下一柱大运的时间节点。', caution: '交运并非某天必然突变，更常表现为前后数月到一两年的主题过渡。', moduleId: 'luck-cycle' },
   { id: 'symbolic-stars', term: '神煞', aliases: ['星煞'], category: '岁运应用', definition: '依据干支组合推导的辅助类象系统，如天乙、驿马、桃花。', caution: '神煞只能辅助定位，不能凌驾于月令、五行、十神和格局。', moduleId: 'special-markers' },
+  { id: 'sexagenary-cycle-term', term: '六十甲子', aliases: ['花甲子'], category: '基础坐标', definition: '十天干与十二地支按阴阳同性顺序相配形成的六十组时间编码。', caution: '六十甲子用于标记时间和柱位，本身不是固定的吉凶等级。', moduleId: 'calendar-calculation' },
+  { id: 'five-tigers', term: '五虎遁', aliases: ['年上起月'], category: '基础坐标', definition: '根据年干确定寅月月干，再顺推十二个月干支的方法。', caution: '月柱仍以节气切换；只背月干口诀而忽略交节时刻会排错临界盘。', moduleId: 'calendar-calculation' },
+  { id: 'five-rats', term: '五鼠遁', aliases: ['日上起时'], category: '基础坐标', definition: '根据日干确定子时时干，再顺推十二时辰干支的方法。', caution: '必须先确认日柱及子时换日口径，日干不同会改变全部时干。', moduleId: 'calendar-calculation' },
+  { id: 'qi-source', term: '源流', aliases: ['源头流向'], category: '分析方法', definition: '观察命局主要力量从哪里产生、经过哪些环节并最终落到何处的分析方法。', caution: '五行出现不等于形成路径；每一环都要检查根、透、位置与受制。', moduleId: 'qi-flow', classicRef: { bookId: 'ditiansui', chapterId: '19', label: '《滴天髓·源流论》' } },
+  { id: 'blockage', term: '阻滞', aliases: ['气塞', '隔'], category: '分析方法', definition: '主要力量因缺少中介、受合绊冲克或寒燥凝结而难以到达作用目标。', caution: '阻滞不只是“缺某五行”，还可能是已有五行无根、无位置或被制。', moduleId: 'qi-flow' },
+  { id: 'rescue-response', term: '救应', aliases: ['救神'], category: '格局取用', definition: '当格局或用神受损时，能够制约破坏因素、恢复结构作用的力量。', caution: '救应要针对具体破坏路径，不是命局中所有喜神都可称救应。', moduleId: 'structure-patterns' },
+  { id: 'confidence-level', term: '证据等级', aliases: ['置信度'], category: '分析方法', definition: '根据资料可靠性、结构证据数量和独立性，为命理结论标注可信程度。', caution: '语气不能代替证据；时辰不明、单一神煞或孤立口诀只能支持低置信提示。', moduleId: 'analysis-writing' },
+  { id: 'counter-evidence', term: '反证条件', aliases: ['证伪条件'], category: '分析方法', definition: '预先说明哪些现实事实出现时，应推翻或修正当前判断。', caution: '无法被任何事实推翻的宽泛断语，不适合作为可验证的分析结论。', moduleId: 'analysis-writing' },
 ];
 
 export const classicExcerpts: ClassicExcerpt[] = [

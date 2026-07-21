@@ -7,6 +7,7 @@ const {
   knowledgeModules,
   knowledgeQuizQuestions,
   knowledgeTerms,
+  learningPaths,
   relationQuickReference,
   seasonQuickReference,
   stemQuickReference,
@@ -40,6 +41,10 @@ test('knowledge library identifiers and links stay internally consistent', () =>
     assert.ok(item.counterEvidence.length > 0, `案例 ${item.id} 缺少反证条件`);
     for (const moduleId of item.moduleIds) assert.ok(moduleIds.has(moduleId), `案例 ${item.id} 的课程 ${moduleId} 不存在`);
   }
+
+  for (const path of learningPaths) {
+    for (const moduleId of path.moduleIds) assert.ok(moduleIds.has(moduleId), `路线 ${path.id} 的课程 ${moduleId} 不存在`);
+  }
 });
 
 test('quick-reference tables cover the expected base systems', () => {
@@ -48,4 +53,11 @@ test('quick-reference tables cover the expected base systems', () => {
   assert.equal(tenGodQuickReference.length, 10);
   assert.equal(seasonQuickReference.length, 12);
   assert.equal(relationQuickReference.length, 8);
+});
+
+test('traditional localization converts display text and normalizes search text locally', async () => {
+  const { loadTraditionalLocalizers } = require('../test-runtime/i18n.js');
+  const localizers = await loadTraditionalLocalizers();
+  assert.equal(localizers.display('学习调候与岁运分析'), '學習調候與歲運分析');
+  assert.equal(localizers.normalizeSearch('學習調候與歲運分析'), '学习调候与岁运分析');
 });

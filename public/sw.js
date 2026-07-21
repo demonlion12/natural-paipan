@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shanyi-paipan-v3';
+const CACHE_NAME = 'shanyi-paipan-v4';
 const APP_SHELL = ['./', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', (event) => {

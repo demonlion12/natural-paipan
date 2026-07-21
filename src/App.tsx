@@ -15,6 +15,7 @@ import {
   EyeOff,
   FileText,
   GraduationCap,
+  Languages,
   LibraryBig,
   LockKeyhole,
   LogIn,
@@ -42,6 +43,8 @@ import {
 } from './auth';
 import type { AccountProfile } from './auth';
 import type { ClassicBook, ClassicChapter, KnowledgeModule } from './knowledge';
+import { loadTraditionalLocalizers, localizeReactTree, readLearningLocale, writeLearningLocale } from './i18n';
+import type { AppLocale, LearningLocalizers } from './i18n';
 import { birthLocations, findBirthLocation } from './locationData';
 import {
   POLICY_VERSION,
@@ -2868,6 +2871,9 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     stemQuickReference,
     tenGodQuickReference,
   } = knowledgeData;
+  const [learningLocale, setLearningLocale] = useState<AppLocale>(() => readLearningLocale());
+  const [learningLocalizers, setLearningLocalizers] = useState<LearningLocalizers | null>(null);
+  const [localeLoading, setLocaleLoading] = useState(false);
   const [view, setView] = useState<LearningView>('paths');
   const [activeModuleId, setActiveModuleId] = useState(knowledgeModules[0].id);
   const [query, setQuery] = useState('');
@@ -2892,10 +2898,31 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
   const [classicReadingPositions, setClassicReadingPositions] = useState<Record<string, string>>(() => readProfileValue('shanyi-classic-positions', {}));
   const chapterLoadRequest = useRef(0);
   const [completedLessons, setCompletedLessons] = useState<string[]>(() => readProfileValue('shanyi-learning-progress', []));
+
+  useEffect(() => {
+    let active = true;
+    const previousLang = document.documentElement.lang;
+    document.documentElement.lang = learningLocale;
+    writeLearningLocale(learningLocale);
+    if (learningLocale === 'zh-CN') {
+      setLearningLocalizers(null);
+      setLocaleLoading(false);
+    } else {
+      setLocaleLoading(true);
+      loadTraditionalLocalizers()
+        .then((localizers) => { if (active) setLearningLocalizers(localizers); })
+        .finally(() => { if (active) setLocaleLoading(false); });
+    }
+    return () => {
+      active = false;
+      document.documentElement.lang = previousLang || 'zh-CN';
+    };
+  }, [learningLocale]);
+
   const totalLessons = knowledgeModules.reduce((sum, module) => sum + module.lessons.length, 0);
   const completedCount = completedLessons.filter((id) => knowledgeModules.some((module) => module.lessons.some((lesson) => lesson.id === id))).length;
   const progress = Math.round((completedCount / totalLessons) * 100);
-  const normalizedQuery = query.trim().toLowerCase();
+  const normalizedQuery = (learningLocalizers?.normalizeSearch(query.trim()) ?? query.trim()).toLowerCase();
   const activeModule = knowledgeModules.find((module) => module.id === activeModuleId) ?? knowledgeModules[0];
   const searchResults = normalizedQuery
     ? knowledgeModules.flatMap((module) => module.lessons
@@ -3136,7 +3163,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     );
   };
 
-  return (
+  const page = (
     <main className="learning-shell">
       <header className="learning-topbar">
         <button className="icon-text-button" onClick={onBack} type="button">
@@ -3151,6 +3178,13 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
           </div>
         </div>
         <div className="learning-top-actions">
+          <label className="learning-locale-select">
+            <Languages size={16} />
+            <select aria-label="学堂显示语言" disabled={localeLoading} onChange={(event) => setLearningLocale(event.target.value as AppLocale)} value={learningLocale}>
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁體中文</option>
+            </select>
+          </label>
           <button className="secondary-button slim" onClick={onGoBazi} type="button">
             <BookOpen size={16} />
             八字排盘
@@ -3658,6 +3692,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
       <p className="disclaimer">知识库用于传统文化学习与结构化思考，不应替代医学、法律、财务或其他专业意见。</p>
     </main>
   );
+  return learningLocalizers ? localizeReactTree(page, learningLocalizers.display) : page;
 }
 
 function YijingPage({ onBack, onGoBazi, onLearning }: { onBack: () => void; onGoBazi: () => void; onLearning: () => void }) {

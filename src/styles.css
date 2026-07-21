@@ -4062,6 +4062,38 @@ button.flow-cell.current:focus-visible {
   gap: 8px;
 }
 
+.learning-locale-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  border: 1px solid rgba(23, 33, 29, 0.12);
+  border-radius: 6px;
+  background: #fff;
+  color: #52665d;
+  padding: 0 9px;
+}
+
+.learning-locale-select select {
+  min-width: 80px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #344a42;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.learning-locale-select:focus-within {
+  outline: 3px solid rgba(43, 122, 120, 0.25);
+  outline-offset: 2px;
+}
+
+.learning-locale-select:has(select:disabled) {
+  opacity: 0.62;
+}
+
 .learning-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
@@ -6297,6 +6329,11 @@ textarea:focus-visible,
   .learning-top-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .learning-locale-select {
+    grid-column: 1 / -1;
+    justify-content: space-between;
   }
 
   .archive-grid,

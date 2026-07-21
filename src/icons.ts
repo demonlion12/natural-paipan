@@ -13,6 +13,7 @@ export { default as EyeOff } from 'lucide-react/dist/esm/icons/eye-off.mjs';
 export { default as FileText } from 'lucide-react/dist/esm/icons/file-text.mjs';
 export { default as GraduationCap } from 'lucide-react/dist/esm/icons/graduation-cap.mjs';
 export { default as LibraryBig } from 'lucide-react/dist/esm/icons/library-big.mjs';
+export { default as Languages } from 'lucide-react/dist/esm/icons/languages.mjs';
 export { default as LockKeyhole } from 'lucide-react/dist/esm/icons/lock-keyhole.mjs';
 export { default as LogIn } from 'lucide-react/dist/esm/icons/log-in.mjs';
 export { default as LogOut } from 'lucide-react/dist/esm/icons/log-out.mjs';
