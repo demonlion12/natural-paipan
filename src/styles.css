@@ -4164,6 +4164,7 @@ button.flow-cell.current:focus-visible {
 .learning-tabs button {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
   gap: 7px;
   min-height: 42px;
   border: 0;
@@ -4172,6 +4173,14 @@ button.flow-cell.current:focus-visible {
   color: #52665d;
   padding: 0 14px;
   font-weight: 900;
+  white-space: nowrap;
+}
+
+.learning-tabs {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .learning-tabs button.active {
@@ -4198,6 +4207,22 @@ button.flow-cell.current:focus-visible {
   outline: 0;
   background: transparent;
   color: #17211d;
+}
+
+@media (max-width: 1500px) {
+  .learning-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .learning-toolbar .learning-tabs {
+    width: 100%;
+  }
+
+  .learning-toolbar .knowledge-search {
+    align-self: flex-end;
+    width: min(520px, 100%);
+  }
 }
 
 .learning-path-library,

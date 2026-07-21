@@ -3137,6 +3137,11 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
     setView('curriculum');
   };
 
+  const switchLearningView = (nextView: LearningView) => {
+    setView(nextView);
+    setQuery('');
+  };
+
   const renderLesson = (lesson: (typeof knowledgeModules)[number]['lessons'][number], moduleTitle?: string) => {
     const isComplete = completedLessons.includes(lesson.id);
     return (
@@ -3214,28 +3219,28 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
 
       <section className="learning-toolbar">
         <div className="learning-tabs" role="tablist" aria-label="学习内容">
-          <button aria-selected={view === 'paths'} className={view === 'paths' ? 'active' : ''} onClick={() => { setView('paths'); setQuery(''); }} role="tab" type="button">
+          <button aria-selected={view === 'paths'} className={view === 'paths' ? 'active' : ''} onClick={() => switchLearningView('paths')} role="tab" type="button">
             <GraduationCap size={17} /> 学习路线
           </button>
-          <button aria-selected={view === 'review'} className={view === 'review' ? 'active' : ''} onClick={() => { setView('review'); setQuery(''); }} role="tab" type="button">
+          <button aria-selected={view === 'review'} className={view === 'review' ? 'active' : ''} onClick={() => switchLearningView('review')} role="tab" type="button">
             <RotateCcw size={17} /> 今日复习
           </button>
-          <button aria-selected={view === 'curriculum'} className={view === 'curriculum' ? 'active' : ''} onClick={() => setView('curriculum')} role="tab" type="button">
+          <button aria-selected={view === 'curriculum'} className={view === 'curriculum' ? 'active' : ''} onClick={() => switchLearningView('curriculum')} role="tab" type="button">
             <BookOpen size={17} /> 课程体系
           </button>
-          <button aria-selected={view === 'cases'} className={view === 'cases' ? 'active' : ''} onClick={() => setView('cases')} role="tab" type="button">
+          <button aria-selected={view === 'cases'} className={view === 'cases' ? 'active' : ''} onClick={() => switchLearningView('cases')} role="tab" type="button">
             <MessageSquare size={17} /> 案例研习
           </button>
-          <button aria-selected={view === 'practice'} className={view === 'practice' ? 'active' : ''} onClick={() => { setView('practice'); setQuery(''); }} role="tab" type="button">
+          <button aria-selected={view === 'practice'} className={view === 'practice' ? 'active' : ''} onClick={() => switchLearningView('practice')} role="tab" type="button">
             <CheckCircle2 size={17} /> 练习复盘
           </button>
-          <button aria-selected={view === 'glossary'} className={view === 'glossary' ? 'active' : ''} onClick={() => { setView('glossary'); setQuery(''); }} role="tab" type="button">
+          <button aria-selected={view === 'glossary'} className={view === 'glossary' ? 'active' : ''} onClick={() => switchLearningView('glossary')} role="tab" type="button">
             <FileText size={17} /> 术语词典
           </button>
-          <button aria-selected={view === 'classics'} className={view === 'classics' ? 'active' : ''} onClick={() => setView('classics')} role="tab" type="button">
+          <button aria-selected={view === 'classics'} className={view === 'classics' ? 'active' : ''} onClick={() => switchLearningView('classics')} role="tab" type="button">
             <LibraryBig size={17} /> 古籍研读
           </button>
-          <button aria-selected={view === 'reference'} className={view === 'reference' ? 'active' : ''} onClick={() => setView('reference')} role="tab" type="button">
+          <button aria-selected={view === 'reference'} className={view === 'reference' ? 'active' : ''} onClick={() => switchLearningView('reference')} role="tab" type="button">
             <Search size={17} /> 基础速查
           </button>
         </div>
