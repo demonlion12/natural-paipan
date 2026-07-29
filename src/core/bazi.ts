@@ -16,7 +16,7 @@ import type {
   ReadingSection,
 } from './types';
 
-export const CALCULATION_VERSION = '2026.07.1';
+export const CALCULATION_VERSION = '2026.07.2';
 
 const STEM_ELEMENT: Record<string, ElementName> = {
   甲: '木',
@@ -145,6 +145,59 @@ const ELEMENT_DEEP_PROFILE: Record<
     virtue: '长处是学习力、策略感和适应力，适合研究、数据、投资、咨询、跨区域或跨行业连接。',
     imbalance: '失衡时容易犹豫、分散，知道很多可能性，却迟迟不落地。',
     social: '你需要能给你空间、也能和你深聊的人；太浅、太吵、太急的关系会让你后退。',
+  },
+};
+
+const STEM_DEEP_PROFILE: Record<string, { core: string; decision: string; tension: string }> = {
+  甲: {
+    core: '甲木像乔木，重方向、原则与向上空间；一旦认定主线，通常愿意长期投入。',
+    decision: '做决定偏向先定方向再补方法，不喜欢目标长期含糊。',
+    tension: '受阻时容易正面硬顶，需分清坚持原则与执着旧路径。',
+  },
+  乙: {
+    core: '乙木像藤蔓花草，善观察环境、借势生长，也更在意关系中的细微反馈。',
+    decision: '做决定会先看人、资源与落地条件，再寻找阻力最小的路径。',
+    tension: '选择过多时容易迁就环境，需避免为了维持关系而丢掉主线。',
+  },
+  丙: {
+    core: '丙火像太阳，重公开表达、影响范围与即时反馈，倾向把局面照亮后再推进。',
+    decision: '判断形成后行动较快，适合在可见成果和明确反馈中持续发力。',
+    tension: '压力大时容易把节奏拉得过快，需给复盘和恢复留下空间。',
+  },
+  丁: {
+    core: '丁火像灯烛，注意力集中、感受细致，擅长在具体的人和事上持续投入。',
+    decision: '做决定更看价值感与真实体验，不愿把重要事情只处理成数字。',
+    tension: '反馈不足时容易内耗，需要把猜测改成及时确认。',
+  },
+  戊: {
+    core: '戊土像高地，重承载、秩序与整体稳定，常会先守住局面再处理个人感受。',
+    decision: '倾向选择能形成长期结构的方案，不喜欢频繁推倒重来。',
+    tension: '责任叠加时容易越扛越重，需要主动划清职责边界。',
+  },
+  己: {
+    core: '己土像田园，重实际照料、资源配置与细节落地，擅长让零散事务形成秩序。',
+    decision: '做决定会反复核对成本、关系与后续维护，不轻易承诺。',
+    tension: '容易替别人补位，需防琐事吞掉真正重要的目标。',
+  },
+  庚: {
+    core: '庚金像矿铁，重效率、取舍与直接解决问题，面对困难时反而容易被激发。',
+    decision: '倾向迅速识别关键矛盾，用行动验证判断。',
+    tension: '推进过快时容易忽略感受与缓冲，需给合作对象留出沟通空间。',
+  },
+  辛: {
+    core: '辛金像精工之金，重标准、边界与完成质量，对细节和失误较为敏感。',
+    decision: '做决定会先排除风险、核验细节，再选择可控且体面的路径。',
+    tension: '标准拉得过高时容易收紧或挑剔，需区分关键质量与非关键完美。',
+  },
+  壬: {
+    core: '壬水像江海，重信息、趋势与活动空间，能够同时容纳多条线索。',
+    decision: '倾向先扩大信息面，再顺势寻找机会窗口。',
+    tension: '可能因选项太多而分散，需用期限和成果定义主线。',
+  },
+  癸: {
+    core: '癸水像雨露，感受细腻、观察深入，擅长从微小变化中识别真实走向。',
+    decision: '做决定会先在心里反复推演，确认安全边界后再投入。',
+    tension: '不确定时容易延后表达，需要用小规模试验替代长期猜测。',
   },
 };
 
@@ -499,6 +552,40 @@ function hasAnyGod(counts: Map<string, number>, gods: string[]) {
   return gods.some((god) => (counts.get(god) ?? 0) > 0);
 }
 
+function countGodGroup(counts: Map<string, number>, gods: string[]) {
+  return gods.reduce((total, god) => total + (counts.get(god) ?? 0), 0);
+}
+
+function getTenGodPlacements(pillars: Pillar[], targetGods: string[]) {
+  return pillars
+    .flatMap((pillar) => {
+      const placements: string[] = [];
+      if (targetGods.includes(pillar.stemTenGod)) placements.push(`${pillar.label}天干${pillar.stemTenGod}`);
+      const hiddenHits = [...new Set(pillar.branchTenGods.filter((god) => targetGods.includes(god)))];
+      if (hiddenHits.length) placements.push(`${pillar.label}地支藏${hiddenHits.join('、')}`);
+      return placements;
+    });
+}
+
+function getNatalBranchRelations(pillars: Pillar[], focusKey?: PillarKey) {
+  const notes: string[] = [];
+  pillars.forEach((pillar, index) => {
+    pillars.slice(index + 1).forEach((other) => {
+      if (focusKey && pillar.key !== focusKey && other.key !== focusKey) return;
+      if (pillar.branch === other.branch) {
+        notes.push(`${pillar.label}${other.label}${pillar.branch}支伏吟`);
+      }
+      if (BRANCH_COMBINES.some(([a, b]) => (a === pillar.branch && b === other.branch) || (b === pillar.branch && a === other.branch))) {
+        notes.push(`${pillar.label}${other.label}${pillar.branch}${other.branch}六合`);
+      }
+      if (BRANCH_CLASHES.some(([a, b]) => (a === pillar.branch && b === other.branch) || (b === pillar.branch && a === other.branch))) {
+        notes.push(`${pillar.label}${other.label}${pillar.branch}${other.branch}相冲`);
+      }
+    });
+  });
+  return notes;
+}
+
 function getGodProfileText(highlightedTenGods: string[]) {
   const primary = highlightedTenGods[0];
   const secondary = highlightedTenGods[1];
@@ -532,48 +619,72 @@ function createPortrait(
   const dominant = elementScores[0];
   const weakest = elementScores[elementScores.length - 1];
   const profile = ELEMENT_DEEP_PROFILE[dayElement];
+  const stemProfile = STEM_DEEP_PROFILE[dayPillar.stem];
   const godProfile = getGodProfileText(highlightedTenGods);
   const usefulText = usefulElements.join('、');
+  const tenGodCounts = countTenGods(pillars);
+  const wealthCount = countGodGroup(tenGodCounts, ['正财', '偏财']);
+  const officerCount = countGodGroup(tenGodCounts, ['正官', '七杀']);
+  const outputCount = countGodGroup(tenGodCounts, ['食神', '伤官']);
+  const resourceCount = countGodGroup(tenGodCounts, ['正印', '偏印']);
+  const peerCount = countGodGroup(tenGodCounts, ['比肩', '劫财']);
+  const monthRole = monthPillar.stemTenGod;
+  const spouseRole = dayPillar.branchTenGods[0] || '十神不显';
+  const timeRole = timePillar.stemTenGod;
+  const primaryGod = godProfile.primary || monthRole;
+  const secondaryGod = godProfile.secondary || spouseRole;
+  const primaryPlacement = getTenGodPlacements(pillars, [primaryGod]).join('、') || `${primaryGod}藏而不透`;
+  const wealthPlacement = getTenGodPlacements(pillars, ['正财', '偏财']);
+  const dayRelations = getNatalBranchRelations(pillars, 'day');
+  const allRelations = getNatalBranchRelations(pillars);
+  const relationText = dayRelations.length ? dayRelations.join('、') : '夫妻宫与其余地支未见直接六合、六冲或伏吟';
+  const roleCombination =
+    officerCount && resourceCount
+      ? `官杀${officerCount}处、印星${resourceCount}处并见，遇事会在“承担责任”和“先求依据”之间来回校准`
+      : outputCount && wealthCount
+        ? `食伤${outputCount}处、财星${wealthCount}处相见，更习惯先做出成果，再把成果换成资源`
+        : peerCount && wealthCount
+          ? `比劫${peerCount}处、财星${wealthCount}处同现，个人主张、合作分配与资源边界会同时成为课题`
+          : `${primaryGod}与${secondaryGod}构成主要行为组合，分别落在${primaryPlacement}`;
 
   return {
     title: `${input.name || '这位缘主'}，你是这样的人`,
-    opening: `从命理结构看，你是${STEM_POLARITY[dayPillar.stem]}${dayElement}日主，月令落在${monthPillar.ganZhi}，命局以${dominant.element}气较显，日主整体为${strength}。这不是一句简单的“性格外向或内向”，而是说：你的底层动力、抗压方式和成事路径，都带有明显的${dayElement}象。${profile.self}`,
+    opening: `从命理结构看，你是${dayPillar.ganZhi}日、${STEM_POLARITY[dayPillar.stem]}${dayElement}日主，生于${monthPillar.ganZhi}月，命局以${dominant.element}气较显，日主整体为${strength}。${stemProfile.core}月干${monthPillar.stem}为${monthRole}，日支${dayPillar.branch}以${spouseRole}为主气，所以你的具体表现不是只有“${dayElement}性格”，还会明显带着${monthRole}处理外部任务、以${spouseRole}回应贴身关系的差别。`,
     evidence: [
       `日主为${dayPillar.stem}${dayPillar.branch}，日干${dayPillar.stem}代表“我”，其五行为${dayElement}，所以先以${dayElement}的气质定你的核心人格。`,
       `月柱${monthPillar.ganZhi}主青年环境与做事底色，藏干为${monthPillar.hiddenStems.join('、')}，说明你早期形成的反应模式里，${monthPillar.branchTenGods.join('、')}的力量较容易被激活。`,
       `命局五行里${dominant.element}约占${Math.round(dominant.ratio * 100)}%，${weakest.element}约占${Math.round(weakest.ratio * 100)}%。${dominant.element}旺处是天赋，${weakest.element}弱处往往就是需要后天补课的地方。`,
-      highlightedTenGods.length
-        ? `十神中${highlightedTenGods.join('、')}较醒目，表示你处理现实问题时，常在这些角色之间切换。`
-        : '十神没有特别单一的压倒性力量，说明你更像复合型人格，不能只用一个标签概括。',
+      `十神计数为：比劫${peerCount}、食伤${outputCount}、财星${wealthCount}、官杀${officerCount}、印星${resourceCount}；${roleCombination}。`,
+      allRelations.length ? `原局可见${allRelations.join('、')}，这些关系会改变同一十神在不同场景下的表达。` : '原局地支之间未见直接六合、六冲或伏吟，性格矛盾更多来自十神分工，而非地支直接牵动。',
     ],
     traits: [
-      profile.pressure,
-      godProfile.drive,
+      `${stemProfile.decision}${monthRole}落月干，现实任务一来，${TEN_GOD_PROFILE[monthRole]?.drive ?? godProfile.drive}`,
+      `命局最醒目的${primaryGod}共${tenGodCounts.get(primaryGod) ?? 0}处，${godProfile.drive}`,
       strength === '偏弱'
         ? '你不适合长期硬扛，越是重要的事，越要先找资源、找方法、找稳定节奏。'
         : strength === '偏旺'
           ? '你心里有主见，不喜欢被人安排太细；别人若只讲道理不讲尊重，你会本能抗拒。'
           : '你有调和能力，既能顾及现实，也保留自我判断，但最怕一直被琐碎事情牵着走。',
-      `时柱${timePillar.ganZhi}看后劲与长期输出，带${timePillar.stemTenGod}，说明你越往后越需要把能力沉淀成自己的节奏，而不是只响应别人需求。`,
+      `时柱${timePillar.ganZhi}看后劲与长期输出，天干为${timeRole}、地支主气为${timePillar.branchTenGods[0] || '不显'}；后期更倾向用${timeRole}的方式安排成果与生活。`,
     ],
     strengths: [
-      profile.virtue,
-      godProfile.gift,
+      `${dayPillar.stem}日主的优势是：${profile.virtue}${stemProfile.decision}`,
+      `${primaryGod}落在${primaryPlacement}，可用优势是：${godProfile.gift}`,
       `当你处在${usefulText}较足的环境里，做事更顺，判断更稳，也更容易遇到能真正托举你的关系和机会。`,
     ],
     blindSpots: [
-      profile.imbalance,
-      godProfile.shadow,
-      `${weakest.element}气不足时，现实表现常是某类能力容易被忽略：可能是表达、边界、稳定、执行或休息。它不是缺陷，而是后天最值得补的功课。`,
+      `${stemProfile.tension}${profile.imbalance}`,
+      `${secondaryGod}与${primaryGod}共同起作用时，需留意：${godProfile.shadow}`,
+      `${weakest.element}仅约${Math.round(weakest.ratio * 100)}%，而${dominant.element}约${Math.round(dominant.ratio * 100)}%；压力下容易继续使用${dominant.element}的惯性，却忽略${weakest.element}代表的缓冲能力。`,
     ],
-    workStyle: `事业上，你不是单纯适合“稳定”或“冒险”的人，而要看阶段。${STRENGTH_PROFILE[strength]} 你的工作方式宜先建立一项可被别人识别的硬能力，再用${highlightedTenGods[0] || '主线能力'}去放大影响力。适合的方向可参考${ELEMENT_CAREER[dayElement]}，但真正关键是：岗位要允许你持续升级，而不是只消耗体力和情绪。`,
-    relationshipStyle: `关系里，你需要的是有回应、有边界、能共同成长的人。${profile.social} 若对方长期含糊、失信或只索取不建设，你会从热到冷，最后在心里先退出。改善关系的关键不是一味忍让，而是把期待说清，把边界立稳。`,
-    moneyStyle: `财务上，命局提示你适合用“能力变现 + 稳定结构”来积累，而不是完全靠运气。若${highlightedTenGods.includes('偏财') ? '偏财' : '财星'}被引动，项目机会、人情资源和副业机会会增加；但越有机会，越要做预算、合同和退出条件，避免财来财去。`,
-    growthKey: `你的开运点不在神秘处，而在三个现实动作：一是补${usefulText}，让生活环境、合作对象和作息更支持你；二是减少${dominant.element}过旺带来的惯性反应；三是把当下大运能给你的资源用到一条主线上。命局给底牌，打法仍在你手里。`,
+    workStyle: `事业以月柱${monthPillar.ganZhi}为环境入口：月干${monthRole}、月支主气${monthPillar.branchTenGods[0] || '不显'}，全局官杀${officerCount}、印星${resourceCount}、食伤${outputCount}。${roleCombination}。${STRENGTH_PROFILE[strength]}因此更适合从${ELEMENT_CAREER[dayElement]}中选择能发挥${primaryGod}、同时补${usefulText}的岗位，而不是笼统地按行业名称择业。`,
+    relationshipStyle: `关系重点落在日支${dayPillar.branch}，主气为${spouseRole}，藏干${dayPillar.hiddenStems.join('、')}；${relationText}。这表示你在亲密关系里会先用${spouseRole}的方式回应：${TEN_GOD_PROFILE[spouseRole]?.drive ?? profile.social}${dayRelations.length ? '夫妻宫被原局其他宫位牵动，家庭、工作或未来安排容易进入两人议题，需要分别讨论。' : '夫妻宫相对独立，更应关注日常回应与承诺兑现。'}`,
+    moneyStyle: `财星在全局共${wealthCount}处${wealthPlacement.length ? `，落于${wealthPlacement.join('、')}` : '，未形成明显透藏'}；食伤${outputCount}处，比劫${peerCount}处。${wealthCount ? (outputCount ? '收入更适合由专业输出、产品或服务转化，并通过合同与现金流承接。' : '财星虽见，但输出通道不强，宜靠稳定交付、经营和资源配置，不宜只追机会。') : '财星不显，先把能力和信用做成稳定现金流，再谈高波动项目。'}${peerCount >= wealthCount && wealthCount ? '比劫不弱于财星，合伙、借贷和人情分配必须先定边界。' : '资源分配的主要课题在节奏与筛选，而非同辈分夺。'}`,
+    growthKey: `本盘最该调整的不是抽象“性格”，而是${primaryGod}与${secondaryGod}的配合：保留${primaryGod}带来的${godProfile.gift.replace(/[。]$/, '')}，同时用${usefulText}补足${weakest.element}偏少造成的断点。遇到重要选择，先核对月柱${monthPillar.ganZhi}代表的现实条件，再确认日支${dayPillar.branch}的关系代价，最后才决定是否投入。`,
     verification: [
-      `你大概率不喜欢被人用很粗暴的方式安排人生，哪怕表面配合，心里也会重新评估这段关系。`,
-      `你在熟悉领域会越来越有主见，但在不确定阶段容易先观察、试探，等判断成型后再明显发力。`,
-      `过去某些阶段，你容易出现“明明能扛，但扛完很累”的情况，尤其当责任、人情和现实压力同时压来时更明显。`,
+      `回看青年阶段：月柱${monthPillar.ganZhi}的${monthRole}是否让你较早面对“${(TEN_GOD_PROFILE[monthRole]?.drive ?? '在外部要求中形成自己的做事方式').replace(/[。；]+$/, '')}”这一课题。`,
+      `回看亲密关系或居住变化：${relationText}是否曾表现为关系议题与工作、家庭或未来计划相互牵动。`,
+      `回看近年的长期选择：时柱${timePillar.ganZhi}带${timeRole}，你是否越来越重视${(TEN_GOD_PROFILE[timeRole]?.drive ?? '按自己的节奏沉淀成果').replace(/[。；]+$/, '')}。`,
     ],
   };
 }

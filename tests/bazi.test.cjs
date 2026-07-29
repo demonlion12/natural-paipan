@@ -70,3 +70,24 @@ test('changing the Zi-hour day boundary rule is an explicit, reproducible option
   assert.equal(lateZi.calculation.dayBoundaryText, '子初换日（23:00）');
   assert.notEqual(midnight.pillars[2].ganZhi, lateZi.pillars[2].ganZhi);
 });
+
+test('different natal charts produce materially different portrait reports', () => {
+  const first = createBaziReading(baseInput);
+  const second = createBaziReading({
+    ...baseInput,
+    name: '第二档案',
+    gender: 'female',
+    birthDate: '1986-06-01',
+    birthTime: '06:30',
+    birthplace: '浙江湖州德清',
+    longitude: 119.9774,
+  });
+
+  assert.notDeepEqual(first.pillars.map((pillar) => pillar.ganZhi), second.pillars.map((pillar) => pillar.ganZhi));
+  assert.notEqual(first.portrait.opening, second.portrait.opening);
+  assert.notEqual(first.portrait.workStyle, second.portrait.workStyle);
+  assert.notEqual(first.portrait.relationshipStyle, second.portrait.relationshipStyle);
+  assert.notEqual(first.portrait.moneyStyle, second.portrait.moneyStyle);
+  assert.match(first.portrait.workStyle, new RegExp(first.pillars[1].ganZhi));
+  assert.match(second.portrait.relationshipStyle, new RegExp(second.pillars[2].branch));
+});
