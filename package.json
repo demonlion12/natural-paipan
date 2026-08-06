@@ -11,7 +11,7 @@
     "test": "tsc -p tsconfig.test.json && node --test tests/*.test.cjs",
     "check": "npm run typecheck && npm run test && npm run build",
     "audit:release": "npm audit --omit=dev --audit-level=high",
-    "sync:classics": "node scripts/sync-ditiansui.mjs && node scripts/sync-lixu.mjs && node scripts/sync-qiongtong.mjs && node scripts/split-classics.mjs",
+    "sync:classics": "node scripts/sync-ditiansui.mjs && node scripts/sync-lixu.mjs && node scripts/sync-qiongtong.mjs && node scripts/sync-expanded-classics.mjs && node scripts/split-classics.mjs",
     "split:classics": "node scripts/split-classics.mjs"
   },
   "dependencies": {

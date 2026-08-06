@@ -1,0 +1,103 @@
+{
+  "id": "sanming",
+  "title": "三命通会",
+  "dynasty": "明",
+  "attribution": "明万民英撰；本站采用维基文库《四库全书》本十二卷",
+  "status": "全文",
+  "unit": "卷",
+  "chapterCount": 12,
+  "description": "汇集禄命法、子平法、神煞、格局、六亲与岁运等多种传统论法的大型命理文献。",
+  "editionNote": "全文据维基文库《三命通会（四库全书本）》卷一至卷十二整理。原页未统一加现代标点，本站仅按篇题和段落切分，不擅改原文；缺字以“□”保留。白话导读为本站阅读提示。",
+  "sourceLabel": "维基文库《三命通会（四库全书本）》",
+  "sourceUrl": "https://zh.wikisource.org/wiki/三命通會_(四庫全書本)",
+  "sourceRevision": "657365,761691,657369,657371,2082207,657375,2082208,761697,761700,761703,761705,761707",
+  "sourceUpdatedAt": "2021-10-11",
+  "updatedAt": "2026-08-06",
+  "chapters": [
+    {
+      "id": "01",
+      "title": "卷01",
+      "guide": "本卷为《三命通会》四库全书本第1卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/01.json",
+      "blockCount": 151
+    },
+    {
+      "id": "02",
+      "title": "卷02",
+      "guide": "本卷为《三命通会》四库全书本第2卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/02.json",
+      "blockCount": 107
+    },
+    {
+      "id": "03",
+      "title": "卷03",
+      "guide": "本卷为《三命通会》四库全书本第3卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/03.json",
+      "blockCount": 109
+    },
+    {
+      "id": "04",
+      "title": "卷04",
+      "guide": "本卷为《三命通会》四库全书本第4卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/04.json",
+      "blockCount": 146
+    },
+    {
+      "id": "05",
+      "title": "卷05",
+      "guide": "本卷为《三命通会》四库全书本第5卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/05.json",
+      "blockCount": 133
+    },
+    {
+      "id": "06",
+      "title": "卷06",
+      "guide": "本卷为《三命通会》四库全书本第6卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/06.json",
+      "blockCount": 191
+    },
+    {
+      "id": "07",
+      "title": "卷07",
+      "guide": "本卷为《三命通会》四库全书本第7卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/07.json",
+      "blockCount": 96
+    },
+    {
+      "id": "08",
+      "title": "卷08",
+      "guide": "本卷为《三命通会》四库全书本第8卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/08.json",
+      "blockCount": 135
+    },
+    {
+      "id": "09",
+      "title": "卷09",
+      "guide": "本卷为《三命通会》四库全书本第9卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/09.json",
+      "blockCount": 139
+    },
+    {
+      "id": "10",
+      "title": "卷10",
+      "guide": "本卷为《三命通会》四库全书本第10卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/10.json",
+      "blockCount": 114
+    },
+    {
+      "id": "11",
+      "title": "卷11",
+      "guide": "本卷为《三命通会》四库全书本第11卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/11.json",
+      "blockCount": 211
+    },
+    {
+      "id": "12",
+      "title": "卷12",
+      "guide": "本卷为《三命通会》四库全书本第12卷。先辨篇题与所引旧说，再区分纳音禄命、子平格局和神煞等不同论法，不将全书材料混作同一套规则。",
+      "path": "knowledge/classics/sanming/chapters/12.json",
+      "blockCount": 133
+    }
+  ],
+  "version": "2026-08-06-1665"
+}

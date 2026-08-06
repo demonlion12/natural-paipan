@@ -1,12 +1,13 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
-const bookIds = ['ditiansui', 'qiongtong', 'lixu'];
+const bookIds = ['ditiansui', 'qiongtong', 'lixu', 'sanming', 'yuanhai', 'wuxing'];
 
 for (const bookId of bookIds) {
   const sourcePath = resolve(`public/knowledge/classics/${bookId}.json`);
   const source = JSON.parse(readFileSync(sourcePath, 'utf8'));
   const version = `${source.updatedAt}-${source.chapters.reduce((sum, chapter) => sum + chapter.blocks.length, 0)}`;
+  rmSync(resolve(`public/knowledge/classics/${bookId}/chapters`), { recursive: true, force: true });
   const chapters = source.chapters.map((chapter) => {
     const chapterPath = `knowledge/classics/${bookId}/chapters/${chapter.id}.json`;
     const target = resolve(`public/${chapterPath}`);

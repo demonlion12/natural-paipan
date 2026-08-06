@@ -99,7 +99,7 @@ const payload = execFileSync('curl', [
   '--data-urlencode', 'action=query',
   '--data-urlencode', `titles=${pageTitles.join('|')}`,
   '--data-urlencode', 'prop=revisions',
-  '--data-urlencode', 'rvprop=content',
+  '--data-urlencode', 'rvprop=ids|timestamp|content',
   '--data-urlencode', 'rvslots=main',
   '--data-urlencode', 'format=json',
   '--data-urlencode', 'formatversion=2',
@@ -112,6 +112,8 @@ const chapters = chapterGuides.map((_, index) => {
   if (!wikitext) throw new Error(`Missing source page: ${title}`);
   return parseChapter(wikitext, index);
 });
+const sourceRevisions = pages.map((page) => page.revisions?.[0]?.revid).filter(Boolean);
+const sourceDates = pages.map((page) => page.revisions?.[0]?.timestamp).filter(Boolean).sort();
 
 const output = {
   id: 'ditiansui',
@@ -124,6 +126,8 @@ const output = {
   editionNote: '正文与旧注据维基文库《滴天髓》页面整理，保留原页繁体用字；个别异体、讹字及标点从底本。白话导读为本站重新撰写，仅帮助建立阅读框架，不替代逐句训诂。',
   sourceLabel: '维基文库《滴天髓》',
   sourceUrl: 'https://zh.wikisource.org/wiki/滴天髓',
+  sourceRevision: sourceRevisions.join(','),
+  sourceUpdatedAt: sourceDates.at(-1)?.slice(0, 10) ?? '',
   updatedAt: new Date().toISOString().slice(0, 10),
   chapters,
 };

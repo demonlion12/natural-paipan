@@ -24,11 +24,12 @@ const payload = execFileSync('curl', [
   '-sG', 'https://zh.wikisource.org/w/api.php',
   '--data-urlencode', 'action=parse',
   '--data-urlencode', 'page=穷通宝鉴',
-  '--data-urlencode', 'prop=wikitext',
+  '--data-urlencode', 'prop=wikitext|revid',
   '--data-urlencode', 'format=json',
   '--data-urlencode', 'formatversion=2',
 ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
-const wikitext = JSON.parse(payload).parse.wikitext;
+const parsedPage = JSON.parse(payload).parse;
+const wikitext = parsedPage.wikitext;
 
 function clean(value) {
   return value
@@ -130,6 +131,7 @@ const output = {
   editionNote: '全文据维基文库《穷通宝鉴》页面整理，按“五行总论、五行分论、十干分论”重建目录；保留来源页正文与标点。白话导读为本站重新撰写，旨在说明篇章问题意识，不替代逐句训诂。',
   sourceLabel: '维基文库《穷通宝鉴》',
   sourceUrl: 'https://zh.wikisource.org/wiki/穷通宝鉴',
+  sourceRevision: String(parsedPage.revid ?? ''),
   updatedAt: new Date().toISOString().slice(0, 10),
   chapters,
 };

@@ -1,8 +1,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const {
   branchQuickReference,
+  classicShelf,
   knowledgeCases,
   knowledgeModules,
   knowledgeQuizQuestions,
@@ -13,6 +16,15 @@ const {
   stemQuickReference,
   tenGodQuickReference,
 } = require('../test-runtime/knowledge.js');
+
+const classicExpectedCounts = {
+  ditiansui: 42,
+  qiongtong: 15,
+  lixu: 3,
+  sanming: 12,
+  yuanhai: 74,
+  wuxing: 34,
+};
 
 function assertUnique(items, getId, label) {
   const ids = items.map(getId);
@@ -53,6 +65,29 @@ test('quick-reference tables cover the expected base systems', () => {
   assert.equal(tenGodQuickReference.length, 10);
   assert.equal(seasonQuickReference.length, 12);
   assert.equal(relationQuickReference.length, 8);
+});
+
+test('six public-domain classics are complete, local and free of wiki markup', () => {
+  assert.equal(classicShelf.length, 6);
+  for (const shelfBook of classicShelf) {
+    assert.ok('path' in shelfBook && shelfBook.path, `${shelfBook.title} 尚未本地化`);
+    const manifestPath = path.resolve('public', shelfBook.path);
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const expectedCount = classicExpectedCounts[manifest.id];
+    assert.equal(manifest.chapterCount, expectedCount, `${manifest.title} 的声明卷篇数错误`);
+    assert.equal(manifest.chapters.length, expectedCount, `${manifest.title} 的目录卷篇数不完整`);
+    assert.ok(manifest.sourceRevision, `${manifest.title} 缺少来源修订号`);
+    assert.match(manifest.updatedAt, /^\d{4}-\d{2}-\d{2}$/);
+
+    for (const chapter of manifest.chapters) {
+      const chapterPath = path.resolve('public', chapter.path);
+      const chapterData = JSON.parse(fs.readFileSync(chapterPath, 'utf8'));
+      assert.ok(chapterData.blocks.length > 0, `${manifest.title} ${chapter.title} 是空篇`);
+      const original = chapterData.blocks.map((block) => `${block.original}${block.commentary || ''}`).join('');
+      assert.ok(original.length > 20, `${manifest.title} ${chapter.title} 内容过短`);
+      assert.doesNotMatch(original, /\{\{|\[\[|<onlyinclude>|@@HEADING@@/, `${manifest.title} ${chapter.title} 残留抓取标记`);
+    }
+  }
 });
 
 test('traditional localization converts display text and normalizes search text locally', async () => {

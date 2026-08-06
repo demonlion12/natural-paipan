@@ -1,0 +1,257 @@
+{
+  "id": "wuxing",
+  "title": "五行精纪",
+  "dynasty": "宋",
+  "attribution": "宋廖中辑；本站据维基文库页面整理",
+  "status": "全文",
+  "unit": "卷",
+  "chapterCount": 34,
+  "description": "汇集唐宋禄命法、纳音、干支、神煞、贵格、六亲、疾病与岁运材料的重要文献。",
+  "editionNote": "全文据维基文库《五行精纪》页面整理，按原页卷次切分。来源文本含少量异体、讹字与录入差异，本站保留原貌并记录来源修订号；导读只说明文献层次。",
+  "sourceLabel": "维基文库《五行精纪》",
+  "sourceUrl": "https://zh.wikisource.org/wiki/五行精紀",
+  "sourceRevision": "2352956",
+  "sourceUpdatedAt": "2024-01-07",
+  "updatedAt": "2026-08-06",
+  "chapters": [
+    {
+      "id": "01",
+      "title": "卷01",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/01.json",
+      "blockCount": 130
+    },
+    {
+      "id": "02",
+      "title": "卷02",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/02.json",
+      "blockCount": 391
+    },
+    {
+      "id": "03",
+      "title": "卷03",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/03.json",
+      "blockCount": 80
+    },
+    {
+      "id": "04",
+      "title": "卷04",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/04.json",
+      "blockCount": 193
+    },
+    {
+      "id": "05",
+      "title": "卷05",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/05.json",
+      "blockCount": 128
+    },
+    {
+      "id": "06",
+      "title": "卷06",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/06.json",
+      "blockCount": 136
+    },
+    {
+      "id": "07",
+      "title": "卷07",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/07.json",
+      "blockCount": 191
+    },
+    {
+      "id": "08",
+      "title": "卷08",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/08.json",
+      "blockCount": 87
+    },
+    {
+      "id": "09",
+      "title": "卷09",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/09.json",
+      "blockCount": 78
+    },
+    {
+      "id": "10",
+      "title": "卷10",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/10.json",
+      "blockCount": 149
+    },
+    {
+      "id": "11",
+      "title": "卷11",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/11.json",
+      "blockCount": 153
+    },
+    {
+      "id": "12",
+      "title": "卷12",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/12.json",
+      "blockCount": 79
+    },
+    {
+      "id": "13",
+      "title": "卷13",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/13.json",
+      "blockCount": 128
+    },
+    {
+      "id": "14",
+      "title": "卷14",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/14.json",
+      "blockCount": 88
+    },
+    {
+      "id": "15",
+      "title": "卷15",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/15.json",
+      "blockCount": 85
+    },
+    {
+      "id": "16",
+      "title": "卷16",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/16.json",
+      "blockCount": 149
+    },
+    {
+      "id": "17",
+      "title": "卷17",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/17.json",
+      "blockCount": 91
+    },
+    {
+      "id": "18",
+      "title": "卷18",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/18.json",
+      "blockCount": 124
+    },
+    {
+      "id": "19",
+      "title": "卷19",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/19.json",
+      "blockCount": 118
+    },
+    {
+      "id": "20",
+      "title": "卷20",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/20.json",
+      "blockCount": 110
+    },
+    {
+      "id": "21",
+      "title": "卷21",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/21.json",
+      "blockCount": 139
+    },
+    {
+      "id": "22",
+      "title": "卷22",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/22.json",
+      "blockCount": 90
+    },
+    {
+      "id": "23",
+      "title": "卷23",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/23.json",
+      "blockCount": 153
+    },
+    {
+      "id": "24",
+      "title": "卷24",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/24.json",
+      "blockCount": 92
+    },
+    {
+      "id": "25",
+      "title": "卷25",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/25.json",
+      "blockCount": 98
+    },
+    {
+      "id": "26",
+      "title": "卷26",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/26.json",
+      "blockCount": 99
+    },
+    {
+      "id": "27",
+      "title": "卷27",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/27.json",
+      "blockCount": 107
+    },
+    {
+      "id": "28",
+      "title": "卷28",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/28.json",
+      "blockCount": 155
+    },
+    {
+      "id": "29",
+      "title": "卷29",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/29.json",
+      "blockCount": 130
+    },
+    {
+      "id": "30",
+      "title": "卷30",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/30.json",
+      "blockCount": 97
+    },
+    {
+      "id": "31",
+      "title": "卷31",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/31.json",
+      "blockCount": 90
+    },
+    {
+      "id": "32",
+      "title": "卷32",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/32.json",
+      "blockCount": 67
+    },
+    {
+      "id": "33",
+      "title": "卷33",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/33.json",
+      "blockCount": 84
+    },
+    {
+      "id": "34",
+      "title": "卷34",
+      "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+      "path": "knowledge/classics/wuxing/chapters/34.json",
+      "blockCount": 92
+    }
+  ],
+  "version": "2026-08-06-4181"
+}

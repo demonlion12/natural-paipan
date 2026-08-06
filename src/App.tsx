@@ -3562,7 +3562,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
                   <article className={ready ? 'classic-book-card ready' : 'classic-book-card'} key={book.id}>
                     <div className="classic-book-mark">{book.title.slice(0, 1)}</div>
                     <div>
-                      <span>{book.dynasty} · {book.chapterCount} {book.id === 'lixu' ? '卷' : '篇'}</span>
+                      <span>{book.dynasty} · {book.chapterCount} {('unit' in book && book.unit) || (book.id === 'lixu' ? '卷' : '篇')}</span>
                       <h2>{book.title}</h2>
                       <p>{book.summary}</p>
                       {ready && classicReadingPositions[book.id] && <small className="classic-book-resume">上次读至第 {Number(classicReadingPositions[book.id])} 篇</small>}
@@ -3584,7 +3584,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
                 <>
                   <header className="classic-reader-head">
                     <button className="icon-text-button" onClick={() => setClassicMode('shelf')} type="button"><ArrowLeft size={15} /> 返回书架</button>
-                    <div><span>{classicBook.dynasty} · 全 {classicBook.chapterCount} 篇</span><h2>{classicBook.title}</h2><p>{classicBook.attribution}</p></div>
+                    <div><span>{classicBook.dynasty} · 全 {classicBook.chapterCount} {classicBook.unit ?? '篇'}</span><h2>{classicBook.title}</h2><p>{classicBook.attribution}</p></div>
                     <a href={classicBook.sourceUrl} rel="noreferrer" target="_blank">核对底本 <ArrowRight size={14} /></a>
                   </header>
                   <div className="classic-reader-layout">
@@ -3631,7 +3631,7 @@ function LearningPageContent({ onBack, onGoBazi, onYijing, knowledgeData }: Lear
                     <aside className="classic-meta">
                       <strong>版本说明</strong>
                       <p>{classicBook.editionNote}</p>
-                      <dl><dt>底本</dt><dd>{classicBook.sourceLabel}</dd><dt>整理日期</dt><dd>{classicBook.updatedAt}</dd><dt>收录状态</dt><dd>{classicBook.status} · {classicBook.chapterCount} 篇</dd><dt>加载方式</dt><dd>本地分篇 · 已读缓存</dd></dl>
+                      <dl><dt>底本</dt><dd>{classicBook.sourceLabel}</dd><dt>来源修订</dt><dd>{classicBook.sourceRevision || '来源页未提供'}{classicBook.sourceUpdatedAt ? ` · ${classicBook.sourceUpdatedAt}` : ''}</dd><dt>整理日期</dt><dd>{classicBook.updatedAt}</dd><dt>收录状态</dt><dd>{classicBook.status} · {classicBook.chapterCount} {classicBook.unit ?? '篇'}</dd><dt>加载方式</dt><dd>本地分篇 · 已读缓存</dd></dl>
                       <strong>阅读建议</strong>
                       <ol><li>先读正文，不急于套命盘。</li><li>再看旧注的时代语境。</li><li>用白话导读提炼问题。</li><li>回到知识体系核对概念。</li></ol>
                       <strong>关联知识</strong>

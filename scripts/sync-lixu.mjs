@@ -13,7 +13,7 @@ const payload = execFileSync('curl', [
   '--data-urlencode', 'action=query',
   '--data-urlencode', `titles=${titles.join('|')}`,
   '--data-urlencode', 'prop=revisions',
-  '--data-urlencode', 'rvprop=content',
+  '--data-urlencode', 'rvprop=ids|timestamp|content',
   '--data-urlencode', 'rvslots=main',
   '--data-urlencode', 'format=json',
   '--data-urlencode', 'formatversion=2',
@@ -63,6 +63,8 @@ const chapters = volumes.map(([title, guide], index) => {
     blocks: lines.map((original) => ({ heading: '', original, commentary: '' })),
   };
 });
+const sourceRevisions = pages.map((page) => page.revisions?.[0]?.revid).filter(Boolean);
+const sourceDates = pages.map((page) => page.revisions?.[0]?.timestamp).filter(Boolean).sort();
 
 const output = {
   id: 'lixu',
@@ -75,6 +77,8 @@ const output = {
   editionNote: '全文据维基文库《李虚中命书（四库全书本）》卷上、卷中、卷下整理，保留底本原字与原注；“□”表示来源页未能直接显示的缺字或异体字。白话导读为本站撰写。',
   sourceLabel: '维基文库《李虚中命书（四库全书本）》',
   sourceUrl: 'https://zh.wikisource.org/wiki/李虛中命書_(四庫全書本)',
+  sourceRevision: sourceRevisions.join(','),
+  sourceUpdatedAt: sourceDates.at(-1)?.slice(0, 10) ?? '',
   updatedAt: new Date().toISOString().slice(0, 10),
   chapters,
 };

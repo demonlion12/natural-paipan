@@ -9,7 +9,9 @@
   "editionNote": "全文据维基文库《李虚中命书（四库全书本）》卷上、卷中、卷下整理，保留底本原字与原注；“□”表示来源页未能直接显示的缺字或异体字。白话导读为本站撰写。",
   "sourceLabel": "维基文库《李虚中命书（四库全书本）》",
   "sourceUrl": "https://zh.wikisource.org/wiki/李虛中命書_(四庫全書本)",
-  "updatedAt": "2026-07-12",
+  "sourceRevision": "786934,1401594,626827",
+  "sourceUpdatedAt": "2018-04-07",
+  "updatedAt": "2026-08-06",
   "chapters": [
     {
       "id": "01",
@@ -33,5 +35,5 @@
       "blockCount": 18
     }
   ],
-  "version": "2026-07-12-102"
+  "version": "2026-08-06-102"
 }
