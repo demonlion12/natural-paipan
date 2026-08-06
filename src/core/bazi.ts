@@ -14,9 +14,10 @@ import type {
   PillarKey,
   ReadingAdvice,
   ReadingSection,
+  SchoolJudgment,
 } from './types';
 
-export const CALCULATION_VERSION = '2026.07.2';
+export const CALCULATION_VERSION = '2026.08.1';
 
 const STEM_ELEMENT: Record<string, ElementName> = {
   甲: '木',
@@ -747,6 +748,160 @@ function getElementFromGanZhi(ganZhi: string) {
   return STEM_ELEMENT[ganZhi[0]];
 }
 
+const MONTH_CLIMATE: Record<string, { season: string; climate: string; priority: ElementName[] }> = {
+  寅: { season: '初春', climate: '寒气未尽、木气初升', priority: ['火', '水'] },
+  卯: { season: '仲春', climate: '木旺气舒、湿润渐增', priority: ['火', '金'] },
+  辰: { season: '季春', climate: '湿土当令、木气退藏', priority: ['木', '火'] },
+  巳: { season: '初夏', climate: '火势渐盛、燥气初显', priority: ['水', '金'] },
+  午: { season: '仲夏', climate: '火旺极热、最怕燥烈', priority: ['水', '金'] },
+  未: { season: '季夏', climate: '燥土司权、火有余威', priority: ['水', '木'] },
+  申: { season: '初秋', climate: '金气初锐、余热未清', priority: ['水', '火'] },
+  酉: { season: '仲秋', climate: '金旺气肃、燥意明显', priority: ['水', '火'] },
+  戌: { season: '季秋', climate: '燥土收束、金火入墓', priority: ['水', '木'] },
+  亥: { season: '初冬', climate: '水旺渐寒、阳气潜藏', priority: ['火', '土'] },
+  子: { season: '仲冬', climate: '水旺至寒、阳气初生', priority: ['火', '土'] },
+  丑: { season: '季冬', climate: '寒湿土重、木火未舒', priority: ['火', '木'] },
+};
+
+function getMonthStructure(pillars: Pillar[]) {
+  const monthPillar = pillars.find((pillar) => pillar.key === 'month')!;
+  const monthGod = monthPillar.branchTenGods[0] || monthPillar.stemTenGod;
+  const exposedAt = pillars
+    .filter((pillar) => pillar.key !== 'day' && pillar.stemTenGod === monthGod)
+    .map((pillar) => pillar.label);
+  const structureName = monthGod === '比肩'
+    ? '建禄格取向'
+    : monthGod === '劫财'
+      ? '月劫格取向'
+      : `${monthGod}格取向`;
+  return {
+    monthGod,
+    exposedAt,
+    structureName,
+    exposureText: exposedAt.length ? `${monthGod}透于${exposedAt.join('、')}` : `${monthGod}只藏月令，未在年、月、时干透出`,
+  };
+}
+
+function createMethodSynthesis(args: {
+  pillars: Pillar[];
+  dayElement: ElementName;
+  strength: '偏弱' | '中和' | '偏旺';
+  usefulElements: ElementName[];
+  elementScores: ElementScore[];
+  tenGodCounts: Map<string, number>;
+  structureName: string;
+  monthGod: string;
+  exposureText: string;
+}): DeepDiveReport['methodSynthesis'] {
+  const { pillars, dayElement, strength, usefulElements, elementScores, tenGodCounts, structureName, monthGod, exposureText } = args;
+  const dayPillar = pillars.find((pillar) => pillar.key === 'day')!;
+  const monthPillar = pillars.find((pillar) => pillar.key === 'month')!;
+  const climate = MONTH_CLIMATE[monthPillar.branch];
+  const ratios = Object.fromEntries(elementScores.map((item) => [item.element, Math.round(item.ratio * 100)])) as Record<ElementName, number>;
+  const supportingRatio = ratios[dayElement] + ratios[getMotherElement(dayElement)];
+  const drainingRatio = 100 - supportingRatio;
+  const climateHits = climate.priority.filter((element) => usefulElements.includes(element));
+  const climateConflict = climate.priority.filter((element) => !usefulElements.includes(element));
+  const relations = getNatalBranchRelations(pillars);
+  const outputCount = countGodGroup(tenGodCounts, ['食神', '伤官']);
+  const wealthCount = countGodGroup(tenGodCounts, ['正财', '偏财']);
+  const officerCount = countGodGroup(tenGodCounts, ['正官', '七杀']);
+  const resourceCount = countGodGroup(tenGodCounts, ['正印', '偏印']);
+  const peerCount = countGodGroup(tenGodCounts, ['比肩', '劫财']);
+  const primaryUseful = usefulElements[0];
+  const usefulRatio = ratios[primaryUseful];
+  const strongest = elementScores[0];
+  const weakest = elementScores[elementScores.length - 1];
+  const confidence = supportingRatio >= 58 || supportingRatio <= 36 ? '较高' : '中等';
+  const schools: SchoolJudgment[] = [
+    {
+      key: 'ziping',
+      school: '子平真诠法',
+      weight: '主判',
+      focus: '月令取格与成败救应',
+      source: '《子平真诠·论用神》',
+      sourceUrl: 'https://ctext.org/wiki.pl?chapter=974137&if=gb',
+      quote: '八字用神，专求月令。',
+      conclusion: `以${monthPillar.branch}月主气${monthGod}立局，定为${structureName}；${exposureText}。${strength === '偏弱' ? '日主承载偏弱，格局能否成立先看印比是否护身。' : strength === '偏旺' ? '日主承载偏旺，宜看月令之气能否被泄、耗、制而成事。' : '日主承载居中，可进一步看月令用神有无相神配合。'}`,
+      evidence: [
+        `月支${monthPillar.branch}藏${monthPillar.hiddenStems.join('、')}，主气对应${monthGod}。`,
+        `全局十神分组为比劫${peerCount}、食伤${outputCount}、财星${wealthCount}、官杀${officerCount}、印星${resourceCount}；用来复核月令主线是否得到相神配合。`,
+      ],
+      limitation: '格局名称只表示月令主线；未完成成格、破格、救应核对前，不据此直断贵贱吉凶。',
+    },
+    {
+      key: 'qiongtong',
+      school: '穷通调候法',
+      weight: '校验',
+      focus: '十干配十二月的寒暖燥湿',
+      source: '《穷通宝鉴》十干分月',
+      sourceUrl: 'https://zh.wikisource.org/zh-hans/%E7%A9%B7%E9%80%9A%E5%AE%9D%E9%89%B4',
+      quote: `${dayPillar.stem}日生${monthPillar.branch}月，先按${climate.season}之${climate.climate}校验调候。此句为本站方法提要，非古籍原句。`,
+      conclusion: `${climate.season}${climate.climate}，调候先察${climate.priority.join('、')}。${climateHits.length ? `其中${climateHits.join('、')}与扶抑喜用重合，优先级可以提高。` : `调候所需${climate.priority.join('、')}与扶抑喜用${usefulElements.join('、')}不完全同向，应少量调气候，不宜直接当作扶身用神。`}`,
+      evidence: [
+        `盘面火${ratios.火}%、水${ratios.水}%、土${ratios.土}%、金${ratios.金}%、木${ratios.木}%。`,
+        climateConflict.length ? `调候与扶抑存在张力：${climateConflict.join('、')}用于调气候时要控制剂量。` : '调候方向与扶抑方向基本一致。',
+      ],
+      limitation: '调候解决“能否发用”的气候条件，不单独代替旺衰、格局与岁运判断。',
+    },
+    {
+      key: 'ditiansui',
+      school: '滴天髓气势法',
+      weight: '校验',
+      focus: '旺衰、清浊与五行流通',
+      source: '《滴天髓·性情》',
+      sourceUrl: 'https://zh.wikisource.org/wiki/%E6%BB%B4%E5%A4%A9%E9%AB%93/34',
+      quote: '五行不戾，惟正清和；浊乱偏枯，性情乖逆。',
+      conclusion: `全局${strongest.element}${Math.round(strongest.ratio * 100)}%最显，${weakest.element}${Math.round(weakest.ratio * 100)}%最少；日主同党约${supportingRatio}%、异党约${drainingRatio}%。${relations.length ? `地支见${relations.join('、')}，气势并非静态，需要看合冲后谁得势。` : '地支未见直接六合、六冲或伏吟，流通重点落在生克次序和透藏。'}`,
+      evidence: [
+        `首用${primaryUseful}当前约${usefulRatio}%，${usefulRatio <= 12 ? '原局落点偏少，主要等待环境与岁运补入' : usefulRatio >= 28 ? '原局已有基础，重点在疏导而非继续堆叠' : '原局有承接点，可观察岁运如何引动'}。`,
+        `原局主要地支作用：${relations.join('、') || '无直接六合、六冲或伏吟'}。`,
+      ],
+      limitation: '百分比只用于展示相对气势，不等于古法权重；月令、通根和透干仍优先于简单计数。',
+    },
+    {
+      key: 'sanming',
+      school: '三命通会法',
+      weight: '补充',
+      focus: '日主、月令、柱位与岁运触发',
+      source: '《三命通会·卷十·看命口诀》',
+      sourceUrl: 'https://zh.wikisource.org/zh-hans/%E4%B8%89%E5%91%BD%E9%80%9A%E6%9C%83_(%E5%9B%9B%E5%BA%AB%E5%85%A8%E6%9B%B8%E6%9C%AC)/%E5%8D%B710',
+      quote: '大凡看命先看月支有无财官，方看其他，月令为命也。',
+      conclusion: `以日干${dayPillar.stem}为主、月支${monthPillar.branch}为提纲，再分柱位：年柱看根基，月柱看早期环境，日支看贴身关系，时柱看后劲。此局定位重点是${monthGod}落于月令，且${exposureText}。`,
+      evidence: [
+        `年、月、日、时为${pillars.map((pillar) => pillar.ganZhi).join('、')}。`,
+        `时柱${pillars[3].ganZhi}为${pillars[3].stemTenGod}坐${pillars[3].branchTenGods[0] || '十神不显'}，后期主题需与大运同看。`,
+      ],
+      limitation: '柱位类象用于定位事情落在哪个阶段或关系层，不把单柱直接等同某位亲属的吉凶。',
+    },
+  ];
+
+  return {
+    confidence,
+    confidenceReason: `${strength}判断基于同党约${supportingRatio}%与月令${monthPillar.branch}；${confidence === '较高' ? '旺衰方向较明确，但具体应事仍需岁运和经历回测。' : '处在中间区间，格局、调候和流通比单一旺弱标签更重要。'}`,
+    consensus: [
+      `四法共同以${dayPillar.stem}日主为体、${monthPillar.branch}月令为提纲，不以单个神煞或单一五行下结论。`,
+      `原局主线是${structureName}，但必须同时核对日主${strength}能否承载，以及${primaryUseful}是否有落点。`,
+      `岁运不是另起一盘，而是引动原局${monthGod}、${relations.length ? relations.join('、') : '透藏生克'}后才产生具体表现。`,
+    ],
+    differences: [
+      `子平法先问“${monthGod}如何成格”，穷通法先问“${climate.climate}是否妨碍发用”；二者回答的是不同层面。`,
+      climateHits.length
+        ? `本盘调候与扶抑在${climateHits.join('、')}上同向，分歧较小。`
+        : `本盘调候${climate.priority.join('、')}与扶抑${usefulElements.join('、')}不同向：采用“调候小剂量、扶抑定主线”的处理。`,
+      `滴天髓重${strongest.element}气势是否流通，三命通会重${monthGod}落在月令及其柱位应事；前者解释动力，后者定位阶段。`,
+    ],
+    decisionOrder: [
+      `先定体：${dayPillar.stem}${dayElement}日主，当前判${strength}。`,
+      `再定提纲：${monthPillar.branch}月${monthGod}司权，取${structureName}。`,
+      `再校气候：${climate.season}${climate.climate}，察${climate.priority.join('、')}。`,
+      `再查成败：看${exposureText}、十神组合及${relations.join('、') || '地支生克'}。`,
+      `最后落岁运：只在大运流年引动上述关键字时，判断事业、财务和关系的阶段变化。`,
+    ],
+    schools,
+  };
+}
+
 function createDomainReport(params: {
   key: DeepDomainReport['key'];
   title: string;
@@ -777,29 +932,31 @@ function createDeepDiveReport(args: {
   const dominant = elementScores[0];
   const weakest = elementScores[elementScores.length - 1];
   const usefulText = usefulElements.join('、');
+  const monthStructure = getMonthStructure(pillars);
   const hasWealth = hasAnyGod(tenGodCounts, ['正财', '偏财']);
   const hasOfficer = hasAnyGod(tenGodCounts, ['正官', '七杀']);
   const hasOutput = hasAnyGod(tenGodCounts, ['食神', '伤官']);
   const hasResource = hasAnyGod(tenGodCounts, ['正印', '偏印']);
   const hasPeer = hasAnyGod(tenGodCounts, ['比肩', '劫财']);
-  const structureName = hasOfficer && hasResource
-    ? '官印相生取向'
-    : hasOutput && hasWealth
-      ? '食伤生财取向'
-      : hasWealth
-        ? '财星经营取向'
-        : hasResource
-          ? '印星护身取向'
-          : hasPeer
-            ? '比劫争衡取向'
-            : '复合平衡取向';
+  const structureName = monthStructure.structureName;
   const currentLuck = daYun.periods.find((period) => period.isCurrent) ?? null;
+  const methodSynthesis = createMethodSynthesis({
+    pillars,
+    dayElement,
+    strength,
+    usefulElements,
+    elementScores,
+    tenGodCounts,
+    structureName,
+    monthGod: monthStructure.monthGod,
+    exposureText: monthStructure.exposureText,
+  });
 
   const domains: DeepDomainReport[] = [
     createDomainReport({
       key: 'summary',
       title: '命局总论',
-      conclusion: `此局为${dayPillar.stem}${dayPillar.branch}日，${STEM_POLARITY[dayPillar.stem]}${dayElement}日主，月令${monthPillar.ganZhi}为提纲，整体判断为${strength}，结构近于“${structureName}”。`,
+      conclusion: `此局为${dayPillar.stem}${dayPillar.branch}日，${STEM_POLARITY[dayPillar.stem]}${dayElement}日主，以${monthPillar.branch}月主气${monthStructure.monthGod}立局，整体判断为${strength}，取“${structureName}”。`,
       evidence: [
         `日干${dayPillar.stem}为命局之我，五行为${dayElement}；月柱${monthPillar.ganZhi}主令气，是判断旺衰与格局的第一层依据。`,
         `五行分布中${dominant.element}约${Math.round(dominant.ratio * 100)}%，${weakest.element}约${Math.round(weakest.ratio * 100)}%，说明天赋与短板都有明确落点。`,
@@ -1006,11 +1163,12 @@ function createDeepDiveReport(args: {
   });
 
   return {
-    thesis: `命局核心为${STEM_POLARITY[dayPillar.stem]}${dayElement}日主，${strength}，以${structureName}为主要取向。成事关键在于补${usefulText}，减少${dominant.element}过显带来的惯性。`,
+    thesis: `以${dayPillar.stem}${dayElement}日主为体，${monthPillar.branch}月${monthStructure.monthGod}司令为用，先取${structureName}；${monthStructure.exposureText}。日主判${strength}，扶抑优先取${usefulText}，再以调候、五行流通与柱位应事逐层校验。`,
     usefulGod: usefulElements[0],
     favorableGod: usefulElements.slice(1).join('、') || usefulElements[0],
     avoidGod: dominant.element,
     structureName,
+    methodSynthesis,
     domains,
     currentLuck: deepLuck,
     futureYears,

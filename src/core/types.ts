@@ -111,12 +111,35 @@ export interface FutureYearReading {
   caution: string;
 }
 
+export interface SchoolJudgment {
+  key: 'ziping' | 'qiongtong' | 'ditiansui' | 'sanming';
+  school: string;
+  weight: '主判' | '校验' | '补充';
+  focus: string;
+  source: string;
+  sourceUrl: string;
+  quote: string;
+  conclusion: string;
+  evidence: string[];
+  limitation: string;
+}
+
+export interface MethodSynthesis {
+  confidence: '较高' | '中等' | '待回测';
+  confidenceReason: string;
+  consensus: string[];
+  differences: string[];
+  decisionOrder: string[];
+  schools: SchoolJudgment[];
+}
+
 export interface DeepDiveReport {
   thesis: string;
   usefulGod: string;
   favorableGod: string;
   avoidGod: string;
   structureName: string;
+  methodSynthesis: MethodSynthesis;
   domains: DeepDomainReport[];
   currentLuck: DeepLuckPeriod | null;
   futureYears: FutureYearReading[];

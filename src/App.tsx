@@ -2459,13 +2459,7 @@ function PortraitSection({ reading }: { reading: BaziReading }) {
 function DeepDivePanel({ reading }: { reading: BaziReading }) {
   const [activeDomain, setActiveDomain] = useState<DeepDomainKey>('summary');
   const activeReport = reading.deepDive.domains.find((domain) => domain.key === activeDomain) ?? reading.deepDive.domains[0];
-  const mergedAdvice = [
-    reading.advice.overview,
-    reading.advice.career,
-    reading.advice.relationship,
-    reading.advice.health,
-    reading.advice.growth,
-  ];
+  const synthesis = reading.deepDive.methodSynthesis;
 
   return (
     <section className="section deep-section">
@@ -2478,6 +2472,61 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
       <div className="deep-thesis">
         <strong>命局总纲</strong>
         <p>{reading.deepDive.thesis}</p>
+      </div>
+      <div className="method-synthesis">
+        <div className="method-synthesis-head">
+          <div>
+            <span className="method-eyebrow">多法交叉校验</span>
+            <h3>四家合参</h3>
+          </div>
+          <span className={`confidence-badge confidence-${synthesis.confidence}`}>{synthesis.confidence}</span>
+        </div>
+        <p className="confidence-reason">{synthesis.confidenceReason}</p>
+        <div className="method-summary-grid">
+          <div>
+            <h4>共同结论</h4>
+            <ol>
+              {synthesis.consensus.map((item) => <li key={item}>{item}</li>)}
+            </ol>
+          </div>
+          <div>
+            <h4>分歧处理</h4>
+            <ol>
+              {synthesis.differences.map((item) => <li key={item}>{item}</li>)}
+            </ol>
+          </div>
+          <div>
+            <h4>判读次序</h4>
+            <ol>
+              {synthesis.decisionOrder.map((item) => <li key={item}>{item}</li>)}
+            </ol>
+          </div>
+        </div>
+        <div className="school-judgment-list">
+          {synthesis.schools.map((school, index) => (
+            <article className="school-judgment" key={school.key}>
+              <div className="school-index">{String(index + 1).padStart(2, '0')}</div>
+              <div className="school-body">
+                <div className="school-title-row">
+                  <div>
+                    <h4>{school.school}</h4>
+                    <span>{school.focus}</span>
+                  </div>
+                  <span className={`school-weight weight-${school.weight}`}>{school.weight}</span>
+                </div>
+                <blockquote>{school.quote}</blockquote>
+                <p className="school-conclusion">{school.conclusion}</p>
+                <ul>
+                  {school.evidence.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+                <div className="school-footer">
+                  <span>适用边界：{school.limitation}</span>
+                  <a href={school.sourceUrl} rel="noreferrer" target="_blank">{school.source} · 查看出处</a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
       <div className="deep-tabs" role="tablist" aria-label="专项详批">
         {deepDomainOrder.map((key) => {
@@ -2535,19 +2584,6 @@ function DeepDivePanel({ reading }: { reading: BaziReading }) {
           </div>
         </div>
       </article>
-      <div className="merged-advice-grid">
-        {mergedAdvice.map((advice) => (
-          <article key={advice.title}>
-            <h3>{advice.title}</h3>
-            <p>{advice.body}</p>
-            <div className="tag-row">
-              {advice.tags.map((tag, index) => (
-                <span key={`${advice.title}-${tag}-${index}`}>{tag}</span>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
     </section>
   );
 }

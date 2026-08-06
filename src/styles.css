@@ -2046,31 +2046,168 @@ button.flow-cell.current:focus-visible {
   font-size: 14px;
 }
 
-.merged-advice-grid {
+.method-synthesis {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.merged-advice-grid article {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-  border: 1px solid rgba(23, 33, 29, 0.09);
+  gap: 18px;
+  border: 1px solid rgba(43, 122, 120, 0.16);
   border-radius: 8px;
-  background: #fbfdfb;
-  padding: 14px;
+  background: #f8fbf9;
+  padding: 20px;
 }
 
-.merged-advice-grid h3 {
-  color: #17211d;
-  font-size: 16px;
+.method-synthesis-head,
+.school-title-row,
+.school-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
 }
 
-.merged-advice-grid p {
-  color: #61736b;
+.method-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: #a87935;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.method-synthesis h3,
+.method-synthesis h4,
+.method-synthesis p {
+  margin: 0;
+}
+
+.method-synthesis h3 {
+  font-size: 22px;
+}
+
+.confidence-badge,
+.school-weight {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.confidence-badge {
+  border: 1px solid rgba(43, 122, 120, 0.24);
+  background: #e8f4ef;
+  color: #216b61;
+  padding: 7px 11px;
+}
+
+.confidence-reason {
+  color: #53675f;
+  line-height: 1.75;
+}
+
+.method-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid rgba(23, 33, 29, 0.09);
+}
+
+.method-summary-grid > div {
+  padding: 16px;
+}
+
+.method-summary-grid > div + div {
+  border-left: 1px solid rgba(23, 33, 29, 0.09);
+}
+
+.method-summary-grid h4 {
+  margin-bottom: 10px;
+  color: #2b7a78;
   font-size: 14px;
-  line-height: 1.72;
+}
+
+.method-summary-grid ol,
+.school-judgment ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 19px;
+}
+
+.method-summary-grid li,
+.school-judgment li {
+  color: #52645d;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.school-judgment-list {
+  display: grid;
+}
+
+.school-judgment {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 14px;
+  padding: 20px 0;
+}
+
+.school-judgment + .school-judgment {
+  border-top: 1px solid rgba(23, 33, 29, 0.09);
+}
+
+.school-index {
+  color: #b78b49;
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+
+.school-title-row h4 {
+  color: #18221e;
+  font-size: 17px;
+}
+
+.school-title-row h4 + span {
+  display: block;
+  margin-top: 3px;
+  color: #71827b;
+  font-size: 12px;
+}
+
+.school-weight {
+  border: 1px solid rgba(167, 121, 53, 0.2);
+  background: #f6efe3;
+  color: #986b2c;
+  padding: 5px 9px;
+}
+
+.school-judgment blockquote {
+  margin: 12px 0;
+  border-left: 3px solid #c8a45d;
+  color: #6f5b38;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 14px;
+  line-height: 1.7;
+  padding-left: 12px;
+}
+
+.school-conclusion {
+  margin-bottom: 10px !important;
+  color: #24352e;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.school-footer {
+  margin-top: 12px;
+  border-top: 1px dashed rgba(23, 33, 29, 0.12);
+  color: #74847d;
+  font-size: 12px;
+  line-height: 1.6;
+  padding-top: 10px;
+}
+
+.school-footer a {
+  flex: 0 0 auto;
+  color: #2b7a78;
+  font-weight: 800;
+  text-decoration: none;
 }
 
 .luck-integrated-section {
@@ -6211,7 +6348,7 @@ textarea:focus-visible,
   .palace-pillar-row,
   .diagram-note-grid,
   .kinship-board,
-  .merged-advice-grid,
+  .method-summary-grid,
   .useful-summary,
   .useful-grid,
   .luck-overview,
@@ -6228,6 +6365,12 @@ textarea:focus-visible,
   .moving-grid,
   .timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .method-summary-grid > div:nth-child(3) {
+    border-top: 1px solid rgba(23, 33, 29, 0.09);
+    border-left: 0;
+    grid-column: 1 / -1;
   }
 }
 
@@ -6734,6 +6877,7 @@ textarea:focus-visible,
   .palace-matrix article > div,
   .kinship-board,
   .kinship-columns,
+  .method-summary-grid,
   .useful-summary,
   .useful-grid,
   .luck-overview,
@@ -6750,6 +6894,22 @@ textarea:focus-visible,
   .mini-columns,
   .timeline {
     grid-template-columns: 1fr;
+  }
+
+  .method-summary-grid > div + div,
+  .method-summary-grid > div:nth-child(3) {
+    border-top: 1px solid rgba(23, 33, 29, 0.09);
+    border-left: 0;
+    grid-column: auto;
+  }
+
+  .school-judgment {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .school-footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .profile-banner {

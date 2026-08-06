@@ -91,3 +91,51 @@ test('different natal charts produce materially different portrait reports', () 
   assert.match(first.portrait.workStyle, new RegExp(first.pillars[1].ganZhi));
   assert.match(second.portrait.relationshipStyle, new RegExp(second.pillars[2].branch));
 });
+
+test('professional report uses four traceable schools with explicit reasoning boundaries', () => {
+  const reading = createBaziReading(baseInput);
+  const synthesis = reading.deepDive.methodSynthesis;
+
+  assert.equal(synthesis.schools.length, 4);
+  assert.deepEqual(synthesis.schools.map((school) => school.key), ['ziping', 'qiongtong', 'ditiansui', 'sanming']);
+  synthesis.schools.forEach((school) => {
+    assert.ok(school.sourceUrl.startsWith('https://'));
+    assert.ok(school.quote.length > 8);
+    assert.ok(school.conclusion.length > 35);
+    assert.ok(school.evidence.length >= 2);
+    assert.ok(school.limitation.length > 20);
+  });
+  assert.match(synthesis.schools.find((school) => school.key === 'qiongtong').quote, /非古籍原句/);
+});
+
+test('month-command structure and school conclusions change with the natal chart', () => {
+  const first = createBaziReading(baseInput);
+  const second = createBaziReading({
+    ...baseInput,
+    name: '第二档案',
+    gender: 'female',
+    birthDate: '1986-06-01',
+    birthTime: '06:30',
+    birthplace: '浙江湖州德清',
+    longitude: 119.9774,
+  });
+
+  assert.notEqual(first.pillars[1].branch, second.pillars[1].branch);
+  assert.notEqual(first.deepDive.structureName, second.deepDive.structureName);
+  first.deepDive.methodSynthesis.schools.forEach((school, index) => {
+    assert.notEqual(school.conclusion, second.deepDive.methodSynthesis.schools[index].conclusion);
+  });
+});
+
+test('professional domains do not repeat long paragraphs verbatim', () => {
+  const reading = createBaziReading(baseInput);
+  const paragraphs = reading.deepDive.domains.flatMap((domain) => [
+    domain.conclusion,
+    ...domain.evidence,
+    ...domain.realWorld,
+    ...domain.risks,
+    ...domain.actions,
+  ]).filter((text) => text.length >= 24);
+
+  assert.equal(new Set(paragraphs).size, paragraphs.length);
+});
