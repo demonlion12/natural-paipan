@@ -3,13 +3,17 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 host="${DEPLOY_HOST:-root@43.134.64.51}"
 key="${DEPLOY_KEY:-$HOME/.ssh/tradeflow_deploy_ed25519}"
-release="$(git rev-parse --short HEAD)-$(date -u +%Y%m%d%H%M%S)"
+git diff --quiet && git diff --cached --quiet || { echo 'Commit source changes before releasing'; exit 1; }
+commit="$(git rev-parse HEAD)"
+release="${commit:0:7}-$(date -u +%Y%m%d%H%M%S)"
 if [ "${SKIP_CHECK:-0}" != 1 ]; then npm run check; fi
+test "$(git rev-parse HEAD)" = "$commit"
+git diff --quiet && git diff --cached --quiet || { echo 'Source changed during build'; exit 1; }
 test -f dist/index.html
 stage="$(mktemp -d)"
 trap 'rm -rf "$stage"' EXIT
-RELEASE_ID="$release" node --input-type=module -e 'import {writeFileSync} from "node:fs"; import {execFileSync} from "node:child_process"; writeFileSync("dist/release.json", JSON.stringify({release:process.env.RELEASE_ID,commit:execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim(),builtAt:new Date().toISOString()}));'
-tar -czf "$stage/site.tar.gz" -C dist .
+RELEASE_ID="$release" RELEASE_COMMIT="$commit" node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("dist/release.json", JSON.stringify({release:process.env.RELEASE_ID,commit:process.env.RELEASE_COMMIT,builtAt:new Date().toISOString()}));'
+COPYFILE_DISABLE=1 tar --no-xattrs --exclude='._*' -czf "$stage/site.tar.gz" -C dist .
 ssh -o BatchMode=yes -i "$key" "$host" "mkdir -p /opt/shanyi-paipan/incoming/$release"
 scp -q -i "$key" "$stage/site.tar.gz" deploy/server/nginx.conf deploy/server/docker-compose.yml "$host:/opt/shanyi-paipan/incoming/$release/"
 ssh -o BatchMode=yes -i "$key" "$host" bash -s -- "$release" <<'REMOTE'
