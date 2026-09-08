@@ -1,0 +1,639 @@
+{
+  "id": "31",
+  "title": "卷31",
+  "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+  "blocks": [
+    {
+      "heading": "",
+      "original": "論疾病",
+      "commentary": "",
+      "id": "31-7a3649800757b9046baf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "夫人禀五行之和氣而成形，所以有疾苦者，皆由陰陽五行之氣，虛、實、寒、熱太過不及，贅疣而致也。欲知人虛實，死絕為虛，生旺為實，虛實既明，疾病可以類推也。凡水死絕，多胸氣、腰足、攻圭、滑瀉、便溺不利之疾，火死絕主腸氣、結塞、驚悸、健忘、精神不安之疾。木死絕，主虛風、目牆、眩暈、筋急、爪甲枯悴，喜怒顛倒，擇食揀飯之疾。金死絕，主氣虛喘咳嗽、皮毛焦、乾燥、乾吝嗇，骨筋疼痛、善憂足涕淚，大腸瀉痢，便血之疾。土死絕，主面黃減食，隔食吐逆，肢體怠墮，喜睡嗜臥，多思足慮，耳聾神濁，健忘少喜動作之疾。",
+      "commentary": "",
+      "id": "31-36bcbdf87dbe919e01ad-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡五行有相尅而成疾者，金火相尅生旺，則痬、瘡、癱、腫，死絕無氣，主勞瘵嘔血。土木相尅生旺，主痞悶、昏眩、風麻、小腸疾、丹腫。死絕相尅，主吐食症塊，疽癖積滯。李九萬雲：木土相尅主中風，土受邪故也。金木相嫅生旺，主肢足骨節不完，眼目之疾。死絕主氣虛精脫，勞瘵癱瘓之疾。水上相尅，主脾濕洩瀉，中滿痰咳，不利之疾。",
+      "commentary": "",
+      "id": "31-595481b903d45287d30d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡五行有相生而生疾者，火木相生生旺，則上盛膈壅，目赤頭風。死絕則傷寒作狂悶亂疾。火土相生生旺，則胃實。死絕則唇焦，紅氣熱結，大便不利。金水相生生旺，則氣滯，死絕則精滑。水木相生生旺，則嘔吐胃虛。死絕則精敗傷寒，痁瘧，金土相生生旺，則多無肌肉。死絕腸鳴蟲作也。凡水土木相逢於無氣處。主蠱氣腹脹，吐逆之疾。凡金水火相逢於無氣之地，主痢疾。金主大腸，水火守之陰陽不和也。凡水逢土，多主翻胃疾，土多而無木氣疏之，主聾軒疾，蓋腎水不流則為翻胃，氣不通則為聵也。",
+      "commentary": "",
+      "id": "31-d3899d79873b6c8eba44-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡一切諸殺，亦有主疾者，劫殺主小腸，又主耳聾、咽喉疾。官符，主腰腳疾。威池主酒色勞瘵膿血，便溺疾。大耗主暗昧，或贅疣疾，凡祿主因食致疾，須帶殺尅身方是也。",
+      "commentary": "",
+      "id": "31-53a9c531e43902fcb679-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命見真沖氣散，或真刑氣散者，多是廢疾人也（並燭神經）",
+      "commentary": "",
+      "id": "31-e16aeb253499f5617c75-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡人午為頭，巳為左肩，未為右肩，辰為左膊，申為右膊，卯為左肋，酉為右肋，寅為左腿，戌為右腿，醜為左腳，亥為右腳，子為陰，又辰為腿，醜為唇，未為三焦，戍為兩腿之間，取疾病去處，須推此。",
+      "commentary": "",
+      "id": "31-867230137be00182f248-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡寅醜子亥多人，中年有腰腳疾，庚辰日，乙亥日，主消渴勞病等疾。",
+      "commentary": "",
+      "id": "31-935b0fc2f991f70270c4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天瞽殺】",
+      "commentary": "",
+      "id": "31-ddeab0a52da5ec9d2211-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "正月起申，逆行十二辰，又名飛廉殺，犯者主無目，凡命最忌，大惡支幹有氣。（並寸珠尺璧）",
+      "commentary": "",
+      "id": "31-c6aa19dbc6c99fab7ae3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【五行交加象】以刑言之",
+      "commentary": "",
+      "id": "31-437016959a95c456b1e2-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲辰、甲午、乙醜、乙未，土木交加，主癱瘓之疾，丙申、丁酉，金火交加，主血筋所傷。戊子、己亥，水土交加，主脾胃之疾。庚寅、辛卯，金木交加，主筋骨勞衰之疾。癸巳、壬午、丙子、丁亥，水火交加，主頭面目疾。",
+      "commentary": "",
+      "id": "31-2512420d7fce780b896c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "日被時克莫相對，終是艱辛病禍纏，金木戰兮憂骨肉，水凌火氣眼生煙。金水死時為風【癩】，土多水少敗丹田。土遭木剋脾胃弱，火勝金殘血裡眠，水深金重逢水厄，遇水定教落深淵。水少火多應受渴，火多土少語狂顛。水若滿兮火若明，水滿火明壽難延。金純切忌四肢損，土多帶火受憂煎。木若盛時應蹇塞，更須仔細辯根源。（並神白經）",
+      "commentary": "",
+      "id": "31-8493cedc1cc6f9e7968a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金衰火盛，嘔血不人小，脫肛水竭，土盈病癖，忽然耳聵。",
+      "commentary": "",
+      "id": "31-df9a63cde0e09d1b53a8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金在臟為肺而主嘔，火在臟為心，而主血咳與血相應也。金衰而火盛，則火乘其便以克之，肺乃受疾，發於上則為咳嘔，發於下則為痔漏，蓋肺與腸相為表裡也。此言金人得火多也。水在髒為骨髓，土在髒為脾為肌肉，骨與肉相接也。水竭而土盈，則土乘其便以克之，腎乃受疾，腎既受疾，攻於下則為癖，攻於上則為聵，蓋腎上攻則應於耳，​​此言水人得土多也。（壺中子）",
+      "commentary": "",
+      "id": "31-e6aba0d401160f7faaa5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "破碎羊刃招痕疾，疾中六害還非吉，日時累犯旺鬼凌，無氣空亡纏病卒。",
+      "commentary": "",
+      "id": "31-9eaebd3b94c5d2bb17b3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命如犯破碎羊刃，日時中見者，身多痕瘕，女人有血氣之疾，少年主多【？】癤之患，凡病厄宮不要見六害，多疾患。旺鬼凌者，如土命人犯乙卯己亥又三合，巳酉醜見戊午，乙巳丁巳之類，更犯空亡無氣，一生多疾。",
+      "commentary": "",
+      "id": "31-ff9705874102980cd0cc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "月陰淫佚忌相逢，陰命須憂帶下通，月水不調緣好事，男兒痔漏及腸風。",
+      "commentary": "",
+      "id": "31-123e0bb433536509af1e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "月陰月殺也，如寅午戌在卯。（並沉芝源髓）",
+      "commentary": "",
+      "id": "31-df6d5cdae051579cc00d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命祿對沖一辰，如坐命宮，或疾厄宮，主人手足不完，身體有疾，六厄亦係名曰互戰。",
+      "commentary": "",
+      "id": "31-00fac47c641cab6af534-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛卯日時，名曰白虎閉目，火年必損眼，其餘辛與卯字者，亦忌之。（並廣信集）",
+      "commentary": "",
+      "id": "31-5b1fbb7207d8e6395d90-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡欲推疾病災厄，先看祿、命、身三等，大小運如何，若三命無氣，祿馬敗絕，但只祿財、命財旺相，亦不至死。若父病推其子命，如子命遇孤辰、寡宿、喪門、吊害及白衣殺臨命，其父必有不可救之疾，夫妻亦準此論之。（三命指掌）",
+      "commentary": "",
+      "id": "31-127bd4f835527dd795c0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "論壽夭",
+      "commentary": "",
+      "id": "31-3922a1d21b7a316370e3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "夫人壽夭脩短之數，大抵生旺為壽長，死絕則為夭折，如根深者蒂固，源【澞】者流長也。凡命皆要逢生旺，則為有壽，如日月上逢生旺，時上雖有死氣，不妨。蓋生旺氣之故也。如月上死絕，日時上雖生旺氣不甚雄，蓋生承死絕故也，於三十歲前，須有幾死之災。如月生日生旺，時上死絕人，壽不過四十五歲。月日時死絕者，死在三十歲前也。更有兇殺五行凌犯，必為殤子，常以月管一歲至三十歲。日管三十一歲至四十五歲。時管四十五歲至百歲。或生旺，或死絕，逐限詳之。如欲知人死處，聚則為生氣，散則為死氣，遇二運太歲會集在死絕衰息之鄉，更太歲刑克與災限相應者，定死也。各發在身無氣，月日時上亦。凡命中有生旺多者，如不犯刑殺，應是少疾病，善終，死於一念之間。若死絕，多刑殺，主憔悴苦楚之災，或久淹歲月難辨之疾。凡旺運中死，或祿上死者，是稱意中卒也。老人行年生旺，死於苦楚，蓋生旺則尫羸淹久，少者則死於善疾，命中是亡神、大耗重迭，死須破屍也。（燭神經）",
+      "commentary": "",
+      "id": "31-0cfa63bc33480edf0a1c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡天幹生旺不損克者，壽。天干不敗死有救助者，尤壽。天干敗死相賊者，夭。天干生旺中有破克者，尤夭。（廣錄）",
+      "commentary": "",
+      "id": "31-58caf2bb7f992e530945-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡欲知人壽命長短，但以本年納音，與生月納音，觀其刑克，若生月克命，即多夭折。命克生月，主壽籌延永。假令癸亥水命人，四月生即無壽，以戊癸年，四月建丁巳，納音屬土，土能克水，是生月克命也。又癸亥人四月為祿命絕處生，故無壽。如癸醜木命，三月生，即有壽，以戊癸之年，三月建丙辰，納音土，木剋土，是命克生月也，設如兇殺下生，亦為身制殺也。又癸醜人三月生，為祿命庫墓中生，凡庫墓中生者，多主有壽。但三十歲以前常主有患難，緣前有絕鄉運，後有死病，歷盡衰鄉運到旺處，故有晚歲福也。（三命鶴）",
+      "commentary": "",
+      "id": "31-956072ecaf0dad8fcdd9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡壽以生月定之，生月居支幹納音旺處，及五音相生不逆，及日、時，並胎，並皆得數，不相刑克，上壽也。（玉門關集）",
+      "commentary": "",
+      "id": "31-2cf1757dca7051c2361b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天壽朝元格】",
+      "commentary": "",
+      "id": "31-59f0439a8c3e195d60e6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "納音居死絕之地，而有真五行與納音比合，居於生旺之位者，是也。假令乙酉人，其納音水，自敗，若得辛亥、丙申，則丙辛真水，復生於申，此類享眉壽也。如乙亥人，得癸亥、戊寅之類亦是。（玉霄寶鑑）",
+      "commentary": "",
+      "id": "31-676978c50f2bf16fc504-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【建命須知壽命長】",
+      "commentary": "",
+      "id": "31-a2ee0e6e741cef8cfa76-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "建命者，如子人見子，醜人見醜之類，如遇滋助，無刑克，多長壽。（沉芝源髓）",
+      "commentary": "",
+      "id": "31-7be0aa65d57b771b22db-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命中帶長生多者，定有壽，須本家納音旺者，謂之長生見克制，則夭矣。（李虛中書）",
+      "commentary": "",
+      "id": "31-48b2186bc289ca8d56d8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡祿馬貴人，往來在生旺之地，死絕之氣者，雖早發亦早死，然須在乘旺之地者，方為福，餘且徒然，若時得力，則晚發，而長壽。",
+      "commentary": "",
+      "id": "31-c2cc2e473c3a3b03c36b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "要知天算得遐長，五行生旺最高強，旺鬼克身為短命，祿財無氣亦為殃。（理愚歌）",
+      "commentary": "",
+      "id": "31-98a7ee10e71fd80b7396-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "人過鬼門，氣度消關。",
+      "commentary": "",
+      "id": "31-36e0a5da79ad46b65bee-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火忌申酉亥，（甲申、乙酉、癸亥，消關者，病、死、絕。）金嫌亥子醜，水土寅卯巳，（水忌戊寅、己卯、丁巳，土忌庚寅、辛卯、己巳。）木怕巳午申，（辛巳、甲午、壬申。）更若逢陰鬼，壽算永不停，艱辛尤住世，發即禍來尋，若人逢此地，不請怨天文。",
+      "commentary": "",
+      "id": "31-1f76dfc11635840bbd4e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【氣短法】",
+      "commentary": "",
+      "id": "31-ffb9188fa2d404987376-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "鬼限生來有所憂，欲知人死向斯求，金哥出去休騎馬，火弟歸來莫跨牛，木遇鼠蛇須遠走，水逢雞子也堪愁，土人切更防豬兔，難保年光到白頭。即小兄例中鬼關殺。",
+      "commentary": "",
+      "id": "31-8b007e7c7ae64e9cc2ba-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "受氣重重鬼莫臨，四柱交加豈可親，時兼本命仍相遇，富貴之中壽不存。",
+      "commentary": "",
+      "id": "31-1e5d334aeecdcbc1b659-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "生日對時人短命，生年對月亦復是，此乃人間短命法，人生值此少年紀。",
+      "commentary": "",
+      "id": "31-b7a6207deb75988feca6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如寅年、申月、午日、子時，是也。又日與時對，更被時尅者，是也。",
+      "commentary": "",
+      "id": "31-f2b5b4481cfe80e82165-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "生日對時人促壽，日時相沖壽不長，天罡空亡難保守，定知惡死路頭亡。或雲沖而不散無害。（並神白經）",
+      "commentary": "",
+      "id": "31-fc3a14f54c6fc33d2996-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "生日對年須可歎，生時對日亦堪傷，那看生處時同歲，二入風流壽不長。",
+      "commentary": "",
+      "id": "31-9d9ef1941fb9682ca21b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如甲寅年、丁酉月、戊申日、甲寅時，不出週歲死，生年對月亦然。（鬼谷要訣）",
+      "commentary": "",
+      "id": "31-8ec39befc4ff9ec862d9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【短命殺】",
+      "commentary": "",
+      "id": "31-6a47a52a67c0c263a357-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "豬鼠無良犬戰於，雞聲催促夜行彪，龍羊猴兔不相入，巳午無人到白頭。與防中害巾沉芝源髓隔宿例同。",
+      "commentary": "",
+      "id": "31-40b0950e19cd276941bd-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "三命鶴作天年殺，主壽命不長，多遇喪禍，若身能尅殺，則可免。",
+      "commentary": "",
+      "id": "31-c7fe642b8d32a9cdf3f2-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【急腳殺】",
+      "commentary": "",
+      "id": "31-a06ca4d8ad450e8ac98c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "此以乾支相尅，只如甲乙屬木、申酉屬金、金尅木也。",
+      "commentary": "",
+      "id": "31-f433b48d3a24ab4966c0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲乙申酉見閻王，丙丁亥子切須防，庚申巳午如風燭，戊己寅卯亦重傷，壬癸辰戍加醜未，永別浮生入鬼鄉。（並三命篡局）",
+      "commentary": "",
+      "id": "31-18d40baf43855a16821c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "廣信集作天鬼截路殺，若甲人見申，乙人見酉，生時帶著，支幹皆有者，定夭。如甲人見庚申是，支幹皆有也。太歲與大運逢之，主多孝服，更與小運併，主死。",
+      "commentary": "",
+      "id": "31-8bf3a76dabb67d1a9a3a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金書命訣雲：行年二位臨斯位，自察前程有盛衰。",
+      "commentary": "",
+      "id": "31-a68455ec7b0a1063de5a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【又急腳殺】",
+      "commentary": "",
+      "id": "31-4cb312a479b11eb9f99f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金人沐浴火木胎，土死水墓四季裁，命有限逢為再犯，閻王急腳送書來。（金書命訣）",
+      "commentary": "",
+      "id": "31-ce5191afcc98cc16741c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【急腳殺】",
+      "commentary": "",
+      "id": "31-a06ca4d8ad450e8ac98c-1",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寶瓶在亥醜居寅，人馬來蛇蠍奔辰，天秤卯宮雙女午，獅子尋牛蟹寶瓶，陰陽在未金牛戌，白羊居醜亥還申。",
+      "commentary": "",
+      "id": "31-e71acf7a7188a27a2050-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "假令子上安命即亥上起一歲，酉上十一，未上二十零一年倒轉，順數節節而去，一歲一辰，怕與限星及大小運併，在子午卯酉宮，及本命墓殺三刑宮。",
+      "commentary": "",
+      "id": "31-93678c6c8f2ae9a8ce83-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "又歌曰：子午便是黃泉路，卯酉呼為二八門，限到殺時人便死，若無惡殺只災迍。（五星級捷論）",
+      "commentary": "",
+      "id": "31-78eb25f6b988b90f5f62-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "古詩雲：急腳相逐逐歲移，衝臨行限少人知，更加惡曜臨其位，買下棺材不用疑。",
+      "commentary": "",
+      "id": "31-07e012b2b9fc65acc61e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "廣信集雲：陰陽順逆依次數，假令寅申巳亥上安命，遇寅申巳亥年，亦災。更恨在寅申巳亥上尤緊，更帶當生行年殺神尅戰命宮，定死，月分亦如之。若坐當生行年祿馬救神上，但災耳。",
+      "commentary": "",
+      "id": "31-7383178d21c9155b623f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【截命殺】若子生人見醜、各於本命前一辰是",
+      "commentary": "",
+      "id": "31-c08566eeae76200b500e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "人命歸前次一支，子生須與醜為期，三逢必定遭兇死，兩見須憂血漬衣。",
+      "commentary": "",
+      "id": "31-b606497b3aa92294d985-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【推命殺】若子生人見亥、各於本命後一辰是",
+      "commentary": "",
+      "id": "31-cdca416fd0e4217f781f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "命後一辰宜見兩，重重見者涉疑猜，三重在外中年夭，五十年前禍必來。",
+      "commentary": "",
+      "id": "31-b3f3edeac5163350824e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【短夭歌】",
+      "commentary": "",
+      "id": "31-d0b59d769c768bd965ab-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅午戌連亥，亥卯未同申，申子辰歸巳，巳酉醜從寅，此劫殺位，更支幹相尅，則兇。",
+      "commentary": "",
+      "id": "31-4d37c75923132be78840-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "財死中生者，從頭說向君，金招離上厄，水莎兌家遁，惟有土兼木，同過玉兔門，火山通鼠穴，光景自逡巡。",
+      "commentary": "",
+      "id": "31-8a891f3582f77da62df7-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【五行滿數】值之有尅刑損夭",
+      "commentary": "",
+      "id": "31-7e3bb9a50762f9deff82-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "五行生處定陰陽，日月平分兩位當，凡月一至十五日為陽十六至三十為陰六日初生名甲乙，初六日木生至初十日滿丙丁依此火為強，十六日火生至二十日滿壬癸水流相注定，二十六日水生至三十日滿從茲生死不乖張。",
+      "commentary": "",
+      "id": "31-dac3536b8bd3721afac5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "只如己亥生九月三十日己酉，丁卯時，其日值水滿，年是己亥，日是己酉，其水被兩土所尅，此人夭壽。",
+      "commentary": "",
+      "id": "31-5dcf02d58f1c7a1991d7-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【陰陽二極】男以本命順數至九辰為陽極女以本命順數至六辰為陰極",
+      "commentary": "",
+      "id": "31-d7928d21c131d3b842a9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "陰陽二極君知否，男女替從本命數，男逢九位女三雙，位位相連兼順去，大小兩運氣全無，到此須知身死處，兩運有氣則無妨，合致一年災運苦。（並金書命訣）",
+      "commentary": "",
+      "id": "31-90a8b18745699f793a99-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【支辰上生下】",
+      "commentary": "",
+      "id": "31-97ff1bdbf61355511976-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "假如寅人，午月，巳日，未時，必命從木生兩火，巳失本氣，更兩火生未土，而寅木弱也。",
+      "commentary": "",
+      "id": "31-45ca3e0f4528912d986f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【夭壽殺】",
+      "commentary": "",
+      "id": "31-3edb9d4ed7ba2b24e4fe-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅午戌全人，亥年、亥時、亥運，皆弱也，巳酉醜全人，寅年、寅時、寅運，皆弱也，申子辰全人，巳年、巳時、巳運，皆弱也，亥卯未全人，申年、申時、申運，皆弱也，更看天幹納音，仔細消息之。（並天元變化書）",
+      "commentary": "",
+      "id": "31-61217c8ff517a7d4222e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【夭壽殺】",
+      "commentary": "",
+      "id": "31-3edb9d4ed7ba2b24e4fe-1",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木為身命，未申子全；金為身命，醜寅午全；火為身命，戍亥卯全；水土為身命，辰巳酉全，在墓絕敗位。（廣錄）",
+      "commentary": "",
+      "id": "31-b65d71d5c88be48e7d05-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木遇巳金金遇寅，生火生金傷本身，五行命裡皆防此，遇者知非鶴髪。",
+      "commentary": "",
+      "id": "31-3637008016682d34f47d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡有二木，怕見巳中生金，金命人金多，怕見寅中生火也，如兩土怕逢亥，亥中有生木尅也。五命皆怕逢之，更加惡殺，皆主夭壽。（沉芝源髓）",
+      "commentary": "",
+      "id": "31-c55e23e347dc6429a395-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "若乃生旺鬼絕，雖破命而長年；鬼旺身衰，逢建命而夭壽。",
+      "commentary": "",
+      "id": "31-2c4b2fdbb41bac50e275-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注雲：五行納音為身，身旺則克我之鬼，自然絕滅，或鬼承旺氣，則我身必致衰矣。譬之庚申木人，得壬寅之金，金克木為鬼，金絕於寅，寅乃木旺之鄉，寅申破命，以其身旺鬼絕，雖破命而長年也。或庚申木人，得壬申之金，金旺木絕，在申是謂鬼旺身衰，雖二申建命，亦不免於夭壽。",
+      "commentary": "",
+      "id": "31-284092e4c477181d580d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "就中祼形夾殺者魄往酆都；所犯有傷，魂歸岱獄。",
+      "commentary": "",
+      "id": "31-0c6d45569af7d9130f64-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注雲：祼形殺者，五行之敗氣，納音長生前一辰是也，如甲子金人，得戊午火，乃金之暴敗處，是為祼形，加以戊午旺火，夾殺自刑，返吟災殺，來破甲子之命，其殺兇也。如此則所犯有傷，魂歸岱獄，乃死者所歸之地。（並珞錄子）",
+      "commentary": "",
+      "id": "31-d36b5e28a7fecb749cac-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "死絕依前，生旺命曰返魂，丘墓坐在本命，其名絕體。",
+      "commentary": "",
+      "id": "31-9dc1cac250dd32fe6b6b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "死而復生，生而復旺，於本命之位者，乃返魂格也。其命必有壽，墓處為丘，丘處於本命，同一方者，名曰絕體，其命必須傷夭。",
+      "commentary": "",
+      "id": "31-cecf6c8b805750c5ea5c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壽數傷殘，本命必逢三合。",
+      "commentary": "",
+      "id": "31-0918fd91411b29f53ef4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "五行生旺墓處互為三合，若得三合全者，壽短，若得三合全，而不帶墓者，抑可言中壽，蓋五行始必生，既生必旺，既生必旺，既旺必墓，既墓則已矣。如巳酉醜，乃金三合之類，緣自生至墓，則氣歇滅矣。",
+      "commentary": "",
+      "id": "31-fa4577ea388c13da2f3a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "顏回夭折，只因四大空亡。",
+      "commentary": "",
+      "id": "31-12af3ef227ce7e33f9eb-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲子、甲午之旬，納音無水。甲申、甲寅之旬，納音無金。生於甲子甲午之人，命內有三字水者，夭。生於甲申甲寅旬之人，命內有三字金者，夭。若見生只有兩字，流年、大運更遇一重圓之，亦夭。（並壺中子）",
+      "commentary": "",
+      "id": "31-ac7ed6143d39ecdfa172-0",
+      "translation": null
+    }
+  ],
+  "editionId": "wuxing-83b291515920710865bc",
+  "version": "2b66a6a4b3ae6fb30864"
+}

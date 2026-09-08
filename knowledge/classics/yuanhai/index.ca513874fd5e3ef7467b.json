@@ -1,0 +1,539 @@
+{
+  "id": "yuanhai",
+  "title": "渊海子平",
+  "dynasty": "宋元以来",
+  "attribution": "传统题署徐大升编；来源页作者题署与版本信息仍待进一步校核",
+  "status": "全文·底本待校",
+  "unit": "篇",
+  "chapterCount": 74,
+  "description": "子平法重要汇编，包含日主、月令、格局、十神、六亲、岁运、诗诀与命例等材料。",
+  "editionNote": "全文据维基文库《渊海子平》页面整理。来源页明确标注“No source”，未提供可逐页核对的扫描底本，因此本站保留“底本待校”标记；文本可供检索学习，不作为唯一校勘定本。",
+  "sourceLabel": "维基文库《渊海子平》（来源页未标底本）",
+  "sourceUrl": "https://zh.wikisource.org/wiki/淵海子平",
+  "sourceRevision": "2593607",
+  "sourceUpdatedAt": "2025-08-24",
+  "updatedAt": "2026-08-06",
+  "chapters": [
+    {
+      "id": "01",
+      "title": "基础与十神",
+      "guide": "本篇讨论“基础与十神”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/01.5af8660fab720fa11246.json",
+      "blockCount": 22
+    },
+    {
+      "id": "02",
+      "title": "论天干地支暗藏总诀",
+      "guide": "本篇讨论“论天干地支暗藏总诀”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/02.222d4ff583a2c8fff436.json",
+      "blockCount": 12
+    },
+    {
+      "id": "03",
+      "title": "又地支藏遁歌",
+      "guide": "本篇讨论“又地支藏遁歌”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/03.1d95171496d3dc0d5595.json",
+      "blockCount": 8
+    },
+    {
+      "id": "04",
+      "title": "论日为主",
+      "guide": "本篇讨论“论日为主”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/04.fa91925aa968c71b6d6b.json",
+      "blockCount": 5
+    },
+    {
+      "id": "05",
+      "title": "论月令",
+      "guide": "本篇讨论“论月令”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/05.310c9e3ee1449ceab5ce.json",
+      "blockCount": 7
+    },
+    {
+      "id": "06",
+      "title": "论太岁吉凶",
+      "guide": "本篇讨论“论太岁吉凶”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/06.88934cef9efac020d3ba.json",
+      "blockCount": 6
+    },
+    {
+      "id": "07",
+      "title": "论征太岁",
+      "guide": "本篇讨论“论征太岁”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/07.3fe65f4da22fbbef5ddf.json",
+      "blockCount": 4
+    },
+    {
+      "id": "08",
+      "title": "论大运",
+      "guide": "本篇讨论“论大运”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/08.7a994e781ef24ff6c5de.json",
+      "blockCount": 13
+    },
+    {
+      "id": "09",
+      "title": "论疾病",
+      "guide": "本篇讨论“论疾病”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/09.c3497f87b2c1d76ffb70.json",
+      "blockCount": 12
+    },
+    {
+      "id": "10",
+      "title": "论性情",
+      "guide": "本篇讨论“论性情”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/10.66ffd4da735e9133ebe8.json",
+      "blockCount": 32
+    },
+    {
+      "id": "11",
+      "title": "论伤官",
+      "guide": "本篇讨论“论伤官”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/11.0374dbfcb156c1adf4a6.json",
+      "blockCount": 36
+    },
+    {
+      "id": "12",
+      "title": "伤官说",
+      "guide": "本篇讨论“伤官说”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/12.ffda1df5d304da337df1.json",
+      "blockCount": 24
+    },
+    {
+      "id": "13",
+      "title": "论食神",
+      "guide": "本篇讨论“论食神”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/13.6d681351b60a367f842a.json",
+      "blockCount": 14
+    },
+    {
+      "id": "14",
+      "title": "论正财",
+      "guide": "本篇讨论“论正财”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/14.89371481a066d746cb11.json",
+      "blockCount": 36
+    },
+    {
+      "id": "15",
+      "title": "正官论",
+      "guide": "本篇讨论“正官论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/15.9c4d3e6d6e09d0e15622.json",
+      "blockCount": 45
+    },
+    {
+      "id": "16",
+      "title": "论七杀",
+      "guide": "本篇讨论“论七杀”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/16.c7c96a344347dad80075.json",
+      "blockCount": 17
+    },
+    {
+      "id": "17",
+      "title": "论官星太过",
+      "guide": "本篇讨论“论官星太过”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/17.22912be4f3c8cbcbad0f.json",
+      "blockCount": 3
+    },
+    {
+      "id": "18",
+      "title": "论官杀混杂要制伏",
+      "guide": "本篇讨论“论官杀混杂要制伏”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/18.e7a86c212b4b1bb4be5d.json",
+      "blockCount": 2
+    },
+    {
+      "id": "19",
+      "title": "论印綬",
+      "guide": "本篇讨论“论印綬”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/19.cf9536ee0f4e78c8f171.json",
+      "blockCount": 37
+    },
+    {
+      "id": "20",
+      "title": "论倒食",
+      "guide": "本篇讨论“论倒食”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/20.7019d2ad45ecc98872bc.json",
+      "blockCount": 6
+    },
+    {
+      "id": "21",
+      "title": "论劫财",
+      "guide": "本篇讨论“论劫财”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/21.9ad766c97f37328ce021.json",
+      "blockCount": 10
+    },
+    {
+      "id": "22",
+      "title": "论阳刃",
+      "guide": "本篇讨论“论阳刃”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/22.38defdef66a08754d496.json",
+      "blockCount": 20
+    },
+    {
+      "id": "23",
+      "title": "论日刃",
+      "guide": "本篇讨论“论日刃”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/23.90f7d31c8e2ba1cd0d3e.json",
+      "blockCount": 8
+    },
+    {
+      "id": "24",
+      "title": "论日贵",
+      "guide": "本篇讨论“论日贵”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/24.18887c8e5938a6fe8d53.json",
+      "blockCount": 9
+    },
+    {
+      "id": "25",
+      "title": "论日德",
+      "guide": "本篇讨论“论日德”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/25.4bad103ed3a7f2a7ece7.json",
+      "blockCount": 11
+    },
+    {
+      "id": "26",
+      "title": "论魁罡",
+      "guide": "本篇讨论“论魁罡”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/26.6b1d86ce1b74d7207dd7.json",
+      "blockCount": 10
+    },
+    {
+      "id": "27",
+      "title": "论金神",
+      "guide": "本篇讨论“论金神”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/27.f5862d88a9aebb761e52.json",
+      "blockCount": 12
+    },
+    {
+      "id": "28",
+      "title": "六亲总篇",
+      "guide": "本篇讨论“六亲总篇”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/28.062375fa5e905af2a67e.json",
+      "blockCount": 10
+    },
+    {
+      "id": "29",
+      "title": "论父",
+      "guide": "本篇讨论“论父”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/29.b7617c3a08b5cfbdee13.json",
+      "blockCount": 6
+    },
+    {
+      "id": "30",
+      "title": "论母",
+      "guide": "本篇讨论“论母”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/30.f40ddc387a8f240fc98d.json",
+      "blockCount": 7
+    },
+    {
+      "id": "31",
+      "title": "论兄弟姊妹",
+      "guide": "本篇讨论“论兄弟姊妹”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/31.909813fdd3a430dcc961.json",
+      "blockCount": 9
+    },
+    {
+      "id": "32",
+      "title": "论妻妾",
+      "guide": "本篇讨论“论妻妾”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/32.ba849531084bd6048d65.json",
+      "blockCount": 17
+    },
+    {
+      "id": "33",
+      "title": "论子息",
+      "guide": "本篇讨论“论子息”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/33.ae323cbf9a00ebadcd1e.json",
+      "blockCount": 13
+    },
+    {
+      "id": "34",
+      "title": "论小儿",
+      "guide": "本篇讨论“论小儿”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/34.b1de8512a8f105c00b15.json",
+      "blockCount": 7
+    },
+    {
+      "id": "35",
+      "title": "论小儿关煞",
+      "guide": "本篇讨论“论小儿关煞”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/35.a8664b806781f96095b5.json",
+      "blockCount": 8
+    },
+    {
+      "id": "36",
+      "title": "论妇人总诀",
+      "guide": "本篇讨论“论妇人总诀”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/36.509c90fbe9bdfffe850d.json",
+      "blockCount": 36
+    },
+    {
+      "id": "37",
+      "title": "阴命赋",
+      "guide": "本篇讨论“阴命赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/37.68d16af2098d2d7eee43.json",
+      "blockCount": 13
+    },
+    {
+      "id": "38",
+      "title": "女命总断歌",
+      "guide": "本篇讨论“女命总断歌”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/38.825cb59511864fc72a6f.json",
+      "blockCount": 22
+    },
+    {
+      "id": "39",
+      "title": "女命富贵贫贱篇",
+      "guide": "本篇讨论“女命富贵贫贱篇”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/39.b2a31d81cbd3d2869306.json",
+      "blockCount": 28
+    },
+    {
+      "id": "40",
+      "title": "滚浪桃花",
+      "guide": "本篇讨论“滚浪桃花”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/40.872af76d4052bd60f312.json",
+      "blockCount": 12
+    },
+    {
+      "id": "41",
+      "title": "女命贵格",
+      "guide": "本篇讨论“女命贵格”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/41.385e22741ce3c565213d.json",
+      "blockCount": 19
+    },
+    {
+      "id": "42",
+      "title": "女命贱格",
+      "guide": "本篇讨论“女命贱格”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/42.35b15a32634c5d87ca5f.json",
+      "blockCount": 21
+    },
+    {
+      "id": "43",
+      "title": "子平举要歌",
+      "guide": "本篇讨论“子平举要歌”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/43.3db10d61d711b715acd3.json",
+      "blockCount": 6
+    },
+    {
+      "id": "44",
+      "title": "详解定真论",
+      "guide": "本篇讨论“详解定真论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/44.a9968e3533de403a1d08.json",
+      "blockCount": 14
+    },
+    {
+      "id": "45",
+      "title": "喜忌篇",
+      "guide": "本篇讨论“喜忌篇”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/45.d7c20ef1192d347a2094.json",
+      "blockCount": 124
+    },
+    {
+      "id": "46",
+      "title": "看命入式",
+      "guide": "本篇讨论“看命入式”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/46.834d0d8f260c798f52c5.json",
+      "blockCount": 10
+    },
+    {
+      "id": "47",
+      "title": "神趣八法",
+      "guide": "本篇讨论“神趣八法”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/47.bf0ba21e7a5759f84162.json",
+      "blockCount": 8
+    },
+    {
+      "id": "48",
+      "title": "杂论口诀",
+      "guide": "本篇讨论“杂论口诀”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/48.76b18a5de4b1676139dd.json",
+      "blockCount": 85
+    },
+    {
+      "id": "49",
+      "title": "群兴论",
+      "guide": "本篇讨论“群兴论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/49.fd6b2802828476d28719.json",
+      "blockCount": 7
+    },
+    {
+      "id": "50",
+      "title": "论兴亡",
+      "guide": "本篇讨论“论兴亡”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/50.64985f8b193edcdf38df.json",
+      "blockCount": 77
+    },
+    {
+      "id": "51",
+      "title": "论命细法",
+      "guide": "本篇讨论“论命细法”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/51.e43cffff145c268bc322.json",
+      "blockCount": 59
+    },
+    {
+      "id": "52",
+      "title": "心镜歌",
+      "guide": "本篇讨论“心镜歌”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/52.94f05b7e0af792d7162e.json",
+      "blockCount": 48
+    },
+    {
+      "id": "53",
+      "title": "妖祥赋",
+      "guide": "本篇讨论“妖祥赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/53.277167d8b7afc04ac917.json",
+      "blockCount": 96
+    },
+    {
+      "id": "54",
+      "title": "相心赋",
+      "guide": "本篇讨论“相心赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/54.e4bca700d140cc206cf3.json",
+      "blockCount": 26
+    },
+    {
+      "id": "55",
+      "title": "玄机赋",
+      "guide": "本篇讨论“玄机赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/55.0a806fe20fa0634c426a.json",
+      "blockCount": 85
+    },
+    {
+      "id": "56",
+      "title": "幽微赋",
+      "guide": "本篇讨论“幽微赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/56.ae3452124efd936eea9f.json",
+      "blockCount": 57
+    },
+    {
+      "id": "57",
+      "title": "五行元理消息赋",
+      "guide": "本篇讨论“五行元理消息赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/57.58671427eaa9e55569a0.json",
+      "blockCount": 382
+    },
+    {
+      "id": "58",
+      "title": "造微论",
+      "guide": "本篇讨论“造微论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/58.740a68217f15ca9e7b59.json",
+      "blockCount": 59
+    },
+    {
+      "id": "59",
+      "title": "人鑑论",
+      "guide": "本篇讨论“人鑑论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/59.72f379fe63059f4fa96a.json",
+      "blockCount": 58
+    },
+    {
+      "id": "60",
+      "title": "爱憎赋",
+      "guide": "本篇讨论“爱憎赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/60.90a82188c77a3ff16eeb.json",
+      "blockCount": 102
+    },
+    {
+      "id": "61",
+      "title": "万金赋",
+      "guide": "本篇讨论“万金赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/61.f0eb5b7fe92b7de4c80f.json",
+      "blockCount": 23
+    },
+    {
+      "id": "62",
+      "title": "挈要捷驰玄妙诀",
+      "guide": "本篇讨论“挈要捷驰玄妙诀”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/62.ad4b2fd02d38ea1b28e0.json",
+      "blockCount": 81
+    },
+    {
+      "id": "63",
+      "title": "渊源集说",
+      "guide": "本篇讨论“渊源集说”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/63.6aace653ad2840f514bc.json",
+      "blockCount": 38
+    },
+    {
+      "id": "64",
+      "title": "子平百章论科甲歌",
+      "guide": "本篇讨论“子平百章论科甲歌”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/64.8ee1a5c84f4e9c38150d.json",
+      "blockCount": 5
+    },
+    {
+      "id": "65",
+      "title": "四言獨步",
+      "guide": "本篇讨论“四言獨步”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/65.c34a3b7c9be4bc77e440.json",
+      "blockCount": 2
+    },
+    {
+      "id": "66",
+      "title": "先看月令，次看淺深。",
+      "guide": "本篇讨论“先看月令，次看淺深。”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/66.4f913027b4c1d1c0705d.json",
+      "blockCount": 101
+    },
+    {
+      "id": "67",
+      "title": "身弱论",
+      "guide": "本篇讨论“身弱论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/67.c546f7831d5415add63a.json",
+      "blockCount": 16
+    },
+    {
+      "id": "68",
+      "title": "弃命从杀论",
+      "guide": "本篇讨论“弃命从杀论”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/68.ab483b574996ed3ce55d.json",
+      "blockCount": 15
+    },
+    {
+      "id": "69",
+      "title": "五言独步",
+      "guide": "本篇讨论“五言独步”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/69.43df0c6c1991367f1f14.json",
+      "blockCount": 23
+    },
+    {
+      "id": "70",
+      "title": "五行生剋赋",
+      "guide": "本篇讨论“五行生剋赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/70.7cc26a844f604ea69cd5.json",
+      "blockCount": 47
+    },
+    {
+      "id": "71",
+      "title": "珞琭子消息赋",
+      "guide": "本篇讨论“珞琭子消息赋”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/71.a81be60b824af244d480.json",
+      "blockCount": 72
+    },
+    {
+      "id": "72",
+      "title": "论八字撮要法",
+      "guide": "本篇讨论“论八字撮要法”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/72.5df89de26f206ca0eeb1.json",
+      "blockCount": 15
+    },
+    {
+      "id": "73",
+      "title": "格局生死引用",
+      "guide": "本篇讨论“格局生死引用”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/73.7c71bc34dec3171557b5.json",
+      "blockCount": 13
+    },
+    {
+      "id": "74",
+      "title": "会要命书说",
+      "guide": "本篇讨论“会要命书说”相关旧法。阅读时先提取月令、日主、透藏、制化与岁运等条件，再与其他章节交叉核对，不直接套用结果性断语。",
+      "path": "knowledge/classics/yuanhai/chapters/74.c20963df080efd7d281a.json",
+      "blockCount": 3
+    }
+  ],
+  "editionId": "yuanhai-6fbd3c1c68ee5326ccef",
+  "schemaVersion": 2,
+  "version": "ca513874fd5e3ef7467b"
+}

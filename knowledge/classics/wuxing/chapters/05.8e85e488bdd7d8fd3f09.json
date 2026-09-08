@@ -1,0 +1,905 @@
+{
+  "id": "05",
+  "title": "卷05",
+  "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+  "blocks": [
+    {
+      "heading": "",
+      "original": "論乾神三",
+      "commentary": "",
+      "id": "05-79daf03d881641c884bc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【戊火數三】",
+      "commentary": "",
+      "id": "05-aaee6a1245a60621cbe1-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六戊生人逢曲直，丁壬相合主清才，從革位中兼一二，決須名譽少年魁。",
+      "commentary": "",
+      "id": "05-2d1d0ae6096fd89372a4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "真火要亥卯未壯，有丁無壬，以亥代，有壬無丁，以未代，本壯元則為福遠，戊癸丁壬合貴也。真火愛寅午戌土壯火炎，官有力，天數乘三，子生其父，巳酉醜多逢，則貴也。",
+      "commentary": "",
+      "id": "05-0874db46fff5be091835-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【淵源滋養】金生水神滋木之官",
+      "commentary": "",
+      "id": "05-16fae4bf74e5a8abfcde-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六戊生人見水源，更逢甲子旺生金，須知名譽當騰達，少主清華入禁林。",
+      "commentary": "",
+      "id": "05-bca644712fd0c6a8ae96-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "命已有水生官，更得金在申子水旺之鄉，則金又生水，甲乙自然有氣，五行要不斷，若有金無水，又能害木，水深則木強故貴。",
+      "commentary": "",
+      "id": "05-b80605737b68289a4fb8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【相為慶會】土壯水生木官顯",
+      "commentary": "",
+      "id": "05-fec0ca223d8cecebe475-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅申本是戊人強，癸亥當頭貴顯揚，但得五行金不入，名清望重佐朝堂。",
+      "commentary": "",
+      "id": "05-f9ac223f3b1c31733e46-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊寅火生處逢土，戊申土生，故強，癸亥水生甲乙，故奇，有金則傷矣。寅申土成體，地本源既壯，又須借木神疏爽之，更得癸亥就位，滋養其神明之德，清健非常，若無金神反制，五行恬然無害，為福厚矣。",
+      "commentary": "",
+      "id": "05-b3f068c852843644f69b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【金火相持】",
+      "commentary": "",
+      "id": "05-707f168cdc9debe02b8e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊人不貴南方火，見火須還帶旺金，有金無火終成咎，有火無金亦不新。",
+      "commentary": "",
+      "id": "05-47998b58e4ae7af6b99d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊人不貴南方火者，戒其太過盛，若無火則金得勢來侵木，無金有火，亦無用也。",
+      "commentary": "",
+      "id": "05-982a439ad8293c483398-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【乾鬼為殃】甲傷戊元有金可救",
+      "commentary": "",
+      "id": "05-8eda681220d2c018186e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊人有甲終無益，帶水拖泥不似初，若得庚金並水局，尤能財祿必微餘。",
+      "commentary": "",
+      "id": "05-941b8c06b2283a32af7d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "逢甲不如見乙，為陰陽和順，甲能傷戊，若加水，甲益壯，終有害。若庚金製之猶庶幾。甲陽木之神，戊人得之，陰錯陽差，若得庚金，又複製甲，既又得水，則為戊人材稟之神，五行互有得失故也。",
+      "commentary": "",
+      "id": "05-18568e4514b688463046-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【己五數真土】",
+      "commentary": "",
+      "id": "05-87ae9e570df81b9bad19-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六甲相逢己用功，乙庚相會祿高封，炎上火神加一二，符壓兵權靜塞衝。",
+      "commentary": "",
+      "id": "05-6270767ebd951bb244f2-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "己乃火生旺之地，己人遇寅午戌，為造化之功，乙庚為土之子，生於己為秀實，有乙無庚，以申代之，有庚無乙，以卯代之，得此方為貴格，如寅午戌三官，二位為貴，申卯代乙庚，庚卯乙申，用己炎土火，而清貴顯達也。",
+      "commentary": "",
+      "id": "05-4e86a97f3b815461a70c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【包成合祿】寅午戌貴旺水損元",
+      "commentary": "",
+      "id": "05-f6dcc27b3eaecc5bf7f8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "己人正月為食魁，更於寅午戌相陪，局內不逢真水數，定知文武助功來。",
+      "commentary": "",
+      "id": "05-2760c97a3fccc1c71f05-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "丙辛為真水數，己人見丙寅為食神之魁，蓋火生土，又得寅午戌炎上之火氣接濟，若無水損祿，天元有滋養，榮名厚利，何患無矣。",
+      "commentary": "",
+      "id": "05-cb7fd9e7412d4be04c8b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【秀轉逢生】金生水旺滋木金暗",
+      "commentary": "",
+      "id": "05-a68672755f4ab8c03e2c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六己相加巳是功，申子辰位甲須豐，更得金神同水化，定知名譽至三公。",
+      "commentary": "",
+      "id": "05-3a6bdf41bdf77e86aa44-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "申子辰水之位，就中見甲，則木乘水之旺氣，為基甚厚，金同水地，則水益壯旺，甲自然發生，此五行陰陽消息，不必見其形，而默會之可也。若只見金而無水，金無所歸，便傷甲乙之木，惟在水地，則自生出水，不必見水，深宜詳之。論曰：若見水加亥卯未上，祿元有所養為福無窮矣。",
+      "commentary": "",
+      "id": "05-19c7aa2a8a9aa88f8962-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【庚四金陽之數】見戊癸醜未火土為貴",
+      "commentary": "",
+      "id": "05-a9909df3ef92df7b947b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六庚真數少人知，戊癸相逢遇者稀，大小吉神逢一二，名播中原福祿輝。",
+      "commentary": "",
+      "id": "05-1dbd5f12ed2fbfbb4cbc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "夫真白虎數用，有子生焉，戊癸乃火之真數，為庚金之真，有戊無癸，以子代之，有癸無戊，以巳代之，乃至為秀實之氣。戊癸化火，能生二吉，醜未為大小二吉，二吉既壯能造庚金，乃為至貴，子巳代戊癸，庚金生巳，戊癸之火發用，醜未貴矣。",
+      "commentary": "",
+      "id": "05-fe2a0b986ace08226943-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【聲譽遠弛】",
+      "commentary": "",
+      "id": "05-cdd4a41f4f7368663c9c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚人巳午逢庚木，學問人世所稀，但無金神並水屬，少馳聲譽掌樞機。",
+      "commentary": "",
+      "id": "05-44b967e846cda7794aea-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火正南方，官神得地，更逢剛木，滋養無窮，所謂本源深而氣壯，若見金神並見水，水又生起，便製其火，雖得正位，終被消爍，此有木無金水，然後為貴。論曰：火加巳午，官星得地，若更乾音帶得木來，火聚南方，高明豁達，所憚者水耳！稍無犯分，則挺轉出群。",
+      "commentary": "",
+      "id": "05-30988402dd087032d5fc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【相參成慶】見土木火祿元有助",
+      "commentary": "",
+      "id": "05-fc6b1a4eee72e6650584-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚人愛得土來親，火數相乘位顯倫，春夏季中生月屬，又加木屬主光榮。",
+      "commentary": "",
+      "id": "05-01ce179f0f0339abb52d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金得土扶，祿元有籍，更加火臨辰未兩個月中，其福愈壯，蓋火生三月，木墓六月，所謂源遠相參發福，有自其為氣也。妙在適其用耳。",
+      "commentary": "",
+      "id": "05-74b3a58704a0d4c2f82d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿害孤害】",
+      "commentary": "",
+      "id": "05-acf6384b3b83c9ac07a6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六庚祿向甲申中，水數才多不可逢，更值金神重迭見，到頭辛苦祿難崇。",
+      "commentary": "",
+      "id": "05-b64aff401813799b23df-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚人以火為福，卻遇甲申，更有別祿見金神，則生出水來，有汗漫不絕之狀。丙丁如此，無以發生，又何祿之有，終難顯達。珞琭子雲：遇如不遇，祿馬之說，要在窮究，曲盡其理，方知祿馬歸來。",
+      "commentary": "",
+      "id": "05-229fc49333a5c9779154-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【六辛天水之數】",
+      "commentary": "",
+      "id": "05-612ddc886c25c8478062-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天數當先號六辛，喜逢親子系丁壬，天魁合會功曹盛，名達朝堂職位清。",
+      "commentary": "",
+      "id": "05-147786fbd8de0b388f68-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛數乾天之子，天一生水，木數合之，乃陰從母生其子，有丁無壬，以亥代之，有壬無丁，以未代之，故為秀實之氣，天魁戌，功曹寅也，亥未代丁壬，有丁壬亥未，用寅午戌之勢，為貴盛也。",
+      "commentary": "",
+      "id": "05-7d9b022c699a07cf5685-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【威高志遠】",
+      "commentary": "",
+      "id": "05-468d249df855ac12292d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六辛要得火相親，帶水須憑見木神，文中卻做武中虎，武祿還須靜塞塵。",
+      "commentary": "",
+      "id": "05-efc4223b968d43d2f23b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "水能生木，木生火，輾轉相生，無窮無盡，辛金得火，祿氣相親，若見水則有損，五行若又見木，水卻隨木化，不傷於火，辛人如此，豈不快哉。",
+      "commentary": "",
+      "id": "05-12dad4d13e2e764654bc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【先兇後吉】",
+      "commentary": "",
+      "id": "05-ed9f46e41edc39fdeded-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛人卯酉值非善，又逢水屬主遲矇，若見火神當勝位，定知煊赫眾難同。",
+      "commentary": "",
+      "id": "05-491e7a718e3826c52309-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛以丙為官，以火為福，卯酉乃火死敗之地，更加水損，何由得福。五行若得火神位，寅午戌即還元，如此則轉禍為福也。",
+      "commentary": "",
+      "id": "05-9eec77ac5102e814823a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿氣退休】",
+      "commentary": "",
+      "id": "05-df519f2698044227ef7d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛人火居西北地，無木相扶士祿難，縱得少年膺爵命，亦須衰蹇見官休。",
+      "commentary": "",
+      "id": "05-e083a412900d8ea9da9d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火居西北，無氣之鄉，又無木來助，豈免迍剝？火在水鄉，終難顯達，得木衛護，猶且庶幾稍弱，闕此終當偃蹇。",
+      "commentary": "",
+      "id": "05-48f410252ef45289901a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【壬為真水數三】",
+      "commentary": "",
+      "id": "05-d4bb4af98d952b92556b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六壬逢火自然光，丙辛交會勢堂堂，大衛卯酉登明會，必是金門紫綺章。",
+      "commentary": "",
+      "id": "05-9fe904b90f023ff6b778-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壬陽木數，當三用周天，火數當其二數，二三合五，乃受氣之數，為壬之官，水數生木，乃母生其子，有丙無辛，以巳代之，為秀實之氣，大衛為卯酉，登明為亥，乃木乘旺之氣為醞釀，巳酉代丙辛，壬人有丙辛，丙酉辛巳，以火用於木氣，為真數入格。",
+      "commentary": "",
+      "id": "05-086ebeb77d15fb5e0b52-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【相呼集福】",
+      "commentary": "",
+      "id": "05-32a33d3d7c3fbca5ae6f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六壬己亥不為官，勿逢水數祿須還，更值五行多火局，定期高煥達金鑾。",
+      "commentary": "",
+      "id": "05-1a2c93b6569108921ad8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "己亥為生成之木，下殘切上，乾頭己土，所以不為壬人之官，若五行帶得火數多，己亥之木，又隨火化藏，己官之土，卻得還元，不必更見水，蓋水能生木，木能剋土，即為壞官故也。",
+      "commentary": "",
+      "id": "05-96251ac9570909ffba94-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【大奇績貴】",
+      "commentary": "",
+      "id": "05-ecbf7fcaa60029cfc64c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六壬醜未兼申子，四位如逢火數奇，更值五行多土局，少年名位擁旌旗。",
+      "commentary": "",
+      "id": "05-4ffd3c3bfbcb0420c9fc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "醜未土成實之氣，申子乃土生旺之鄉，乾音帶得火來，五行中更加土多，壬人福祿自然顯著，豈不早年亨快。",
+      "commentary": "",
+      "id": "05-95f3c154bd01766014db-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【反兇成慶】",
+      "commentary": "",
+      "id": "05-02b81bbc1fe7410638a3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六壬若遇繁剛木，須得乾音帶火來，若是寅宮並午位，必做朝中將相才。",
+      "commentary": "",
+      "id": "05-d6d31b12afe5de90209d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲辰甲戌皆幹音火木，更又庚寅壬午俱來資助，水旺則土盛，氣數純全，福基自壯矣。",
+      "commentary": "",
+      "id": "05-654785d11cb8a5db8f2d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天鬼相交】",
+      "commentary": "",
+      "id": "05-28e71ed19db5b59e723f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六壬最忌土頭戊，或加辰戌主相殘，不見甲來為救應，定主身中帶不安。",
+      "commentary": "",
+      "id": "05-d43bd6786dcafda11e7d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壬人見戊為乾鬼，若加魁罡之地，則禍患之端，五行若有甲乾陽木，又能克戊土，即有所救，不然，鬼氣太重，壬人所懼。",
+      "commentary": "",
+      "id": "05-625880d05f73ec4ee7e8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【癸真火數二】",
+      "commentary": "",
+      "id": "05-7800b260b5e46afb4350-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六癸生逢曲直加，如臨甲己最為佳，更加傳送遂為祿，，仕千鐘福壽遐。",
+      "commentary": "",
+      "id": "05-733006ade1fc7636ff65-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "曲直，亥卯未之氣也。癸音火，須逢木而生，甲己者土，合火之子數陰，從母生其子為成，有甲無己，以未代之，有己無甲，以寅代之，乃為貴氣。傳送者乃甲己生處，甲己未寅，為秀實之氣，癸人有甲己，旺中帶木氣為清貴之格。",
+      "commentary": "",
+      "id": "05-a6df9c234eca53139585-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【互相福應】",
+      "commentary": "",
+      "id": "05-66604efea6e8a1c53598-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六癸生人多亥子，不逢土數自光榮，若得土加寅巳上，不須亥子即為清。",
+      "commentary": "",
+      "id": "05-31b153c775eb93db7eff-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "亥子乃水會之地，癸人得之，聚成一氣，不必見土，見土則水爭強，反而不好，若寅巳上卻見土神，癸人之官，又不必見亥子，見之則土爭雄，反為交雜。",
+      "commentary": "",
+      "id": "05-e90f49f220e453452b3c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天鬼為滯】",
+      "commentary": "",
+      "id": "05-350176c8ba7065136604-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六癸人逢己是殃，不逢甲數盡乖張，莫教醜未乘於火，定知貧賤永無疆。",
+      "commentary": "",
+      "id": "05-5a1020f42b14e2c45575-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "癸人以戊為官，見己為陰陽失序，反為鬼，五行中若得甲木之氣解救，尚可免迍駁，若見己醜己未之類夾攻之，癸人福氣滅然。",
+      "commentary": "",
+      "id": "05-674d9e757ca082815e23-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "論甲乙",
+      "commentary": "",
+      "id": "05-cd39d358da2b66fc3643-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【滋陰福元】",
+      "commentary": "",
+      "id": "05-37ae512fc6f234bcc9cf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木逢癸亥正長生，蔭益根元必大亨，更有金臨西北位，定主清華祿自存。",
+      "commentary": "",
+      "id": "05-1df306639dcb8672acca-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木生在亥，就其位得癸亥之水滋養，生中逢生，最為喜會，更得西北，帶金生出水來轉旺，健源深遠，福祿崇峻。",
+      "commentary": "",
+      "id": "05-9ee59872efceabd69c07-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【變鬼為官】",
+      "commentary": "",
+      "id": "05-f081b5cd103e0bb9b7ac-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木人最怕遇壬申，若逢癸酉福增新，但得水臨西北地，返作清華顯赫人。",
+      "commentary": "",
+      "id": "05-ae59299172673ff3ec05-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壬申癸酉乃劍鋒金，乘臨官旺地剋木，甲乙最怕之，若亥子上見水神化藏金毒，金雖承天將之利，終不能害木，大抵福欲乘之，鬼欲制之，然後可觀。",
+      "commentary": "",
+      "id": "05-b36159bf2760ecbb527a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【破禍成福】",
+      "commentary": "",
+      "id": "05-751c44d8a1f3ec552c27-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木逢辛亥不長生，不逢火制祿難存，火神與木俱繁盛，何慮功名事不成。",
+      "commentary": "",
+      "id": "05-9f69e2d40f184bacec06-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木生在亥，卻於生處逢金，謂之生地見鬼，得火救之，金不敢用事，木乃出焉。此謂通變，自有輕重，五行須明勝負，不可一途取軌，火木繁盛，金自銷爍，雖是辛亥作禍，得火與木繁盛，始有生殺，若非辛亥見火木繁多俱壯，又不便也。",
+      "commentary": "",
+      "id": "05-025fdd64d9406426bfa2-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【鬼氣臨官】",
+      "commentary": "",
+      "id": "05-c90173acc3a86439ea75-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木人怕見火神興，無水相臨主禍迎，更被金來加局內，一生艱險不安寧。",
+      "commentary": "",
+      "id": "05-07f1d747749d2a1014fc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "木人火盛則灰飛煙滅，得水可製火，苟不見水，又加從革金局，其神銳利，甲乙之木，窘氣可知。",
+      "commentary": "",
+      "id": "05-4961bdb6b8cb0883ac82-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "論丙丁",
+      "commentary": "",
+      "id": "05-f9baf74d718e9a7db15d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【根源渾厚】",
+      "commentary": "",
+      "id": "05-3bdf6455e20198bdc9b6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火人日月時遭水，須逢曲直乙為乾，若得炎宮納音金，定知食祿至清官。",
+      "commentary": "",
+      "id": "05-7cc5b9f3d130097aae73-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火人月、日、時帶水神，則火無發露，若亥卯未上乾頭帶陰木，水卻又來生木，木又生火，火生不絕，火神得地，更若寅午戌上納音見金，又來剋木，木神受制，生出火官，五行脫體還元，乃高上之福。",
+      "commentary": "",
+      "id": "05-6cbe284a7ed44aa6c112-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【兌官生鬼】",
+      "commentary": "",
+      "id": "05-8d65cc7c624ed0d56d16-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火神敗地莫逢金，見水加來愈不禁，不見傷殘幷夭折，定須受病肺連心。",
+      "commentary": "",
+      "id": "05-c6fbd2cc5ce58737f2a3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "敗地本自衰微，逢水則金不能為財，而與水為鬼，論曰：火至敗地，見金則生出水來，火力既不能勝，安得不傷殘也。",
+      "commentary": "",
+      "id": "05-1a774128853341c54aa8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【屯蹇多災】",
+      "commentary": "",
+      "id": "05-8940ad2eb3e191a78c6c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "眾火須防水在寅，平生迍坎諦勞神，資財必定難充溢，盛德高風處處新。",
+      "commentary": "",
+      "id": "05-ec34197435246e080a04-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火神稍眾於生地，卻見水，如甲寅之類，何以堪然。火神既多，須得少木資之，則有不窮之眾稍多，於此終為害也。",
+      "commentary": "",
+      "id": "05-bc137b66f53f2937a9d4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "論戊己",
+      "commentary": "",
+      "id": "05-eeb27e0bfa05e25eec21-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【氣數淳厚】",
+      "commentary": "",
+      "id": "05-8f9d3f35cdc02f8bf834-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "土人土重火炎陽，職位清華祿益強，火加己午逢諸土，盛德高風處處新。",
+      "commentary": "",
+      "id": "05-77aeda5f57ec9ce38d7b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "土數既重，必藉父扶持，為生生不窮之貌，若更見火加巳午，火旺之地，土又強壯，設或見水，終不能勝火土，則為財廩之氣矣。",
+      "commentary": "",
+      "id": "05-eaf02ee80fc8079b96d1-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【五木成煙】",
+      "commentary": "",
+      "id": "05-8275117f42173b57b0b6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "土人藉木為文曲，四位之中帶火來，重見木神臨巽地，高甲陞名福慶來。",
+      "commentary": "",
+      "id": "05-08528c74e035220e7910-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "土無木不能通爽其氣，木無土不能安立其根，二者相須皆不可闕，五行中若帶火來，又於巳上見木，輾轉生育，聚成一體，氣數壯實，火神有所蘊藉矣。",
+      "commentary": "",
+      "id": "05-82faad70f260cb03f045-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【救助鹹福】",
+      "commentary": "",
+      "id": "05-ccbb381836b4bce09113-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "土人獨位逢諸火，更加火旺增災禍，就中若見水神被，縱免災殃還坎坷。",
+      "commentary": "",
+      "id": "05-3ba92efdd7b72b1dfb1b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "火數既旺，且多併來生一土，其氣大煅燥，忽見水返來制火，五行雖有救解，終不為吉兆。",
+      "commentary": "",
+      "id": "05-3b55cf676582a92de14b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【基本衰弱】",
+      "commentary": "",
+      "id": "05-d53d242c4f802c51ad30-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "土人若重嫌己酉，區區終是諫勞生，水近土傍尤見禍，賣盡田園沒地耕。",
+      "commentary": "",
+      "id": "05-deb80f1a335d313f083b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "己酉乃土水敗地，重重見之，則困苦相陵，終不見福，蓋水能勝於火矣。司馬季主曰：水逢沐浴如逢土，土到衰鄉水不如，土到酉宮真敗地，卻逢癸酉祿盈馀，二氣各有勝負耳。",
+      "commentary": "",
+      "id": "05-c830ed497eb790e4c5b9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "論庚辛",
+      "commentary": "",
+      "id": "05-2dca32f2205069d9d2aa-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【滋陰成官】",
+      "commentary": "",
+      "id": "05-c0015fd30eb3b5786e70-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金多逢火不為災，切忌金神帶水來，木逐火神生旺土，發榮名位足資財。",
+      "commentary": "",
+      "id": "05-45549af2eaad1db67f27-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "只怕身旺被鬼所製，金多又自帶旺火，不為害，自己寡弱，則克我者始得志也。",
+      "commentary": "",
+      "id": "05-23e4452be13ab8da60dc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天益離鄉】",
+      "commentary": "",
+      "id": "05-1892e2d1e0f15693ebc8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金加乙巳太乖張，木數來逢主夭亡，便自水多難抑制，定殘骨肉遠離鄉。",
+      "commentary": "",
+      "id": "05-42020ebda456749de6ea-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金生處見乙巳火，被火截住，加以木來扶火之勢益壯，金自銷。",
+      "commentary": "",
+      "id": "05-b3ae4ce99a9e8a66c83d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "論壬癸",
+      "commentary": "",
+      "id": "05-5538fa539379a3d6b6f7-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【源遠流清】",
+      "commentary": "",
+      "id": "05-8b720738cb2249e32b3b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "水人見木為本利，得火相逢兇害至，更無火木見金神，決主少年登顯秩。",
+      "commentary": "",
+      "id": "05-8913bf6924ba427bf530-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "金為水本源，木得水滋，深為利用，見木卻生火，火旺則反傷於金，五行中若無木火，",
+      "commentary": "",
+      "id": "05-1439cfad566a6f15f5c0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "但得金氣發露，則生出水祿自然。",
+      "commentary": "",
+      "id": "05-0e31215b1b7f06af45cf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【無救成兇】",
+      "commentary": "",
+      "id": "05-dc9117f2925490fd2a65-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "水人切忌戊申寅，截斷根源主禍頻，局內不逢金髮露，平生波劫受艱辛。",
+      "commentary": "",
+      "id": "05-ee5c6719a3815ca3f4ca-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊申戊寅乃土成實之地，水人生處受制，病處見鬼，故曰，截斷根源，五行中若見魁罡，則鬼氣無以化藏，",
+      "commentary": "",
+      "id": "05-e534277cb42577e14039-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "水神如此，可謂困矣。",
+      "commentary": "",
+      "id": "05-8df4f89ae36510eb5faf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【長鬼為殃】",
+      "commentary": "",
+      "id": "05-2effaf9bc7b29bdabc28-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "水人大怕火炎揚，寅午相逢轉更忙，若見丙加辰戍位，定知夭折見悲傷。",
+      "commentary": "",
+      "id": "05-d7f859d8a663cdeb37dc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅午乃火生旺之地，火熾可知，水神如此則竭矣，五行若見魁罡，如丙戍之類，水神之福轉衰矣。（並太乙統記）",
+      "commentary": "",
+      "id": "05-d0abf862f0f0495e05e3-0",
+      "translation": null
+    }
+  ],
+  "editionId": "wuxing-83b291515920710865bc",
+  "version": "2b66a6a4b3ae6fb30864"
+}

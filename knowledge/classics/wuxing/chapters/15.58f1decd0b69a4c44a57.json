@@ -1,0 +1,604 @@
+{
+  "id": "15",
+  "title": "卷15",
+  "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+  "blocks": [
+    {
+      "heading": "",
+      "original": "論祿",
+      "commentary": "",
+      "id": "15-b66e904918c848163b17-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【十幹祿】",
+      "commentary": "",
+      "id": "15-b84681544853c71c49b5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲祿在寅乙祿在卯丙戊祿在巳丁己祿在午",
+      "commentary": "",
+      "id": "15-81c0d1de9aca7921b08d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚祿在申辛祿在酉壬祿在亥癸祿在子",
+      "commentary": "",
+      "id": "15-d200bff22e98edb8eb9f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命的一位者為衣食，或多見，更五行相生者為貴，若遇死絕有刑者，作無官閒冗餘之輩，猥賤之人。（林開五命）",
+      "commentary": "",
+      "id": "15-7fec7df73ffd0746bece-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【分十乾祿氣】",
+      "commentary": "",
+      "id": "15-ff20414f5daafae297c0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲祿在寅，醜為祿庫，卯為羊刃，申為破祿，餘皆此。見丙寅為福星祿，甲土勊丙水為財，戊寅為伏馬祿，火土相生大吉，此帶刑杖，君子吉，小人兇，庚寅為之破祿，半兇半吉，壬寅謂之正祿，帶截路空亡，必為僧道，有福，甲寅謂之長生福星祿大吉。",
+      "commentary": "",
+      "id": "15-b310f15c17311cabf809-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "乙祿在卯，見丁卯為截路空亡，金本不相喜，兇象，己卯進神祿，有官不久，己土卯上死也。",
+      "commentary": "",
+      "id": "15-3d46b1aa12ff88e6f72c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛卯破祿，又為交神，乙祿會之兇，暫有資財不永。癸卯帶天乙死祿，雖貴終貧，乙卯旺祿喜神大吉。",
+      "commentary": "",
+      "id": "15-d45cb08509d05876d660-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "丙祿在巳，見己巳九天庫祿，有官，辛巳截路空亡祿，多是非，癸巳伏貴神祿，多成敗。（一雲半吉）乙巳旺馬祿有官，丁巳旺庫祿有官。",
+      "commentary": "",
+      "id": "15-6ceb41927cfb400d2608-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "丁祿在午，見庚午為截路空亡祿，多成敗，壬午為德，合祿有官短命，甲午為進神祿，有登科之喜，丙午喜神祿，交羊刃半吉，戊午伏羊刃祿，多兇災患。",
+      "commentary": "",
+      "id": "15-dbdf8d5456fee976beb4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊祿在巳，見己巳九天庫祿，有官司，辛苦巳截路空亡祿，有官，終失，多是非，癸巳貴神祿，有官位重，戊癸相合吉，乙巳驛馬同鄉祿，有官大吉，丁巳旺庫祿，有官。",
+      "commentary": "",
+      "id": "15-f39fe1c2da343327dc4c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "己祿在午，見庚午截路空亡祿，為兇象，壬午死鬼祿，兇，甲午進神德合祿，殊達之象，丙午喜神為羊刃祿，兇，戊午伏神羊刃兇。",
+      "commentary": "",
+      "id": "15-1df14c78764d139490b6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚祿在申，見壬申大敗祿，主貧賤，甲申截路空亡祿，兇（一雲小吉）丙申大敗祿，多成敗，招是非，戊申伏馬祿，多滯， （一雲戊申伏滯又值福星貴吉）庚申長生祿，大吉。",
+      "commentary": "",
+      "id": "15-961ddc0bb204cb4c76e4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "辛祿在酉，見癸酉伏神祿，水火相犯兇，（一雲半吉）乙酉破祿，多成敗，丁酉空亡貴神祿，丁木受氣，辛水沐浴主姦淫之事，（一雲值喜神吉）己酉進神祿，有殊達之兆，辛酉正祿，吉在戌，六戊午羊刃相蝕，小人血光散財，婦人產難，君子赤眼病患，乙卯年大敗，戊戌年羊刃發見天災。",
+      "commentary": "",
+      "id": "15-e9b7ee40925f93af51cc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壬祿在亥，見丁亥貴神祿，有官，乙亥天德祿，大吉，己亥旺祿，辛亥同馬鄉祿，大貴，癸亥大敗祿，貧薄。",
+      "commentary": "",
+      "id": "15-f95b67fb659ea3678e2d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "癸祿在子，見甲子進神祿，主登科進達之喜，丙子交羊刃祿，帶福星貴，有權，戊子伏羊刃合貴祿，半吉，庚子應祿吉，壬子正羊刃祿兇。（金書命訣）命書雲：陰死陽生，陽死陰生，人皆言之，未知其詳，今書以示將來，且甲生於亥，順數至寅，臨官為祿，至午而死，乙卻復生於午，逆數至卯，臨官為祿，蓋死於亥，而甲復生也，丙生寅，順數至巳，臨官為祿，至酉而死，丁卻復生於酉，逆數至午臨官為祿，蓋死於寅，而丙復生也，庚辛壬癸皆彷此，惟戊生申，逆數至巳上臨官為祿，己生於卯，順數至午上臨官為祿，此陰死陽生，陽死陰生之說也。（廣信集）",
+      "commentary": "",
+      "id": "15-3da907a6bedcad8f13c7-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【生成祿】",
+      "commentary": "",
+      "id": "15-90f8f7b8cf4d0ae15233-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲乙人得甲寅乙卯丙丁人得丁巳戊午戊己人得丁巳戊午庚辛人得庚申辛酉壬癸人得癸亥壬子",
+      "commentary": "",
+      "id": "15-82ca21e70d12d15273d9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【名位祿】",
+      "commentary": "",
+      "id": "15-1c0bb229473100dd94da-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡祿上帶食神者是，如甲人見克寅，謂之名位祿，皆為貴格，餘彷此。（林開五命）",
+      "commentary": "",
+      "id": "15-238f8faea1f639045ade-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【真祿】",
+      "commentary": "",
+      "id": "15-9b522a39fcf9d621a61d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲人見丙或巳乙人見巳或午丙人見癸或子丁人見丙或巳戊人見丁或午己人見庚或申庚人見甲或寅辛人見丁或午壬人見辛或酉癸人見甲或寅大凡看貴命最要真祿馬真官真印食神天德月德歲德月空，併月中秀氣。",
+      "commentary": "",
+      "id": "15-f9512efae01b7ad2dec4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【進退真祿】",
+      "commentary": "",
+      "id": "15-7124d6b1d021790b7355-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊辰丁巳戊丁巳丙辰癸巳丙午癸巳癸亥甲子癸丑甲子壬戌辛亥壬子辛亥以上戊見丁，丙見癸，癸見甲，壬見辛，皆易祿也，進丁，丙見癸，癸見甲，壬見辛，則平易祿也，進丁，丙見，退則艱難，更帶福神，可作貴顯科甲之格，如重見之，難作福，而為狡獪不堪福，福亦少減損，重迭之字，以後俱用，更不再書。",
+      "commentary": "",
+      "id": "15-47db35f9837395982406-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【因縟殺】",
+      "commentary": "",
+      "id": "15-dac8a19bc182b2a7aeeb-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲人戊寅乙人己卯丙人辛巳丁人庚午戊人癸巳己人壬午",
+      "commentary": "",
+      "id": "15-5ad2d175ca05ba0eb9bf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚人甲申辛人乙酉壬人丁亥癸人丙子",
+      "commentary": "",
+      "id": "15-8969e85a80362e3f67a7-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "以上乃祿頭是財，主人富聲望，古詩雲：祿生於因辱，因財反有名，君子榮顯祿，常人主豐盈。",
+      "commentary": "",
+      "id": "15-68b39a0630462522cf7d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿頭鬼】",
+      "commentary": "",
+      "id": "15-73d7b19b648ebba09a1a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲人庚寅乙人辛卯丙人癸巳丁人壬年戊人乙巳己人甲午",
+      "commentary": "",
+      "id": "15-edf3835625490867fb10-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚人丙申辛人丁酉壬人己亥癸人戊子",
+      "commentary": "",
+      "id": "15-2ddf0be6322baf3d69db-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "以上又稱赤舌殺，君子主甲科，常人口舌刑責，若別有貴救，主家世超越，三代富有，行年太歲遇之，主有災。（廣信錄）",
+      "commentary": "",
+      "id": "15-47866f3ca4fa90eb35d2-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿盈天府格】",
+      "commentary": "",
+      "id": "15-d7560e94abe943f078ba-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "假令六甲人見丙寅，復見巳字者為入格，甲祿在寅，遁得丙寅，丙祿在巳，再見丙祿，他皆彷此，入格者，福祿兼足，稍有福助之，五品之貴，一雲重重福祿主富盛。",
+      "commentary": "",
+      "id": "15-80591adc42e8dc887156-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【旬中祿格】",
+      "commentary": "",
+      "id": "15-038cf9ad928609855cf1-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "旬中祿為月中祿，定斷公卿無反复，清華館見演絲綸，福慧昭昭兩俱足。如貴晃仲甲申年乙亥月丙辰日庚寅時，又如丁慶相公庚寅年甲申月壬寅日己酉時生月帶祿也。",
+      "commentary": "",
+      "id": "15-a6007fa264e15b0cc8fa-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【幹支合祿格】",
+      "commentary": "",
+      "id": "15-d25e7d46b4ca22868a4b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如甲祿在寅，見甲寅，己亥，乙祿在卯見乙卯庚戌，丙戊祿在巳，見辛巳丙申，丁己祿在午,見壬午丁未，餘彷次，凡值此主官職​​崇重，台輔之命。（八字金書）",
+      "commentary": "",
+      "id": "15-f0924b1d748dfb21085d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【暗祿格】",
+      "commentary": "",
+      "id": "15-747edcf486333f9d571e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲人辛亥暗中祿，乙要隆昌甲戌推，丙見戊申尊重處，丁逢辛未福神威，戊人若見壬申好，己若繁華乙未隨，庚意多權須己巳，辛來喜合壬辰輝，壬公元用丙寅輔，癸命生未巳醜時，此是上清暗合祿，不因師指若何知。",
+      "commentary": "",
+      "id": "15-73709dedb9c8dc36f12f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【活祿格】",
+      "commentary": "",
+      "id": "15-46d10290143cd30f8020-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "上清活祿少人知，演去乾頭轉取之，君子日時兼生命，榮華富貴一生奇。法曰：甲丁巳喜慶，乙辛戊午強，癸庚寅上，丙丁己申鄉，壬人酉中取，官品至候王。",
+      "commentary": "",
+      "id": "15-396d215400e5c71b0232-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天雄祿】",
+      "commentary": "",
+      "id": "15-23005fd0ec949548da3c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "大凡陰陽天地之數，須至五位而後有成，天數五，地數五是也，且如申人數至戊是五數，不必求戊，戊祿在巳，見巳即名天雄祿，更正祿加之為入格。（馬子才命格）",
+      "commentary": "",
+      "id": "15-e4e45d3bc91d8c0cc0fb-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天祿貴神】",
+      "commentary": "",
+      "id": "15-9f4f6a38f04f1ed7faaa-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "太歲本幹不見祿，取五虎元遁，至祿上看得何干，真幹見天乙貴神，而貴人所坐之乾，復得貴於祿上者是也。假令六丁人祿在午，至午上得丙字，丙貴在酉亥，而得辛酉或辛亥，則辛貴復見於午也，此為入格，又加六壬人至祿上得辛而見丙寅者是也，如更入格，貴極一品，常格得之",
+      "commentary": "",
+      "id": "15-e4a2d6de718f938096ef-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "211",
+      "commentary": "",
+      "id": "15-54c0219247987ce199be-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "，不下三品。（玉霄寶鑑）",
+      "commentary": "",
+      "id": "15-d7b3c2e779ae8d728c9a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿堂】",
+      "commentary": "",
+      "id": "15-76a325c764bd7aab1144-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "自來言祿，但知甲祿在寅之類，殊未知祿堂為最貴，甲人得甲戌是也，以其甲為歲幹，則甲之本位遁在戌，若更得諸位福神助發，必須大貴，獨辛壬有二位，辛有辛卯辛醜，壬有壬寅壬子，餘皆一位。（李虛中書）",
+      "commentary": "",
+      "id": "15-9088c190ba33fd796823-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "閻東叟雲：切記三合六合上見鬼見鬼，以甲戌言之，鬼在醜上則可畏，以醜刑戌也，鬼在未上則無意，以戌刑未也，以乙酉言之，鬼在巳上則為善，以三合相會也，鬼在辰上則減福，以合相親也，五行無勊，諸位相助，方為祿堂，理愚歌雲：祿入都堂須大拜。",
+      "commentary": "",
+      "id": "15-6c9345221cb5decf4894-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿九天】",
+      "commentary": "",
+      "id": "15-6a59555c7d2758472707-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "祿九天者，取祿後一辰，謂如甲祿在寅，醜是也，主食天祿，常處廊廟之上。",
+      "commentary": "",
+      "id": "15-4fbcd63dedd580533f4b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿九地】",
+      "commentary": "",
+      "id": "15-bd196451f84ffa7bdd36-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "祿九地者，取祿後二辰，謂如甲祿在寅，子是也，戊己之人，寄旺於丙丁，無祿九地也，遇之者，主高",
+      "commentary": "",
+      "id": "15-e32e9dd3887a7e7d3782-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "官長壽，資產富饒。（三命鈴）",
+      "commentary": "",
+      "id": "15-497acc041d2734c1c858-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "本家祿者，甲為寅人之祿，乙為卯人之祿，丙戊為巳人之祿，丁己為午人之祿，庚為申人之祿，辛為酉人之祿，壬為亥人之祿，癸為子人之祿，辰戌醜未人無本家祿，若寅生人月日時遇甲，餘準此。若遇兩重以上，又在四貴華蓋之位，則極貴也，若在四平位或貴人上亦主貴，又曰：歲幹為正幹官正印尤佳，在四忌上則亦有官，常調之人也。（三命提要）",
+      "commentary": "",
+      "id": "15-7d6fce5d3bc3d43182c2-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "建祿者，主人肌厚實，韻格不清，一生安逸足財利，此生旺者然也。死絕則氣濁神慢，孜孜為生，吝嗇猥鄙，與元辰並，因樗蒲而得財，復因此敗，與官符並因公門得或多爭訟，與卻殺並好賤使小商不義橫財，與天中並多遺失破財，與祿鬼倒食並，多因賒貨牙販而得財，至死不通，惟財是念之人。",
+      "commentary": "",
+      "id": "15-3839aa3996fbd0467f41-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庫者祿之緊也，破者祿之散也，空者祿之閒也，合者祿之橫也。",
+      "commentary": "",
+      "id": "15-c66007b893feb4bf1686-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲乙木庫在未，丙丁在戌，戊己壬癸在辰，庚辛在醜庫者，祿之所鐘也，如甲乙亥多而得未者，乃祿厚望足之人也。破為破祿也，如甲祿在寅而得申，惡衝而氣散也。貴者得此，停慶剝落，眾人衣食不瞻，祿落空亡，此為尤甚，古人雲：資財聚散祿居空，胎裡生時怕遇逢，貧賤為奴為乞食，飄又身自泛西東。祿最喜合，如甲祿在寅，命中得亥，雖非見祿，亦曰見祿也，得之多者為意外倘來之福，門蔭流外",
+      "commentary": "",
+      "id": "15-91dbdfe3fffb199a1426-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "有司達身者，往往得此也。（燭神經）",
+      "commentary": "",
+      "id": "15-1b8458d1ef63720bfc2b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "古人雲：祿前二辰為背祿，後二辰為向祿。沉芝取建，向，近，合四字為貴，若甲祿在寅，亦寅為建，醜為向，卯為近，亥為合，餘準此。又曰建不如向，近不如合，以為四字中，得兩字者發早，至於主貴惟建合兩字也。（三命提要）",
+      "commentary": "",
+      "id": "15-cc6b8ee0c22781ce3000-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿位會合】",
+      "commentary": "",
+      "id": "15-f27804630aa71fed245b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "祿若會見則富貴，相合則奮迅，遇食神則福緊，值天牛力慢，切忌衝破，甲祿在寅而得己亥，乙祿在卯而得庚戌，丙戊祿在巳，而得辛巳癸巳，丁己祿居午，而得壬午甲午，庚祿居申，而得己巳，辛祿在酉，而得丙辰，壬祿在亥而得丁亥，癸祿在子，而得戊子，以上十位，謂之相合祿，壬食甲，甲祿在寅，從而得甲寅，癸食乙，乙祿在卯，從而得乙卯，戊食庚，庚祿居申，從而得庚申，己食辛，辛祿在酉，從而得辛酉，以上四位，謂之食神帶祿，甲食丙，從而得丙申或丙寅，乙食丁，從而得丁未或丁卯，丙食戊，從而得戊申，丁食己，從而得己未，庚食壬，從而得壬寅，辛食癸，從而得癸醜，以上八位，謂之食神合祿，丙戊祿居巳，丁巳祿居午，四乾而得二支，謂之三見祿也。",
+      "commentary": "",
+      "id": "15-0a9776d3788bbec104fc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【祿氣相親】",
+      "commentary": "",
+      "id": "15-ef30d8521d935abc3280-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲寅乙卯庚申辛酉之命，與日上或時上乾支同者，謂之本祿入鳳池，更遇天乙天官食神驛馬居其上，有氣而不犯空亡者文貴命也。本食甲寅，得乙卯為帝坐，本是庚申，得辛酉為帝坐，謂支順祿入鳳池，本是辛酉得庚申為帝坐，本是乙卯得甲寅為帝坐，謂之逆祿入鳳池，丙寅得辛巳，戊寅得癸巳，丁人得壬午，己壬得甲午，壬人得丁亥，癸人得戊子，在於帝坐謂之合祿入鳳池，甲寅乙卯丙辰丁巳丙午己未庚申辛酉戊戌癸亥壬子癸醜十乾在十二辰上，如五位中得之多或得之全，謂之祿氣專位，甲寅得己亥，乙卯得庚戌，戊辰得癸酉，丁巳得壬申，丙午得辛未，己未得甲午，庚申得乙巳，辛酉得丙辰，戊戌得癸峸，癸亥得戊寅，壬子得丁醜，己醜得甲子，在日上謂之祿氣乘本主，在時上謂之祿氣親帝坐也。（閻東叟書）",
+      "commentary": "",
+      "id": "15-76e01694c4bc8ca4f302-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "官崇位顯定知夾祿之鄉",
+      "commentary": "",
+      "id": "15-f72e1130a63344e940ca-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注雲：癸祿在子，子前後辰遇癸四柱得之者曰夾祿，又謂之拱祿，祿得虛拱以待用，祿之所主者，官爵也，如此則官爵自然榮顯。",
+      "commentary": "",
+      "id": "15-bfb5eae4e4cd980f8b85-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "生月帶祿入居赫奕之尊",
+      "commentary": "",
+      "id": "15-fb32f26c90a7f3e9dd9a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "瑩和尚注雲：本命祿元與生日同者是也，其祿元用日干求之，假令庚子人甲申月得乙庚之日使用五子推之，甲申是也。（珞琭子)",
+      "commentary": "",
+      "id": "15-19593e974415e5b71ad5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲好寅庚好申，更將戊己附炎神，日時並有三重祿，須作清華職位人。",
+      "commentary": "",
+      "id": "15-918b78f3e9f1ebcb3120-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "此謂十乾祿也，見生旺福神，則為貴祿，若遇死絕刑破則為絕祿。（鬼谷要訣）",
+      "commentary": "",
+      "id": "15-0d525332256ee17bbb68-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【互橫朝元兩相得】",
+      "commentary": "",
+      "id": "15-2f8d2c885209199a88eb-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "互橫者，如庚寅見甲申日時之類，朝元祿如寅人見甲日時之類，或總朝於胎中為最貴，須不駁雜，不相嫌，兼貴助之曰得。",
+      "commentary": "",
+      "id": "15-2ace2baf61c9e9f7e5f8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【朝雲夾合封公國】",
+      "commentary": "",
+      "id": "15-5ffcb28e3ea5706d1cf5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "朝元夾合者，如癸巳見戊辰戊午之類，蓋兩戊於癸合夾巳得戊祿在巳也，如辛巳人見丙辰丙午，甲午人見己巳己未之類亦是。",
+      "commentary": "",
+      "id": "15-7f1c01c7a7e780104199-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【時有祿朝日內金玉滿堂成富輩】",
+      "commentary": "",
+      "id": "15-d7a3c68dfaab453bb02a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如己巳日丙時更帶滋，命金玉滿堂格主大富，祿中更有多般說，自衰自旺兼敗絕，若無吉殺加助時，定知破祖多浮劣。",
+      "commentary": "",
+      "id": "15-e67fe1ade7cb575757b6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如甲寅人見戊寅日自衰，壬寅日自絕，辛人見乙酉曰自敗，乙人見乙卯曰自死，吉殺加助者，如己卯己酉甲子甲午，雖曰自敗自死，緣有四簡進神，故得吉殺助也。甲寅有秀氣，內或有貴人食神旺氣來助亦佳，不可一途而取也。",
+      "commentary": "",
+      "id": "15-78c611a27ea6bcdcdd7e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "祿入空亡何所知，虛名虛譽足堪嗤，忽然更在衰兼病，曹無名傳處處知。",
+      "commentary": "",
+      "id": "15-91cd5c6a37f0261eebea-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "祿值空亡之人，或秀氣助成，稱虛官衝，解元之屬，或空亡值衰病，亦是曹號，更駁雜，即呼不好曹號。（沈源）",
+      "commentary": "",
+      "id": "15-6c18215330577793e29e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "一祿不足救三絕，故宣叔丙午年庚子月，戊寅日，庚申時，官至正郎，行乙巳運，除福建漕，未赴，一夕暴卒，足見禍福各不相擾，雖有重祿，奈水土絕於巳，餘彷此。（廣錄）",
+      "commentary": "",
+      "id": "15-c37c1f859c233932155e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【遇如不遇】",
+      "commentary": "",
+      "id": "15-47550d97cbfd2ad2410c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲祿在寅，如甲子人見庚寅，被庚來破甲，所謂遇如不遇，又如庚人見丙申，乙人見辛卯，辛人見丁酉，以上鬼來勊退故無力，雖有如閒，餘彷此。（三命篡局）",
+      "commentary": "",
+      "id": "15-582fbeaab8eed1329d5a-0",
+      "translation": null
+    }
+  ],
+  "editionId": "wuxing-83b291515920710865bc",
+  "version": "2b66a6a4b3ae6fb30864"
+}
