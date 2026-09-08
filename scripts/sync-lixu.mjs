@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { archiveSource } from './classic-quality.mjs';
 
 const volumes = [
   ['卷上', '卷上集中讨论六十甲子纳音、天乙贵人和多种早期禄命格法。阅读时应注意：这套体系与后世以日主为中心的子平法并不完全相同。'],
@@ -18,6 +19,7 @@ const payload = execFileSync('curl', [
   '--data-urlencode', 'format=json',
   '--data-urlencode', 'formatversion=2',
 ], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+archiveSource(payload, '李虚中命书');
 const pages = JSON.parse(payload).query.pages;
 const pageByTitle = new Map(pages.map((page) => [page.title, page.revisions?.[0]?.slots?.main?.content ?? '']));
 

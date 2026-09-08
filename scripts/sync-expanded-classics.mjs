@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { archiveSource } from './classic-quality.mjs';
 
 const API = 'https://zh.wikisource.org/w/api.php';
 
@@ -15,6 +16,7 @@ function fetchPages(titles, maxBuffer = 128 * 1024 * 1024) {
     '--data-urlencode', 'format=json',
     '--data-urlencode', 'formatversion=2',
   ], { encoding: 'utf8', maxBuffer });
+  archiveSource(payload, titles.join('|'));
   const pages = JSON.parse(payload).query.pages;
   return new Map(pages.map((page) => [page.title, {
     revision: page.revisions?.[0]?.revid,

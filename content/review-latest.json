@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-09-08T17:20:08.154Z",
+  "books": [
+    {
+      "bookId": "ditiansui",
+      "chapters": 42,
+      "characters": 2326,
+      "previousCharacters": 2326,
+      "missing": [],
+      "reviewRequired": false
+    },
+    {
+      "bookId": "qiongtong",
+      "chapters": 15,
+      "characters": 32887,
+      "previousCharacters": 32887,
+      "missing": [],
+      "reviewRequired": false
+    },
+    {
+      "bookId": "lixu",
+      "chapters": 3,
+      "characters": 22510,
+      "previousCharacters": 22510,
+      "missing": [],
+      "reviewRequired": false
+    },
+    {
+      "bookId": "sanming",
+      "chapters": 12,
+      "characters": 449426,
+      "previousCharacters": 449426,
+      "missing": [],
+      "reviewRequired": false
+    },
+    {
+      "bookId": "yuanhai",
+      "chapters": 74,
+      "characters": 55644,
+      "previousCharacters": 55644,
+      "missing": [],
+      "reviewRequired": false
+    },
+    {
+      "bookId": "wuxing",
+      "chapters": 34,
+      "characters": 181314,
+      "previousCharacters": 181314,
+      "missing": [],
+      "reviewRequired": false
+    }
+  ]
+}

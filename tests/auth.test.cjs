@@ -60,6 +60,8 @@ test('local accounts encrypt migrated archives and isolate account vaults', asyn
   localStorage.setItem('shanyi-archives-v1', JSON.stringify([legacyArchive]));
 
   const first = await registerLocalAccount({ username: 'first_user', displayName: '甲用户', password: 'correct-horse-1' });
+  assert.deepEqual(Object.keys(first.account).sort(), ['createdAt', 'displayName', 'id', 'username']);
+  assert.deepEqual(Object.keys(getActiveAccount()).sort(), ['createdAt', 'displayName', 'id', 'username']);
   assert.equal(first.migratedArchives, 1);
   assert.equal(getVaultArchives()[0].id, 'legacy-one');
   assert.equal(localStorage.getItem('shanyi-archives-v1'), null);
@@ -86,4 +88,25 @@ test('local accounts encrypt migrated archives and isolate account vaults', asyn
   assert.deepEqual(readProfileValue('shanyi-learning-progress', []), ['first-lesson']);
   await deleteActiveAccount();
   await assert.rejects(() => loginLocalAccount('first_user', 'correct-horse-1'), /账号或密码错误/);
+});
+
+test('failed vault writes do not change committed state; stale tabs cannot overwrite', async () => {
+  localStorage.clear();
+  const { account } = await registerLocalAccount({ username: 'atomic_user', displayName: '保存测试', password: 'correct-horse-3' });
+  await setVaultArchives([{ id: 'saved' }]);
+  const originalSet = localStorage.setItem;
+  localStorage.setItem = () => { throw new Error('QuotaExceeded'); };
+  await assert.rejects(setVaultArchives([{ id: 'not-saved' }]), /保存失败/);
+  assert.deepEqual(getVaultArchives(), [{ id: 'saved' }]);
+  localStorage.setItem = originalSet;
+  await Promise.all([writeProfileValue('one', 1), writeProfileValue('two', 2)]);
+  assert.equal(readProfileValue('one', 0), 1);
+  assert.equal(readProfileValue('two', 0), 2);
+  const key = `shanyi-account-vault-v1:${account.id}`;
+  const previous = localStorage.getItem(key);
+  localStorage.setItem(key, previous + ' ');
+  await assert.rejects(setVaultArchives([{ id: 'stale' }]), /另一个页面/);
+  assert.equal(localStorage.getItem(key), previous + ' ');
+  assert.deepEqual(getVaultArchives(), [{ id: 'saved' }]);
+  await logoutLocalAccount();
 });

@@ -16,6 +16,7 @@ export type ArchiveRecord = {
   input: BirthInput;
   pillars: string;
   calculationVersion?: string;
+  snapshots?: BaziReading[];
   updatedAt: string;
   createdAt: string;
 };
@@ -63,17 +64,19 @@ export const archiveRepository = {
   },
   async save(input: BirthInput, reading: BaziReading, existingId?: string) {
     const records = this.list();
-    const existing = records.find((record) => record.id === existingId) ?? records.find((record) => record.input.name === input.name && record.input.birthDate === input.birthDate && record.input.birthTime === input.birthTime);
+    const existing = existingId ? records.find((record) => record.id === existingId) : undefined;
+    if (!existing && records.length >= 30) throw new Error('本机档案已达 30 份，请先导出或删除不再需要的档案。');
     const now = new Date().toISOString();
     const record: ArchiveRecord = {
       id: existing?.id ?? createId(),
       input,
       pillars: reading.pillars.map((pillar) => pillar.ganZhi).join(' '),
       calculationVersion: reading.calculation.version,
+      snapshots: [...(existing?.snapshots ?? []).filter(snapshot => snapshot.generatedAt !== reading.generatedAt), structuredClone(reading)],
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     };
-    await setVaultArchives([record, ...records.filter((item) => item.id !== record.id)].slice(0, 30));
+    await setVaultArchives([record, ...records.filter((item) => item.id !== record.id)]);
     return record;
   },
   async remove(id: string) {
@@ -148,7 +151,7 @@ export async function submitFeedback(payload: FeedbackPayload) {
     return { remote: true, stored: true };
   }
   const account = getActiveAccount();
-  if (account) void writeProfileValue(FEEDBACK_KEY, [...readProfileValue<unknown[]>(FEEDBACK_KEY, []), item].slice(-30));
+  if (account) await writeProfileValue(FEEDBACK_KEY, [...readProfileValue<unknown[]>(FEEDBACK_KEY, []), item].slice(-30));
   return { remote: false, stored: Boolean(account) };
 }
 

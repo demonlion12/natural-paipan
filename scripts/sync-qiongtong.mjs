@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { archiveSource } from './classic-quality.mjs';
 
 const guides = {
   五行总论: '从阴阳寒热说明五行的来源、性情、生克与中和原则，是全书的理论入口。阅读时要把“折衷中道”理解为动态平衡，而不是五行数量平均。',
@@ -28,6 +29,7 @@ const payload = execFileSync('curl', [
   '--data-urlencode', 'format=json',
   '--data-urlencode', 'formatversion=2',
 ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+archiveSource(payload, '穷通宝鉴');
 const parsedPage = JSON.parse(payload).parse;
 const wikitext = parsedPage.wikitext;
 

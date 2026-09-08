@@ -1,0 +1,41 @@
+name: Release server 8002
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: server-8002
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run audit:release
+      - name: Configure verified SSH identity
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          test -n "$DEPLOY_KEY" && test -n "$KNOWN_HOSTS"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/shanyi_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/shanyi_deploy ~/.ssh/known_hosts
+      - name: Publish and verify with automatic failure rollback
+        run: SKIP_CHECK=1 DEPLOY_KEY=$HOME/.ssh/shanyi_deploy bash scripts/deploy-server.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-release
+          path: dist/
+      - name: Remove deployment key
+        if: always()
+        run: rm -f ~/.ssh/shanyi_deploy

@@ -1,6 +1,9 @@
+import { getSelfDiShi, getTenGod as getTenGodFromStems } from './ganzhi';
 import { Lunar, Solar } from 'lunar-javascript';
+import { evaluateMethods } from './methodRules';
 import type { DaYun, EightChar } from 'lunar-javascript';
 import type {
+  AnalysisContext,
   BaziReading,
   BirthInput,
   DaYunPeriod,
@@ -17,7 +20,7 @@ import type {
   SchoolJudgment,
 } from './types';
 
-export const CALCULATION_VERSION = '2026.08.1';
+export const CALCULATION_VERSION = '2026.09.09';
 
 const STEM_ELEMENT: Record<string, ElementName> = {
   甲: '木',
@@ -339,7 +342,7 @@ export function resolveBirthMoment(input: BirthInput) {
   const correctionMinutes = Math.round(longitudeCorrection + equationOfTime + daylightSavingMinutes);
   const effective = addMinutes(converted, correctionMinutes);
   const warnings: string[] = [];
-  if (input.unknownHour) warnings.push('出生时刻未知，当前以正午占位；时柱及依赖时柱的结论仅供比较，不作确定判断。');
+  if (input.unknownHour) warnings.push('出生时刻未知，时柱不参与五行统计；日柱以当日正午核历，临近换日或交节时仍需核实。喜用、格局、亲属与岁运详批暂不定论。');
   const minuteOfDay = converted.hour * 60 + converted.minute;
   const hourBoundaries = [60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260, 1380];
   const nearestHourBoundary = Math.min(...hourBoundaries.map((boundary) => Math.min(Math.abs(minuteOfDay - boundary), 1440 - Math.abs(minuteOfDay - boundary))));
@@ -373,15 +376,6 @@ function normalizeArray(value: string[] | string): string[] {
     .filter(Boolean);
 }
 
-function getSelfDiShi(stem: string, branch: string) {
-  const startIndex = BRANCH_ORDER.indexOf(CHANG_SHENG_START[stem]);
-  const branchIndex = BRANCH_ORDER.indexOf(branch);
-  if (startIndex < 0 || branchIndex < 0) return '-';
-  const direction = STEM_POLARITY[stem] === '阳' ? 1 : -1;
-  const stageIndex = (direction * (branchIndex - startIndex) + 24) % 12;
-  return CHANG_SHENG_ORDER[stageIndex];
-}
-
 function getMotherElement(element: ElementName) {
   return (Object.keys(GENERATES) as ElementName[]).find((key) => GENERATES[key] === element)!;
 }
@@ -394,29 +388,10 @@ function getControlledBy(element: ElementName) {
   return (Object.keys(CONTROLS) as ElementName[]).find((key) => CONTROLS[key] === element)!;
 }
 
-function getTenGodFromStems(dayStem: string, targetStem: string) {
-  const dayElement = STEM_ELEMENT[dayStem];
-  const targetElement = STEM_ELEMENT[targetStem];
-  const samePolarity = STEM_POLARITY[dayStem] === STEM_POLARITY[targetStem];
-
-  if (dayElement === targetElement) {
-    return samePolarity ? '比肩' : '劫财';
-  }
-  if (GENERATES[dayElement] === targetElement) {
-    return samePolarity ? '食神' : '伤官';
-  }
-  if (GENERATES[targetElement] === dayElement) {
-    return samePolarity ? '偏印' : '正印';
-  }
-  if (CONTROLS[dayElement] === targetElement) {
-    return samePolarity ? '偏财' : '正财';
-  }
-  return samePolarity ? '七杀' : '正官';
-}
-
 function getAnnualBranchNotes(branch: string, pillars: Pillar[]) {
   const notes = new Set<string>();
   pillars.forEach((pillar) => {
+    if (pillar.known === false) return;
     if (BRANCH_COMBINES.some(([a, b]) => (a === branch && b === pillar.branch) || (b === branch && a === pillar.branch))) {
       notes.add(`${branch}${pillar.branch}合（引动${pillar.label}）`);
     }
@@ -716,10 +691,9 @@ function createAdvice(
   };
 }
 
-function getDaYunPeriods(input: BirthInput, eightChar: EightChar): BaziReading['daYun'] {
+function getDaYunPeriods(input: BirthInput, eightChar: EightChar, currentYear: number): BaziReading['daYun'] {
   const genderFlag: 0 | 1 = input.gender === 'male' ? 1 : 0;
   const yun = eightChar.getYun(genderFlag);
-  const currentYear = new Date().getFullYear();
   const periods: DaYunPeriod[] = yun
     .getDaYun(9)
     .filter((period) => period.getGanZhi())
@@ -812,7 +786,7 @@ function createMethodSynthesis(args: {
   const usefulRatio = ratios[primaryUseful];
   const strongest = elementScores[0];
   const weakest = elementScores[elementScores.length - 1];
-  const confidence = supportingRatio >= 58 || supportingRatio <= 36 ? '较高' : '中等';
+  const confidence = '待回测';
   const schools: SchoolJudgment[] = [
     {
       key: 'ziping',
@@ -878,7 +852,7 @@ function createMethodSynthesis(args: {
 
   return {
     confidence,
-    confidenceReason: `${strength}判断基于同党约${supportingRatio}%与月令${monthPillar.branch}；${confidence === '较高' ? '旺衰方向较明确，但具体应事仍需岁运和经历回测。' : '处在中间区间，格局、调候和流通比单一旺弱标签更重要。'}`,
+    confidenceReason: `四组规则分别核对月令透根、气候落点、生化路径与柱位。旺衰${strength}仍是分数模型的初筛，不作为四家独立赞同的证据；结论尚需案例回测。`,
     consensus: [
       `四法共同以${dayPillar.stem}日主为体、${monthPillar.branch}月令为提纲，不以单个神煞或单一五行下结论。`,
       `原局主线是${structureName}，但必须同时核对日主${strength}能否承载，以及${primaryUseful}是否有落点。`,
@@ -898,7 +872,7 @@ function createMethodSynthesis(args: {
       `再查成败：看${exposureText}、十神组合及${relations.join('、') || '地支生克'}。`,
       `最后落岁运：只在大运流年引动上述关键字时，判断事业、财务和关系的阶段变化。`,
     ],
-    schools,
+    schools: evaluateMethods(pillars, schools),
   };
 }
 
@@ -915,6 +889,7 @@ function createDomainReport(params: {
 }
 
 function createDeepDiveReport(args: {
+  analysisYear: number;
   input: BirthInput;
   pillars: Pillar[];
   dayElement: ElementName;
@@ -1115,7 +1090,7 @@ function createDeepDiveReport(args: {
     : null;
 
   const futureYears = [0, 1, 2].map((offset) => {
-    const year = new Date().getFullYear() + offset;
+    const year = args.analysisYear + offset;
     const ganZhi = getGanZhiYear(year);
     const [yearStem, yearBranch] = ganZhi.split('');
     const stemElement = STEM_ELEMENT[yearStem];
@@ -1175,8 +1150,7 @@ function createDeepDiveReport(args: {
   };
 }
 
-function getAnnualReading(dayElement: ElementName, usefulElements: ElementName[]) {
-  const year = new Date().getFullYear();
+function getAnnualReading(dayElement: ElementName, usefulElements: ElementName[], year: number) {
   const annualEightChar = Solar.fromYmdHms(year, 7, 1, 12, 0, 0).getLunar().getEightChar();
   const ganZhi = annualEightChar.getYear();
   const yearElement = STEM_ELEMENT[annualEightChar.getYearGan()];
@@ -1192,7 +1166,10 @@ function getAnnualReading(dayElement: ElementName, usefulElements: ElementName[]
   };
 }
 
-export function createBaziReading(input: BirthInput): BaziReading {
+export function createBaziReading(input: BirthInput, context?: AnalysisContext): BaziReading {
+  const asOf = context?.asOf ?? new Date().toISOString();
+  if (!Number.isFinite(Date.parse(asOf))) throw new Error('分析基准日期无效');
+  const analysisYear = new Date(Date.parse(asOf) + 8 * 3600000).getUTCFullYear();
   const moment = resolveBirthMoment(input);
   const { year, month, day, hour, minute } = moment.effective;
   const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
@@ -1200,6 +1177,7 @@ export function createBaziReading(input: BirthInput): BaziReading {
   const eightChar = lunar.getEightChar();
   eightChar.setSect(input.dayBoundary === 'lateZi' ? 1 : 2);
   const pillars: Pillar[] = ['year', 'month', 'day', 'time'].map((key) => createPillar(key as PillarKey, eightChar));
+  if (input.unknownHour) pillars[3] = { key: 'time', label: '时柱', known: false, ganZhi: '未知', stem: '', branch: '', hiddenStems: [], stemTenGod: '待定', branchTenGods: [], wuXing: '', naYin: '待定', diShi: '待定', selfDiShi: '待定', xunKong: '待定' };
   const scores = scoreElements(pillars);
   const elementScores = normalizeScores(scores);
   const dayStem = eightChar.getDayGan();
@@ -1209,10 +1187,11 @@ export function createBaziReading(input: BirthInput): BaziReading {
   const dominantElement = elementScores[0].element;
   const missingElements = elementScores.filter((item) => item.tone === '不足').map((item) => item.element);
   const highlightedTenGods = findHighlightedTenGods(pillars);
-  const annual = getAnnualReading(dayElement, usefulElements);
+  const annual = getAnnualReading(dayElement, usefulElements, analysisYear);
   const portrait = createPortrait(input, pillars, dayElement, strength, usefulElements, elementScores, highlightedTenGods);
-  const daYun = getDaYunPeriods(input, eightChar);
+  const daYun = getDaYunPeriods(input, eightChar, analysisYear);
   const deepDive = createDeepDiveReport({
+    analysisYear,
     input,
     pillars,
     dayElement,
@@ -1230,14 +1209,18 @@ export function createBaziReading(input: BirthInput): BaziReading {
     ]),
   ) as Record<ReadingSection, ReadingAdvice>;
 
-  return {
+  const reading: BaziReading = {
     input,
-    generatedAt: new Date().toISOString(),
+    generatedAt: asOf,
     solarText: solar.toYmdHms(),
     lunarText: `${lunar.getYearInChinese()}年${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`,
     zodiac: lunar.getYearShengXiao(),
     calculation: {
       version: CALCULATION_VERSION,
+      asOf,
+      ruleVersion: 'rules-2026.09.09',
+      contentVersion: 'classics-2026.09.09',
+      completeness: input.unknownHour ? 'unknown-hour' : 'complete',
       originalText: moment.originalText,
       convertedSolarText: moment.convertedSolarText,
       effectiveSolarText: moment.effectiveSolarText,
@@ -1273,4 +1256,17 @@ export function createBaziReading(input: BirthInput): BaziReading {
     annual,
     advice,
   };
+  if (input.unknownHour) {
+    const pending = '时辰未知，资料补全后再作完整判断。';
+    reading.usefulElements = [];
+    reading.structure.mingGong = '待定';
+    reading.structure.shenGong = '待定';
+    reading.dayMaster.summary = pending;
+    reading.portrait = { title: '三柱暂定观察', opening: pending, evidence: pillars.filter(p => p.known !== false).map(p => `${p.label} ${p.ganZhi}`), traits: [], strengths: [], blindSpots: [], workStyle: pending, relationshipStyle: pending, moneyStyle: pending, growthKey: pending, verification: [pending] };
+    reading.deepDive = { thesis: pending, usefulGod: '待定', favorableGod: '待定', avoidGod: '待定', structureName: '待定', methodSynthesis: { confidence: '待回测', confidenceReason: pending, consensus: [], differences: [], decisionOrder: [], schools: [] }, domains: [], currentLuck: null, futureYears: [] };
+    reading.daYun = { startText: '时辰待定', direction: daYun.direction, periods: [] };
+    reading.annual = { ...annual, theme: '待补全', suggestion: pending };
+    for (const key of Object.keys(reading.advice) as ReadingSection[]) reading.advice[key] = { ...reading.advice[key], body: pending, tags: [] };
+  }
+  return reading;
 }

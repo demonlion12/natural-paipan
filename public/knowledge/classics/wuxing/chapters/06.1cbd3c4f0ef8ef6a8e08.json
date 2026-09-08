@@ -1,0 +1,961 @@
+{
+  "id": "06",
+  "title": "卷06",
+  "guide": "本卷汇录唐宋禄命法材料。重点识别纳音、干支、神煞、岁运等概念的历史层次，并与后世以日主和月令为中心的子平法分开阅读。",
+  "blocks": [
+    {
+      "heading": "",
+      "original": "論支神",
+      "commentary": "",
+      "id": "06-1737cc1dd6ca79327e4d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【十二支例】",
+      "commentary": "",
+      "id": "06-b2536f4be61552d4f344-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "亥子(水)寅卯(木)巳午(火)申酉(金)辰戍醜未(土)",
+      "commentary": "",
+      "id": "06-8ef9a229e17297dda5f3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【十二支合】",
+      "commentary": "",
+      "id": "06-32d83c89b461bebb28e5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子醜寅亥卯戍辰酉午未巳申",
+      "commentary": "",
+      "id": "06-7638cb4801e83f908279-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天元變化書雲：子合醜，福輕，醜合子，福盛。寅合亥，福清，亥合寅，福慢，戍合卯，福虛，卯合戍，福厚，辰合酉，福弱，酉合辰，大利。午合未，福慢，未合午，大利，巳合申，福慢，申合巳，官氣盛。如甲午，辛未，乙未，只是身旺，卻命祿弱合衰氣多也，如乙未，壬午，雖祿弱艱得。",
+      "commentary": "",
+      "id": "06-939ff221635685947c0e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【三合】",
+      "commentary": "",
+      "id": "06-aa4796cb617306fa1766-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅午戍（火）巳酉醜（金）申子辰（水）亥卯未（木）（三合纂局）",
+      "commentary": "",
+      "id": "06-c7cb4082064f05687d1a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【陰陽】",
+      "commentary": "",
+      "id": "06-dce1c96c564e73bf7464-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子為一陽醜二寅三卯四辰五巳為六陽極。",
+      "commentary": "",
+      "id": "06-9914d4e2940c1575f777-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "午為一陰未二申三酉四戍五亥為六陰極。",
+      "commentary": "",
+      "id": "06-e2329967f9e3dfde76bf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【支神一字格】",
+      "commentary": "",
+      "id": "06-581ecc1057011c7ff91a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "福神多，可作兩府，兇殺多，則窮夭，如曾布乙亥年，丁亥月，辛亥日，已亥時，戊寅胎，乙亥火雖自死，得已亥木自生，四亥與寅胎合，故作兩府，如蕭注癸醜年，乙醜月，乙醜日，丁醜時，丙辰胎，以四柱帶殺多，故換武官，止於兩製而無壽。",
+      "commentary": "",
+      "id": "06-f82c8ef3694a867b16c6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "玉霄寶鑑雲：有芝蘭並秀格，支神一字而乾神靈是也，仍須幹神和會，而福聚於支神上者為應格。",
+      "commentary": "",
+      "id": "06-d0e7c6ceb996f5878dcc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【六合雙鴯格】",
+      "commentary": "",
+      "id": "06-d0bf924fc823610d79ee-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六合雙鴛坐槐庭而布政，假如戊辰年癸亥月戊寅日甲寅時，一亥合兩寅馬也。（鬼谷命格）",
+      "commentary": "",
+      "id": "06-914ea97e1f84b8641ad9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【衝合格】",
+      "commentary": "",
+      "id": "06-38c7237f4f3d1ed3f594-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "大凡命前六辰貴氣沖和也，假令丁亥土人得甲辰丙辰是也，更天幹納音稍有和氣，富貴極盛，為陰陽六辰，自然清貴，變天乙貴神之意。（天元變化書）",
+      "commentary": "",
+      "id": "06-5accd972d8013fb1a831-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【支神往來有五行之氣】",
+      "commentary": "",
+      "id": "06-235391d2242d10d01475-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅午往來，有甲己土氣，子巳往來，有戊癸火氣，巳酉往來，有丙辛水氣，卯申往來，有乙庚金氣，亥午往來，有丁壬木氣，皆在祿上也。又子巳午亥，謂之隔六合，蓋一陽至六陽，一陰至六陰也。（廣錄）",
+      "commentary": "",
+      "id": "06-a16015505501673b2c3d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天元變化書雲：此系支辰之論，更得天幹納音有交涉者大利，福厚堅固。",
+      "commentary": "",
+      "id": "06-ecda92fbddeaee6aa12b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "五行本位者，寅午戌火之位，丙丁人遇之貴（寅又為雜木位甲祿之所建也），亥卯未木之位，甲乙人遇之貴（亥又為雜水位壬祿之所建也），巳酉醜金之位，庚辛人遇之貴（巳又為雜火位丙祿之所建也），申子辰水土之位，戊己壬癸人遇之貴（申又為雜金位庚祿之所建也），五行各三位與四貴三位同，惟闕（缺？）胎貴一位，其主貴之福，亦與四貴同，陽祿貴在臨官，陰祿貴在旺，若陽祿遇旺，陰祿遇臨官，雖為本位，其福差減於建處也。有遇一、兩貴位，卻為兇殺刑害破得深重無祿者也。（三命提要）",
+      "commentary": "",
+      "id": "06-55ea31f11503c89815e4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【大吉生逢小吉，反壽長年，天罡運至天魁，實生續壽。】",
+      "commentary": "",
+      "id": "06-ee68230e9d8223237a8a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注雲：醜為大吉，乃金之墓，未屬小吉，乃木之庫，以醜中金氣來克未中之木氣，上克下曰冶金，未變化，仁義相濟則反壽長年，或未人得醜，則尊辱卑榮，不為壽而為夭矣。天罡是辰，辰之中有水氣之所重也。天魁是戌，戌之中有火氣之所重也。辰中之水，克戌中之火，為精為神，水火既濟，則寄生續壽。或戌人得辰，則陰陽不正，為返吟之破命矣。瑩和尚注雲：以上四節，並用真印，始得其詳，乙醜金印，癸未木印，壬辰水印，甲戌火印，丙辰土印，醜中有乙木，未有癸水，癸水生其乙木，櫓生（此二字不確定）祿元，故反壽長年，戌中有甲，辰中有丙壬，壬水生其甲木，甲木續其丙火，故寄生續壽。",
+      "commentary": "",
+      "id": "06-4fb542f560c5e0534962-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "命書論受氣血脈，謂醜中有金氣，未中有木氣，辰中有水氣，戌中有火氣，故未畏醜，醜不畏未，戌畏辰，辰不畏戌，此說最妙。",
+      "commentary": "",
+      "id": "06-891975e35c73080df802-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【從魁抵蒼龍之宿，財自天來，太衝臨昴冑之鄉，人元有害】",
+      "commentary": "",
+      "id": "06-3c7cb2cb0e01c08859c5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "瑩和尚注雲：酉為昴冑之鄉，從魁也。卯曰（不確定，應是曰）蒼龍之宿，太沖是也。以支元納音取財，今言天來何也？緣酉上有辛，卯上有乙，辛金製其乙木，故雲財自天來，卯見酉而為害，以金克其卯木，故臨昴冑而人元受害也。若酉人遇卯則吉。（珞琭子）",
+      "commentary": "",
+      "id": "06-1e2acf9350869bfda5c9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【朝北面南，希見子來拱午】",
+      "commentary": "",
+      "id": "06-e027502a6ee45536d688-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子午卯酉四方之正位，五行之帝座也，凡帝座惟可朝而拱對之，不可位其位，欲別其有君臣之分也。然而相對卯酉者，不及相對子午，蓋子午乃明堂端門，聖人南面以聽天下，諸侯北面以朝至尊，故雲：希見子來拱午。",
+      "commentary": "",
+      "id": "06-7f40da7dd17a427928b1-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "八字金書雲：子為端門，午為離門，皆以拱虛（字模煳不是很清楚）為上，正見者次之，若福氣重厚，可入侍從，凡虛（字模煳不是很清楚）拱二門貴人最為上。又雲：子午為明堂，端門可以虛（同上）拱，不可居位，若子來朝午者君臣勢順也。",
+      "commentary": "",
+      "id": "06-861c57a006c72a777b6f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "紫虛局有拱端門格，如陳宗丞乙醜年甲戌月己亥日丁卯時，陸徽猷丁未年己酉月乙巳日丁巳時，是也。",
+      "commentary": "",
+      "id": "06-88bdf9dd8f7cc5b1a4f8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【四極全備，鄧禹作綠鬢將軍】",
+      "commentary": "",
+      "id": "06-e90a7a849c77d37ae5cf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅申巳亥，子午卯酉，辰戌醜未，皆謂之四極，蓋言多也，得之全者，為人性剛勇，宜從右選，以求功名，有子午卯酉者，為其專位於四正，主有方面之權，又須貴早，所以喻鄧禹十八為將也。（壺中子）",
+      "commentary": "",
+      "id": "06-e09aee9b658396c282f9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅申巳亥四孟，子午卯酉四仲，辰戌醜未四季，不可以得是格者，便為妙用。四孟名為四進之氣，前行可達，故馬坐是地，又名曰四長生，為五行長生在上，其間最是土得力，蓋申上土生土長，亥上土旺，寅上有火亦可取旺，只有巳上土絕，亦有火生壯其土，故巳上不可謂之土絕，有一飛宮土法，言四月土生土長生，是四孟有土力，故金人土人得福多。其間木不旺，因巳上木衰，申上木絕，亥寅縱得長生臨官，大抵十月與正月木方芽，甲故不旺，水人火人臨時消息。四仲曰四極，五行遙遠遠不相拘受，須是取時日向旺，方為上，若生值是格，更時日向衰弱之地，必不高顯，如庚戌年金，戊子月火，甲午金日，癸酉金時，己卯土胎，此向西方金家旺地，故貴，吳轉運命。蓋庚戌金，受戊子火上下造化。戊午年辛酉月癸卯日壬子時，以月上死，日上沐浴，時上亦無氣，故兇。四季名曰角，繫陰陽各立之地，最旺金土人，水人不旺，若水多人，得此就土氣作官，水少人不可。如癸亥水人，壬戌月，壬辰日，丁未時，癸醜胎，是命薄祿，為水多，且使四季土造化，火人得是格太弱，木人得此，亦不成造化，類百里之田，一合之子耳。",
+      "commentary": "",
+      "id": "06-3eafa9b3584c8f06b28b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "（天元變化書）",
+      "commentary": "",
+      "id": "06-fd973548862ff48b5314-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【論孟仲神所值貴賤】",
+      "commentary": "",
+      "id": "06-46bcda36527e35257ffc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅申巳亥四位，謂之孟神，非取祿馬，但於年月日時見寅申巳亥者，自然高貴，如有不等，卻成貧賤，若全見上四字，則貴不可偕。",
+      "commentary": "",
+      "id": "06-edf3743818fd97459ea6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子午卯酉四位，謂之仲神，若年月日時全帶或重迭，及值六害，此人幼稚便患風疾。（金書命訣）",
+      "commentary": "",
+      "id": "06-ed66a408823daf177c6d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【或全帶得卯酉來俱所為多改越。】",
+      "commentary": "",
+      "id": "06-c46e00162cf09dcb03aa-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "人命帶印（疑為卯）日酉時，更胎月一處有馬，多好動移，然命入局，乾神得助者，移動則吉，命薄因移而得失也。（沉芝源髓）",
+      "commentary": "",
+      "id": "06-c4c1005b94712821e0f0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【辰戌醜未為四孤之氣】",
+      "commentary": "",
+      "id": "06-0c6937b9803f2666a21a-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戌為天門，故戌曰天孤，辰為地門，故辰曰地孤，未為人門，故未曰人孤，醜為鬼門，故醜曰鬼孤，此是天涯地角，故為四孤之氣。（燭神經）",
+      "commentary": "",
+      "id": "06-2d56a3912976189a3d2e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【顛倒殺】",
+      "commentary": "",
+      "id": "06-b42ff70f0e56c045e35b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "寅醜巳辰申未亥戌",
+      "commentary": "",
+      "id": "06-77cb17552b2d2025ae61-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "以上日時上犯者，君子主玷污，庶人徒刑，又名惆悵殺，主咨嗟不足，雖富貴亦然。（廣信集）",
+      "commentary": "",
+      "id": "06-a02add8defa19f449483-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "並論十神",
+      "commentary": "",
+      "id": "06-913e2677268b70a6352f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【十幹十二支】",
+      "commentary": "",
+      "id": "06-24fe35dbb5783eb0fa37-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲，是木之乾節；乙，木之根；丙，火之宿者；丁，火之光；戊，石也；己，土可作者；庚，金之質；辛，金之刃；壬，水之源；癸，水之流；亥，水之源；子，水之流；醜，土雜金土；寅，木之乾節；卯，木之根；辰，土雜水木；巳，火之光；午，火之宿者；未，土雜木火；申，金之質；酉，金之刃；戌，土雜金火。（廣録）",
+      "commentary": "",
+      "id": "06-cbf5afd9e6d7a995abcf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡甲丙戊庚壬為陽幹，乙丁己辛癸為陰乾，子寅辰午申戌為陽支，醜卯巳未酉亥為陰支。（三命吟鶴）",
+      "commentary": "",
+      "id": "06-886a9fb4184db6f7ef97-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天元喜地元有祿】",
+      "commentary": "",
+      "id": "06-323a6e8cf75c9e9921d9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲己喜四季乙庚喜申酉丙辛喜亥子丁壬喜寅卯戊癸喜巳午",
+      "commentary": "",
+      "id": "06-d7e4e797021b6b93a80d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【地元喜天元】",
+      "commentary": "",
+      "id": "06-f354227dbf0bf1e33261-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子醜喜戊寅喜己卯辰喜庚巳喜辛庚午未喜甲壬申喜乙",
+      "commentary": "",
+      "id": "06-93c9b92407ae7a829dfc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "酉戌喜丙亥喜丁",
+      "commentary": "",
+      "id": "06-36de08c7dab2c6df7b7d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壞天元者，三十九歲以前，名利難發。壞地元者，四十歲後，福不如前。天元地元皆有者，平生福氣高崇；皆無者，平生名利無成。三命中，二命若衰，一命何安也。",
+      "commentary": "",
+      "id": "06-ecd7987f22d9d6e355ec-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【地元忌天元】",
+      "commentary": "",
+      "id": "06-6cf70a9e5cbb9c34fb26-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子醜怕己寅怕庚卯辰怕辛巳怕甲壬午未怕乙癸申怕丙",
+      "commentary": "",
+      "id": "06-a3e38462f30fc06ec292-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "酉戌怕丁亥怕戊",
+      "commentary": "",
+      "id": "06-27e5b7b2a1812efa1df6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天元秀氣】",
+      "commentary": "",
+      "id": "06-41452bcae3bf9cdb0c20-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "子醜癸寅甲卯辰乙巳丙戊午未丁己申庚酉戌辛亥壬",
+      "commentary": "",
+      "id": "06-fc0ae81bce23683c8fd9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天地之秀見時，不貴即富。珞琭子雲：壬癸秋生而冬旺，亥子同途；甲乙夏死而春榮，寅卯一揆是也。（神白經）",
+      "commentary": "",
+      "id": "06-72cafcd08d226f04bac3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【生死相聚】",
+      "commentary": "",
+      "id": "06-38fb74394529b0301e6f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚辰、辛巳、庚午、辛巳甲戌、乙亥、甲子、乙亥",
+      "commentary": "",
+      "id": "06-dfd19ddd00b706d3246f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壬寅、癸卯、壬辰、癸卯丙申、丁酉、丙戌、丁酉",
+      "commentary": "",
+      "id": "06-61c5c00aa6b0695f0e59-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "以上是陽死陰生,陰死陽生,如甘苦同受之意,所謂庚生於巳，辛死於巳，甲生於亥，乙死於亥，壬死於卯，癸生於卯，丙死於酉，丁生於酉，是不相離也。（廣信集）",
+      "commentary": "",
+      "id": "06-d0304dfd85ff94dc86fa-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【三命生地足】",
+      "commentary": "",
+      "id": "06-c0ba7e4dc120d26b4d2f-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "六乙人寅卯辰，六辛人申酉戌，水土人亥子醜，火人巳午未，餘彷。若遇此格，不厭鬼多，多則貴，假如生地旺全，氣堅固，則不能造化，大抵五行不須太過，故使鬼多者妙。如乙亥年，庚辰月，辛卯日，庚寅時，辛未胎，然庚辛鬼氣多，緣乙木在寅卯辰木壯，更亥卯未木氣全，乙木十分氣足，雖兩庚兩辛在寅卯辰上，未及十分重氣，木盛於金則貴也。（天元變化書）",
+      "commentary": "",
+      "id": "06-c4286676ea6073c0a1ae-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【幹支四字全】",
+      "commentary": "",
+      "id": "06-8172625cbef712f511d5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "四字全者，取十乾十二支合而言之，凡年月日時併胎月五位中，若有甲有乙，其生月日時遇寅卯兩位者是也。有丙有丁遇巳午戊己準此，有庚有辛遇申酉，有壬有癸遇亥子，土隨水源行，戊己有亥有子，亦主富貴，更須要諸位上支幹相扶助也。（三命提要）",
+      "commentary": "",
+      "id": "06-92e9c877b6222cea8621-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【七祿】",
+      "commentary": "",
+      "id": "06-7333dce8bd582f5a6cb5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲乙人丁壬亥卯未丙丁人戊癸寅午戌戊己人甲己辰戌醜未",
+      "commentary": "",
+      "id": "06-729b8a8635463c24596c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "庚辛人乙庚巳酉醜壬癸人丙辛申子辰",
+      "commentary": "",
+      "id": "06-a89254d7ff438a952b70-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "以上七祿全一氣者，更有歸宿，主及第，為人超越，無歸宿，只作門陰之人，若破敗不作福，行運到祿幹得地，必發旺。",
+      "commentary": "",
+      "id": "06-e0e041c7098d66b0a3ed-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "帶三祿者，謂在月日時上，更帶本祿也。若在四貴、華蓋、驛馬上，必為貴顯之人。迭三支者，年月日時胎五支中，三支並在一位上者是也，並在四貴華蓋貴神之位，則主貴，在貴神與忌神同位則主福，雖迭在無氣處，若三支於祿幹有輔助亦貴，若在死敗絕空亡上無輔助者，無福人也。（三命提要）",
+      "commentary": "",
+      "id": "06-2b8c1cbc1056e0d46d40-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天元變化書有三字格，如三丁一癸，三壬一戊，三庚一丙，三辛一丁，尤恐造化輕弱不成器用，凡見三字格，切忌建旺太過中又太過，唯土金不然，如三金得土，三土得火，或三戊，三己，三庚，三辛，建旺不礙。",
+      "commentary": "",
+      "id": "06-d64fb0c17313f55843cf-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "壺中子雲：三乾鳳凰極貴，切忌戀匹戀林，四本主中有三字本主同一字幹而向下支不同者，曰三幹鳳凰，三本主同一字支而向上幹不同者，曰支鳳凰，三位本主同一支幹者，日麟閣鳳沼，主清華之貴，唯戀匹戀林，見合則曰戀匹，見刃則曰戀林。",
+      "commentary": "",
+      "id": "06-e5c2c1a6e54179855f73-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【先上清而得之下濁，後下濁而升越上清】",
+      "commentary": "",
+      "id": "06-f115de3d7fa726e04300-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "先取上之轻清而为用，次看浊气压下，上虽清而不秀，则取下浊有用之气为福，而升越为上矣。（鬼谷遗文）",
+      "commentary": "",
+      "id": "06-6143eed7fb2e1a6f9008-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【以干为禄向背定其富贵；以支为命，详顺逆以循环】",
+      "commentary": "",
+      "id": "06-4c5e0d394af2baa882c1-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注云：如甲禄在寅，或坐禄、向禄者，不富则贵；或破禄、背禄者，不贫则夭。甲禄在寅，命得寅以坐之，遇丑以向之，逢申以破之，见卯以背之，经云：向禄则生，背禄则死，故禄前一辰为羊刃，禄后一辰为禄库，此所谓向背定其贫富者欤。十二支曰命，命之所司者，修短定焉。盖得之以顺者，遇五行生旺，三合六合者是也。不顺者逢休囚六害四衡三刑者是也，得此者寿，失此者夭，故曰以支为命，详逆顺以循环。",
+      "commentary": "",
+      "id": "06-f7be050eddfb9ebedeff-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "莹和尚注云：背者可定其贫，向者以言其富，然不可一途取轨，亦有逢背禄不贫者。",
+      "commentary": "",
+      "id": "06-62b51aa1c0f614223b25-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天元一气定侯伯之迁荣，支作人元运商徒而得失】",
+      "commentary": "",
+      "id": "06-c832ef3f79cac8434f10-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天元秀气而吉将加临者，人得之贵也，支元纯粹而四柱比和者，人得之富也，直言富贵，而不言贫贱者，反此则贫贱耳。",
+      "commentary": "",
+      "id": "06-0ec968a339172194f4ee-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【庚辛临于甲乙，君子可以求官，此人运至南方，货易获其厚利】",
+      "commentary": "",
+      "id": "06-e22f2a76496cc23498a8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注云：甲以辛为官，乙以庚为官，庚辛来临于甲乙之人，故曰君子可以求官，小人反以为鬼也。亥子者，北方之水，巳午者南方之火也，以水至火乡，我克之为财，所以货易或其厚利也。或谓壬癸至巳午亦是者非也。壬癸是禄，巳午是命。如壬癸得丙丁，亦可谓之禄财，谈命者当分禄命身，以干配禄，以支合命，以纳音论身，之谓三命。",
+      "commentary": "",
+      "id": "06-eeae9cddf016084eae1c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【金禄穷于正首，庚重辛轻；木人困于金乡，寅深卯浅】",
+      "commentary": "",
+      "id": "06-d18ec1a89b962f5845d4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注云：庚辛金也，庚阳而辛阴，甲乙木也，甲阳而乙阴，庚辛之金，至寅俱绝，必曰庚重辛轻者何？寅为阳宫，庚乃阳金，以阳遇阳曰伤，寅中有甲，甲庚相恶，故曰庚重辛轻，辛为阴金，至寅阳宫，甲以辛为官，兼六辛逢马虎，天乙贵人，故谓辛轻，寅卯之木，至申而绝，必曰寅深卯浅者何？寅为阳辰，至申宫两阳相竞，寅申相冲，为绝之深也，及卯居申合乙庚，阴阳合气，故为绝之浅也。",
+      "commentary": "",
+      "id": "06-00cf398ef09b1b471c21-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【壬癸秋生而冬旺，亥子同途；甲乙夏死而春荣，寅卯一揆】",
+      "commentary": "",
+      "id": "06-0de3e5c95e4b91670b16-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "王氏注云：壬癸亥子一类水也，水生于申，而旺于子，甲乙寅卯一类木也，木旺于卯，而死于午，故曰壬癸秋生而冬旺，甲乙夏死而春荣。（珞琭子）",
+      "commentary": "",
+      "id": "06-ea083d256c7234b9b6fc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【甲己丙辛申子辰，丁壬亥卯未中寻，乙庚从格局为真，戊癸炎上亦须陈，得局却嫌逢脱局，财局萦心鬼局恶，甲乙曲直亦同详，归认干头莫教错】",
+      "commentary": "",
+      "id": "06-39e99dbc95a9d20e0234-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如丁壬亥卯未本局之类，且如丙辛见巳酉丑相生局也。脱局者乙庚遇申子辰，金生水为脱局也。财局如乙庚的亥卯未鬼局，如乙庚得寅午戌也或贫贱夭寿，甲乙乃木也，亥卯未为本局，亦嫌脱也。（沉芝源髓）",
+      "commentary": "",
+      "id": "06-9e7081a05a95a0181c9d-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【戊己加临丘壑，信若尾生；壬癸遁入江湖，廉如鲍叔】",
+      "commentary": "",
+      "id": "06-a77afc71e2768ee7e796-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊己属土，丘壑亦属土，辰戌丑未乃丘壑之地，壬癸属水，江湖亦属水，亥子乃江湖之乡，戊己人得丘壑之地生者，足于信，盖土主于信，壬癸得江湖之地生者，其人廉。",
+      "commentary": "",
+      "id": "06-f46c276f778dd2ac5ea9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【头戴脚踏，罕遇甲年寅时】",
+      "commentary": "",
+      "id": "06-144d142d6eb9a1a385db-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "头谓八字之首，踏谓八字之末，甲乙天中之木也。寅卯地下之木也，八字之首得甲，而八字之末得寅者，戴其天中之木，而踏其地下之木也。八字之首得乙，而八字之末得卯者，戴其天中之木，而踏其地下之木也。余十干皆彷此。",
+      "commentary": "",
+      "id": "06-2256562600ba195b2db4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【丁得戊而最佳，酉见丁而可畏】",
+      "commentary": "",
+      "id": "06-ef0176a16d3d034cba0b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "戊人见丁者，在字为成，酉人得丁或丁人得酉为丁入目。",
+      "commentary": "",
+      "id": "06-48275a9607b59ea8c1b5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【八字纯粹，少处严廊，二气偏枯，老为俗物】",
+      "commentary": "",
+      "id": "06-ee8fb21a6ffc631d76bc-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "八字乃年月日时枝干也，二气乃阴阳也，八字得之浑然纯粹者，必早有严廊之望。二气得之交迭，偏枯者无贵，则至老终为俗物，黄帝谓一阴一阳之谓道，偏阴偏阳之谓疾。",
+      "commentary": "",
+      "id": "06-62e4ffabfbcb6f84575b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【天干不断若血脉之调荣，地支相连类珠玑之贯穿】",
+      "commentary": "",
+      "id": "06-2427b034cae92c7f780e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天干不断，在格曰连珠，地支相连，在格曰连茹，得连珠则贵，得连茹则富，有所畏者隔断也，盖十干不要断，若甲字断之，如血脉之不通荣衔也，反为；夭折。十二支不要断，若子字断之，则如珠玑之不相穿贯也，反为灾害，十干若不断甲字，而断他九字，化为虚一待用格。十二支若不断子，而断余十一字，名为歇灭杀，女子尤忌之。",
+      "commentary": "",
+      "id": "06-9fa814c98b95d90afc2b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "天元变化书云：天干连珠中间有转达之气，并贵旺相者为上，无此未必便佳。支神连珠太岁在前者为上，如亥人见申酉戌亥，紧向本岁，谓之从岁，仍看天干纳音如何。",
+      "commentary": "",
+      "id": "06-b66ea56d7f0120448b9e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "虚其一，待其用，得之者，稳步青云；忽头重，忽尾轻，遇之者早归泉世。",
+      "commentary": "",
+      "id": "06-019c13d052315f150a72-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "四柱本干相连，即跳一字，号为虚一待用。四柱本支相连，而重一字者号为头重尾轻，虚一待用为青云得路之人，头重尾轻乃泉壤夭折之子。（壶中子）",
+      "commentary": "",
+      "id": "06-2bde33b3812565e6c59b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【连珠入局尤为荣】",
+      "commentary": "",
+      "id": "06-99634c6fea9f640d6ece-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如甲乙丙丁子丑寅卯之类，干支顺者，谓之入局，若相刑克者不入局。（理愚歌）",
+      "commentary": "",
+      "id": "06-9684b7a2645718772e6b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【连珠贵格】",
+      "commentary": "",
+      "id": "06-1adcd630ee16394a3ad0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲午乙未丙申丁酉戊戌己亥余皆彷此（三命纂局）",
+      "commentary": "",
+      "id": "06-c982640ce00dfdf9b386-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "八字金书云：若甲子生下有乙丑，此为连珠福神，能押众杀，更加禄马十分之命。诗云：命中生处得连珠，足食丰衣与众殊；若有杀神居位内，自然为福与消除。",
+      "commentary": "",
+      "id": "06-9c2adb1c8aa5455a6baa-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【连珠进退】",
+      "commentary": "",
+      "id": "06-5832b08302ba05b9a8e6-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡见同气连珠，如丙寅见丁卯，损气，是名退气连珠，丁卯见丙寅退一辰，却是进，名贡气连珠，如丙辰土入见丁巳不佳，丁巳见丙辰最上。（天元变化书）",
+      "commentary": "",
+      "id": "06-73d2e036c8094c12140e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "论干支诸字杂犯",
+      "commentary": "",
+      "id": "06-91388563e84af4640535-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【凡甲丙丁壬辰字平头】",
+      "commentary": "",
+      "id": "06-1342a013c722518b5b4e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "若见三四字带空亡者，定为僧道。",
+      "commentary": "",
+      "id": "06-a26ade3ba2282c6989f0-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【甲癸未申酉属破字】",
+      "commentary": "",
+      "id": "06-3cef9d88f75d1237f0ce-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "甲癸酉必损眼，未申患心腹疾，更看时入害乡，干神受制者，必不虚矣。",
+      "commentary": "",
+      "id": "06-2b8110dae68ea639ca5b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【甲辛卯午申属悬针】",
+      "commentary": "",
+      "id": "06-d8522fe2e73cd5f1c9d3-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "五行无气，不值德神，定是军人。",
+      "commentary": "",
+      "id": "06-7b7151c27e28fa6c5636-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "三命纂局云：悬针三四字，号悬针眼疾，还多险厄临，被刑带杀须徙配，怎不为军刺面人。",
+      "commentary": "",
+      "id": "06-5f955765c3984043c3c9-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【戊庚戍属杖刑锋刃】",
+      "commentary": "",
+      "id": "06-ee23afe6abcaabc08e7b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "若带羊刃蚀神，定犯徙流。",
+      "commentary": "",
+      "id": "06-490e607fc4706ee5bfa4-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【乙己丑巳属阙字】(曲脚杀附)",
+      "commentary": "",
+      "id": "06-4ca3baf9e3a61abb4a05-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "犯多者必有阙唇，穿耳，肢体不全，若无德合，五行无气，*（ps*读音：gu(谷）我的字库没这个字）帛不充，寄食他门。",
+      "commentary": "",
+      "id": "06-b59c7b96dcbaae2632f5-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "李九万云：凡巳酉丑三合全，天干带己字者，主唇齿不全之疾，一生招人唇吻。",
+      "commentary": "",
+      "id": "06-eff44e5cda1d8fb8f222-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "八字金书云：四柱中乙己巳者名曲脚杀，带多主他养为子，不然养他人子，主两姓故也。",
+      "commentary": "",
+      "id": "06-5b6b827d71bbdef94866-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【丙壬寅酉为聋哑字】",
+      "commentary": "",
+      "id": "06-6355e46e5f549c6b4bf8-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "若犯多者，及胎中受害，时食于日，必患聋哑，又酉日戍时生者主聋哑，及头害恶疮，此是时破日者也。",
+      "commentary": "",
+      "id": "06-566e30caa02721bb1b0e-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "歌曰：平头必是为僧道，破字终须失眼明，杀看悬针须刺面，徙流多见杖刑并，饥贫不幸逢空阙，相貌兼知不十成，惟是相遭聋哑字，空亡无气定来精。（金书命诀）",
+      "commentary": "",
+      "id": "06-0cc0586022cb580b8c7b-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【禄绝命绝】",
+      "commentary": "",
+      "id": "06-52e3d983997eab52f17c-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "禄绝者，如甲乙生人在申，主仕官不久，职位难进，资财不丰，门阀不盛。人命绝者，如亥子人在巳，主孤独少子，又寿不长，中年多困。（三命吟）（ps：吟原为金和今，也查不到）",
+      "commentary": "",
+      "id": "06-8ccee2a1d774fe4ed438-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "【同类破】",
+      "commentary": "",
+      "id": "06-27b7b00098fbba756fef-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "如己未见甲辰，甲辰见己丑，己丑见甲戍，甲戍见己未，凡在四冲之地，纳音同类，逐两位逆数之是也，寅申巳亥子午卯酉，亦以此取之，主人平生多不足，不成器道,经云，井栏互破，无药可医，遇空亡则庶几，行年行运亦忌之。",
+      "commentary": "",
+      "id": "06-205e47d3bf91f0e37c32-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命带重支迭干者，主心怀不佳，计较机谋，狡狯短行，岁运添之，因而有失，亦主思虑过当，有心力藏怀之人也。",
+      "commentary": "",
+      "id": "06-343f0cd88691880a5843-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡四柱不可犯丙戊二干，若在寅辰上，名仇雠晦气，主招谤怨，多与人竞，如韩球都大命，戊辰年，甲寅月，甲寅日，丙寅时，又*(ps：*为足和束这个字怎么都查不到）山如老庚辰年，戊寅月，戊寅日，丙辰时是也，古诗云：丙戊忌见莫同群，逢之灾咎及其身，若遇仇雠龙与虎，非时刑祸不堪论。",
+      "commentary": "",
+      "id": "06-8957947dd099a80e6257-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "凡命带乙己癸三干全者，不是四肢眼目破伤，则中年后犯刑，甲乙庚三干全者主失明，十有九中，或小年斑疮损眼，带辰午酉全，中年定失明，乙癸二干不可同见丑字，主富贵少寿，丁辛二干不可同见巳字，主伤父母，经曰：乙癸同牛寸阴难保；丁辛见巳，父母多伤。丙辛二干不可见卯，己丁壬三干，不可见午申，名曰类应，主平生歇灭，乙辛二干不可同位，乙未辛未是也。庚壬二干不可同位，庚戍壬戍是也，名曰反伤，主富贵人夭寿，小人刑戳之灾",
+      "commentary": "",
+      "id": "06-1c65ed4da9635e14b253-0",
+      "translation": null
+    },
+    {
+      "heading": "",
+      "original": "，經曰：乙辛逢未為天牢，四位同宮禍患遭，庚壬遇戍須徙配，災咎來時不可逃。（廣信集）",
+      "commentary": "",
+      "id": "06-4661e6fce8c15f618b14-0",
+      "translation": null
+    }
+  ],
+  "editionId": "wuxing-83b291515920710865bc",
+  "version": "2b66a6a4b3ae6fb30864"
+}

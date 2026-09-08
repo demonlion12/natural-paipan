@@ -34,6 +34,7 @@ type ActiveSession = {
   account: AccountProfile;
   key: CryptoKey;
   vault: VaultData;
+  envelope: string | null;
 };
 
 const ACCOUNT_REGISTRY_KEY = 'shanyi-accounts-v1';
@@ -209,20 +210,38 @@ function mergeLegacyData(vault: VaultData) {
   };
 }
 
-async function writeVault(accountId: string, key: CryptoKey, vault: VaultData) {
+async function writeVault(accountId: string, key: CryptoKey, vault: VaultData, expected?: string | null) {
   const envelope = await encryptVault(accountId, key, vault);
+  const serialized = JSON.stringify(envelope);
+  if (expected !== undefined && storage().getItem(`${VAULT_PREFIX}${accountId}`) !== expected) {
+    throw new AuthError('storage', '另一个页面已修改本机档案，请重新登录后再保存，避免覆盖新内容。');
+  }
   try {
-    storage().setItem(`${VAULT_PREFIX}${accountId}`, JSON.stringify(envelope));
+    storage().setItem(`${VAULT_PREFIX}${accountId}`, serialized);
   } catch {
     throw new AuthError('storage', '加密档案保存失败，请检查浏览器存储空间。');
   }
+  return serialized;
 }
 
-function scheduleVaultPersistence(session: ActiveSession) {
-  const snapshot = structuredClone(session.vault);
-  persistQueue = persistQueue.catch(() => undefined).then(() => writeVault(session.account.id, session.key, snapshot));
-  void persistQueue.catch(() => undefined);
+function scheduleVaultPersistence(session: ActiveSession, update: (vault: VaultData) => VaultData) {
+  const commit = async () => {
+    const next = update(structuredClone(session.vault));
+    next.updatedAt = new Date().toISOString();
+    const envelope = await writeVault(session.account.id, session.key, next, session.envelope);
+    session.vault = next;
+    session.envelope = envelope;
+  };
+  persistQueue = persistQueue.catch(() => undefined).then(() => globalThis.navigator?.locks
+    ? navigator.locks.request(`shanyi-vault:${session.account.id}`, commit) : commit());
+  void persistQueue.catch(error => {
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('shanyi-storage-error', { detail: error.message }));
+  });
   return persistQueue;
+}
+
+function publicProfile({ id, username, displayName, createdAt }: AccountProfile): AccountProfile {
+  return { id, username, displayName, createdAt };
 }
 
 export async function registerLocalAccount(input: { username: string; displayName: string; password: string }): Promise<AuthResult> {
@@ -245,16 +264,16 @@ export async function registerLocalAccount(input: { username: string; displayNam
     iterations: PBKDF2_ITERATIONS,
   };
   const merged = mergeLegacyData(emptyVault());
-  await writeVault(account.id, key, merged.vault);
+  const envelope = await writeVault(account.id, key, merged.vault);
   try {
     writeAccounts([...accounts, account]);
   } catch (error) {
     storage().removeItem(`${VAULT_PREFIX}${account.id}`);
     throw error;
   }
-  activeSession = { account, key, vault: merged.vault };
+  activeSession = { account: publicProfile(account), key, vault: merged.vault, envelope };
   removeLegacyData();
-  return { account, migratedArchives: merged.migratedArchives };
+  return { account: publicProfile(account), migratedArchives: merged.migratedArchives };
 }
 
 export async function loginLocalAccount(usernameInput: string, password: string): Promise<AuthResult> {
@@ -266,16 +285,19 @@ export async function loginLocalAccount(usernameInput: string, password: string)
   const rawEnvelope = storage().getItem(`${VAULT_PREFIX}${stored.id}`);
   const vault = rawEnvelope ? await decryptVault(stored.id, derived.key, JSON.parse(rawEnvelope) as VaultEnvelope) : emptyVault();
   const merged = mergeLegacyData(vault);
-  activeSession = { account: stored, key: derived.key, vault: merged.vault };
+  let envelope = rawEnvelope;
   if (merged.migratedArchives || Object.keys(readLegacyData().profileStorage).length) {
-    await writeVault(stored.id, derived.key, merged.vault);
+    envelope = await writeVault(stored.id, derived.key, merged.vault, rawEnvelope);
     removeLegacyData();
   }
-  return { account: stored, migratedArchives: merged.migratedArchives };
+  activeSession = { account: publicProfile(stored), key: derived.key, vault: merged.vault, envelope };
+  return { account: publicProfile(stored), migratedArchives: merged.migratedArchives };
 }
 
 export function getActiveAccount(): AccountProfile | null {
-  return activeSession ? { ...activeSession.account } : null;
+  if (!activeSession) return null;
+  const { id, username, displayName, createdAt } = activeSession.account;
+  return { id, username, displayName, createdAt };
 }
 
 export function getVaultArchives<T>(): T[] {
@@ -284,8 +306,8 @@ export function getVaultArchives<T>(): T[] {
 
 export function setVaultArchives(records: unknown[]) {
   if (!activeSession) return Promise.resolve();
-  activeSession.vault = { ...activeSession.vault, archives: structuredClone(records), updatedAt: new Date().toISOString() };
-  return scheduleVaultPersistence(activeSession);
+  const archives = structuredClone(records);
+  return scheduleVaultPersistence(activeSession, vault => ({ ...vault, archives }));
 }
 
 export function readProfileValue<T>(key: string, fallback: T): T {
@@ -300,12 +322,8 @@ export function readProfileValue<T>(key: string, fallback: T): T {
 
 export function writeProfileValue(key: string, value: unknown) {
   if (!activeSession) return Promise.resolve();
-  activeSession.vault = {
-    ...activeSession.vault,
-    profileStorage: { ...activeSession.vault.profileStorage, [key]: JSON.stringify(value) },
-    updatedAt: new Date().toISOString(),
-  };
-  return scheduleVaultPersistence(activeSession);
+  const serialized = JSON.stringify(value);
+  return scheduleVaultPersistence(activeSession, vault => ({ ...vault, profileStorage: { ...vault.profileStorage, [key]: serialized } }));
 }
 
 export function exportActiveVault() {
@@ -315,8 +333,7 @@ export function exportActiveVault() {
 
 export async function clearActiveVault() {
   if (!activeSession) return;
-  activeSession.vault = emptyVault();
-  await scheduleVaultPersistence(activeSession);
+  await scheduleVaultPersistence(activeSession, () => emptyVault());
 }
 
 export async function logoutLocalAccount() {

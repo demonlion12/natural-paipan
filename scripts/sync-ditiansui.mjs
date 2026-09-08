@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
+import { archiveSource } from './classic-quality.mjs';
 
 const chapterGuides = [
   ['通天论', '总论命理从阴阳、五行、干支与进退之机入手。阅读时应把旺衰、顺逆和配置放在同一结构中，不可执一字断吉凶。'],
@@ -104,6 +105,7 @@ const payload = execFileSync('curl', [
   '--data-urlencode', 'format=json',
   '--data-urlencode', 'formatversion=2',
 ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+archiveSource(payload, '滴天髓');
 const pages = JSON.parse(payload).query.pages;
 const pageByTitle = new Map(pages.map((page) => [page.title, page.revisions?.[0]?.slots?.main?.content ?? '']));
 const chapters = chapterGuides.map((_, index) => {

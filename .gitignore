@@ -2,6 +2,7 @@ node_modules/
 dist/
 test-runtime/core/
 .DS_Store
+.cache/
 *.log
 .env
 .env.*

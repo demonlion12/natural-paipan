@@ -36,6 +36,7 @@ declare module 'lunar-javascript' {
   }
 
   export interface LunarDate {
+    getJieQiTable(): Record<string, SolarDate>;
     getYear(): number;
     getMonth(): number;
     getDay(): number;

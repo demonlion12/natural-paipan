@@ -6,6 +6,7 @@
     "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
     "strict": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "outDir": "test-runtime",
     "rootDir": "src",
@@ -17,6 +18,7 @@
     "src/knowledge.ts",
     "src/locationData.ts",
     "src/core/bazi.ts",
+    "src/core/solarTerms.ts",
     "src/core/types.ts",
     "src/lunar-javascript.d.ts"
   ]

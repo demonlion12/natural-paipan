@@ -1,4 +1,5 @@
 export type Gender = 'male' | 'female';
+export type YaoValue = 6 | 7 | 8 | 9;
 export type ElementName = '木' | '火' | '土' | '金' | '水';
 export type PillarKey = 'year' | 'month' | 'day' | 'time';
 export type ReadingSection = 'overview' | 'career' | 'relationship' | 'health' | 'growth';
@@ -27,6 +28,7 @@ export interface BirthInput {
 }
 
 export interface Pillar {
+  known?: boolean;
   key: PillarKey;
   label: string;
   ganZhi: string;
@@ -112,6 +114,10 @@ export interface FutureYearReading {
 }
 
 export interface SchoolJudgment {
+  citation?: { bookId: string; chapterId: string; chapterTitle: string; passageId: string; version: string; sourceUrl: string; text: string };
+  ruleId?: string;
+  dependencies?: string[];
+  counterEvidence?: string[];
   key: 'ziping' | 'qiongtong' | 'ditiansui' | 'sanming';
   school: string;
   weight: '主判' | '校验' | '补充';
@@ -153,6 +159,10 @@ export interface BaziReading {
   zodiac: string;
   calculation: {
     version: string;
+    asOf?: string;
+    ruleVersion?: string;
+    contentVersion?: string;
+    completeness?: 'complete' | 'unknown-hour';
     originalText: string;
     convertedSolarText: string;
     effectiveSolarText: string;
@@ -199,5 +209,10 @@ export interface BaziReading {
 }
 
 export interface ReadingPort {
-  createReading(input: BirthInput): BaziReading;
+  createReading(input: BirthInput, context?: AnalysisContext): Promise<BaziReading>;
+}
+
+export interface AnalysisContext {
+  asOf: string;
+  signal?: AbortSignal;
 }

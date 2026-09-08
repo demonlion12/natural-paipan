@@ -90,6 +90,8 @@ export type ClassicExcerpt = {
 };
 
 export type ClassicTextBlock = {
+  id?: string;
+  translation?: { text: string; author: string; status: 'draft' | 'reviewed'; version: string } | null;
   heading: string;
   original: string;
   commentary: string;
@@ -108,6 +110,7 @@ export type ClassicChapterSummary = Omit<ClassicChapter, 'blocks'> & {
 };
 
 export type ClassicBook = {
+  editionId?: string;
   id: string;
   title: string;
   dynasty: string;
