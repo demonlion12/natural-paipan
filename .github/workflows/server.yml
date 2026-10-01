@@ -32,7 +32,7 @@ jobs:
           chmod 600 ~/.ssh/shanyi_deploy ~/.ssh/known_hosts
       - name: Publish and verify with automatic failure rollback
         run: SKIP_CHECK=1 DEPLOY_KEY=$HOME/.ssh/shanyi_deploy bash scripts/deploy-server.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: server-release
           path: dist/
